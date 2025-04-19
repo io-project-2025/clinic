@@ -69,8 +69,8 @@ export default () => {
 
         <div className="bg-gradient-to-l to-[#92817A] from-[#F1DABF] h-screen">
             <Header/>
-            <main className="pt-8 pb-20">
-                <div className="grid grid-cols-2 grid-rows-2 gap-4 place-items-center">
+            <main className="pt-8 pb-20 w-[80%] block mx-auto">
+                <div className="grid grid-cols-2 grid-rows-2 gap-4  place-items-center">
                     {
                         buttonsContent.map((button, index) => (
                             <MainLink key={index} txt={button.txt} link={button.link} className={button.className} linkClass={button.linkClass}/>

@@ -2,16 +2,20 @@ import React from "react";
 import {Link} from "react-router-dom";
 
 
+const HelperDiv = (props) => {
+    return (<div className = {props.className} onClick={props.onClick}>
+        {props.txt}
+    </div>)
+}
 
-const  MainLink = (props) => {
+
+const MainLink = (props) => {
     return (
-            <>
-            <Link to={props.link}>
-                <div className = {props.className} onClick={props.onClick}>
-                { props.render ? props.render : props.txt }
-                </div>
-            </Link>
-            </>    
+            <Link to={props.link} className={props.linkClass}>
+            {
+                props.render ? props.render : (<HelperDiv {...props}/>)
+            }
+            </Link>       
     );
 };
 

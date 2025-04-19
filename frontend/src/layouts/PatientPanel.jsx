@@ -67,9 +67,9 @@ const Footer = () => {
 export default () => {
     return (
 
-        <div className="bg-gradient-to-l to-[#92817A] from-[#F1DABF] ">
+        <div className="bg-gradient-to-l to-[#92817A] from-[#F1DABF] h-screen">
             <Header/>
-            <main className="h-screen pt-8">
+            <main className="pt-8 pb-20">
                 <div className="grid grid-cols-2 grid-rows-2 gap-4 place-items-center">
                     {
                         buttonsContent.map((button, index) => (

@@ -5,7 +5,7 @@ import { Home, User } from 'lucide-react';
 
 const Information = () => {
     return (
-        <div className="text-center">
+        <div className="text-center text-[var(--text)]">
             <strong className="text-xl">Zalogowany pacjent: </strong> <span>Loading...</span>
         </div>
     );
@@ -18,11 +18,11 @@ const Header = () => {
             <nav>
 
                 <MainLink link="/" linkClass="w-10 inline-block ml-4"  
-                render={<User className="h-10 w-10 text-[#000500] hover:text-[#FFFBFF] transition duration-300 ease-in-out" />}
+                render={<User className="h-10 w-10 text-[var(--secondary)] hover:text-[var(--text)] transition duration-300 ease-in-out" />}
                 />
                 
                 <MainLink link="/" linkClass="w-10 inline-block ml-4"  
-                render={<Home className="h-10 w-10 text-[#000500] hover:text-[#FFFBFF] transition duration-300 ease-in-out" />}
+                render={<Home className="h-10 w-10 text-[var(--secondary)] hover:text-[var(--text)] transition duration-300 ease-in-out" />}
                 />
               
             </nav>
@@ -31,24 +31,28 @@ const Header = () => {
     );
 }
 
+
 const commonButtonClass = "font-bold rounded-full m-2 w-[15vw] h-[15vw] flex justify-center items-center text-center  transition duration-300 ease-in-out ";
+const leftButtonsClass = "bg-[var(--primary)] text-[var(--text)]  hover:shadow-2xl hover:shadow-[var(--shadow-secondary)] ";
+const rightButtonsClass = "w-[30vw] h-[30vw] bg-[var(--secondary)] text-[var(--primary)] hover:shadow-2xl hover:shadow-[var(--shadow-primary)] ";
+
 
 const buttonsContent = [
     {
         txt: "Panel wizyt",
         link: "visits",
-        className: commonButtonClass + "bg-[#FFFBFF] text-[#000500]  hover:bg-[#000500] hover:text-[#FFFBFF]"
+        className: commonButtonClass + leftButtonsClass
     },
     {
         txt: "Dokumentacja medyczna i skierowania",
         link: "documentation",
-        className: commonButtonClass + "w-[30vw] h-[30vw] hover:bg-[#FFFBFF] hover:text-[#000500] bg-[#000500] text-[#FFFBFF]",
+        className: commonButtonClass + rightButtonsClass,
         linkClass: "row-span-2"
     },
     {
         txt: "Wyniki badań",
         link: "results",
-        className: commonButtonClass + "bg-[#FFFBFF] text-[#000500]  hover:bg-[#000500] hover:text-[#FFFBFF]"
+        className: commonButtonClass + leftButtonsClass
 
     },
 
@@ -67,7 +71,7 @@ const Footer = () => {
 export default () => {
     return (
 
-        <div className="bg-gradient-to-l to-[#92817A] from-[#F1DABF] h-screen">
+        <div className="bg-gradient-to-l to-[var(--background)] from-[var(--accent)] h-screen">
             <Header/>
             <main className="pt-8 pb-20 w-[80%] block mx-auto">
                 <div className="grid grid-cols-2 grid-rows-2 gap-4  place-items-center">

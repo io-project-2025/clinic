@@ -1,11 +1,17 @@
 import {Routes, Route} from 'react-router-dom'
 import PatientPanel from '../../layouts/PatientPanel'
+import AdminPanel from '../../layouts/AdminPanel'
 
 const routerButtons = [
     {
         value: 'PatientPanel',
         route: '/patient',
         element: <PatientPanel/>
+    },
+    {
+        value: 'AdminPanel',
+        route: '/admin',
+        element: <AdminPanel/>
     }
 ];
     

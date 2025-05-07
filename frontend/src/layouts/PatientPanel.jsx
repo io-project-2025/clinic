@@ -1,8 +1,6 @@
 import MainLink from "../components/MainLink";
 import { Home, User } from 'lucide-react';
 
-// paleta kolorów - https://coolors.co/000500-362417-92817a-f1dabf-fffbff
-
 const Information = () => {
     return (
         <div className="text-center text-[var(--text)]">

@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 :root {
-    --accent: #b80c09ff;
-    --background: #0b4f6cff;
-    --primary: #01baefff;
-    --secondary: #fbfbffff;
-    --text: #040f16ff;
+    --primary: #0057FF;      /* główny niebieski, np. przyciski, akcenty */
+    --secondary: #D1FAE5;    /* zielony tła statusów aktywnych */
+    --accent: #1D4ED8;       /* dodatkowy niebieski dla linków/statusów */
+    --text: #111827;         /* główny kolor tekstu */
+    --background: #F9FAFB;   /* tło aplikacji */
 
     --shadow-secondary: 0 15px 40px var(--secondary);
     --shadow-primary: 0 15px 40px var(--primary);  

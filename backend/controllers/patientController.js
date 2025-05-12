@@ -11,3 +11,7 @@ exports.getPatientDetails = (req, res) => {
     const patientId = req.params.patientId;
     res.json({ id: patientId, name: 'Jan Kowalski', age: 40 });
 };
+
+exports.getPatients = (req, res) => {
+    //TODO 
+}

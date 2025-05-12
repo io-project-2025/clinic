@@ -1,14 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const schedulesController = require('../controllers/schedulesController');
+const roomsController = require('../controllers/roomsController');
 
-// Pobieranie harmonogramów lekarzy
-router.get('/', schedulesController.getSchedules); // GET /api/schedules
+// Pobieranie listy pokoi
+router.get('/', roomsController.getRooms);
 
-// Dodawanie harmonogramu lekarza
-router.post('/', schedulesController.createSchedule); // POST /api/schedules
+// Dodawanie nowego pokoju
+router.post('/', roomsController.createRoom);
 
-// Edytowanie harmonogramu lekarza
-router.put('/:scheduleId', schedulesController.updateSchedule); // PUT /api/schedules/:scheduleId
+// Edytowanie pokoju
+router.put('/:roomId', roomsController.updateRoom);
+
+// Usuwanie pokoju
+router.delete('/:roomId', roomsController.deleteRoom);
 
 module.exports = router;

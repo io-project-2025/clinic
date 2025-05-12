@@ -20,3 +20,7 @@ exports.addMedicalHistory = (req, res) => {
 exports.updateMedicalHistory = (req, res) => {
     res.json({ message: `Historia choroby ${req.params.entryId} zaktualizowana dla pacjenta ${req.params.patientId}` });
 };
+
+exports.createMedicalNote = (req, res) => {
+    //TODO
+}

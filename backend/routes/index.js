@@ -1,29 +1,21 @@
 var express = require('express');
 var router = express.Router();
 
-// const usersRouter = require('./users');
-// const schedulesRouter = require('./schedules');
-// const patientsRouter = require('./patients');
-// const appointmentsRouter = require('./appointments');
-// const medicalNotesRouter = require('./medicalNotes');
-// const labResultsRouter = require('./labResults');
-// const documentsRouter = require('./documents');
-// const statisticsRouter = require('./statistics');
-// const doctorsRouter = require('./doctors');
-// const departmentsRouter = require('./departments');
-// const roomsRouter = require('./rooms');
+const appointmentsRouter = require('./routes/appointments');
+const departmentsRouter = require('./routes/departments');
+const doctorsRouter = require('./routes/doctors');
+const documentsRouter = require('./routes/documents');
+const labResultsRouter = require('./routes/labResults');
+const patientsRouter = require('./routes/patients');
+const statisticsRouter = require('./routes/statistics');
 
-// router.use('/api/users', usersRouter);
-// router.use('/api/schedules', schedulesRouter);
-// router.use('/api/doctor/patients', patientsRouter);
-// router.use('/api/appointments', appointmentsRouter);
-// router.use('/api/appointments/:id/note', medicalNotesRouter);
-// router.use('/api/patients/:patientId/lab-results', labResultsRouter);
-// router.use('/api/patients/:patientId/documents', documentsRouter);
-// router.use('/api/statistics', statisticsRouter);
-// router.use('/api/doctors', doctorsRouter);
-// router.use('/api/departments', departmentsRouter);
-// router.use('/api/rooms', roomsRouter);
+app.use('/api/appointments', appointmentsRouter);
+app.use('/api/departments', departmentsRouter);
+app.use('/api/doctors', doctorsRouter);
+app.use('/api/documents', documentsRouter);
+app.use('/api/lab-results', labResultsRouter);
+app.use('/api/patients', patientsRouter);
+app.use('/api/statistics', statisticsRouter);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

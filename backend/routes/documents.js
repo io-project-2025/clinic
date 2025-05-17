@@ -1,14 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const documentController = require('../controllers/documentController');
+const documentsController = require('../controllers/documentsController');
 
-// Tworzenie e-recepty
-router.post('/prescriptions', documentController.createPrescription);
-
-// Tworzenie e-skierowania
-router.post('/referrals', documentController.createReferral);
-
-// Pobieranie dokumentów pacjenta
-router.get('/:patientId', documentController.getPatientDocuments);
+// GET /api/patients/:patientId/documents
+router.get('/:patientId/documents', documentsController.getPatientDocuments);
 
 module.exports = router;

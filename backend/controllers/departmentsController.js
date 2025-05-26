@@ -6,7 +6,7 @@ const pool = require('../model/model');
 // Pobieranie listy oddziałów
 exports.getDepartments = async (req, res) => {
     try {
-      const result = await pool.query('SELECT * FROM oddzial ORDER BY oddzial_id');
+      const result = await pool.query('SELECT * FROM oddzialy ORDER BY oddzial_id');
       res.json(result.rows);
     } catch (err) {
       console.error('Błąd pobierania oddziałów:', err);
@@ -22,7 +22,7 @@ exports.createDepartment = async (req, res) => {
     }
     try {
       const result = await pool.query(
-        'INSERT INTO oddzial (nazwa, adres) VALUES ($1, $2) RETURNING *',
+        'INSERT INTO oddzialy (nazwa, adres) VALUES ($1, $2) RETURNING *',
         [nazwa, adres]
       );
       res.status(201).json(result.rows[0]);
@@ -41,7 +41,7 @@ exports.updateDepartment = async (req, res) => {
     }
     try {
       const result = await pool.query(
-        'UPDATE oddzial SET nazwa = $1, adres = $2 WHERE oddzial_id = $3 RETURNING *',
+        'UPDATE oddzialy SET nazwa = $1, adres = $2 WHERE oddzial_id = $3 RETURNING *',
         [nazwa, adres, departmentId]
       );
       if (result.rowCount === 0) {
@@ -59,7 +59,7 @@ exports.deleteDepartment = async (req, res) => {
     const { departmentId } = req.params;
     try {
       const result = await pool.query(
-        'DELETE FROM oddzial WHERE oddzial_id = $1',
+        'DELETE FROM oddzialy WHERE oddzial_id = $1',
         [departmentId]
       );
       if (result.rowCount === 0) {

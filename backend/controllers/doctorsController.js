@@ -8,7 +8,7 @@ exports.getDoctors = async (req, res) => {
     try {
       const result = await pool.query(`
         SELECT lekarz_id, imie, nazwisko, email, oddzial_id
-        FROM lekarz
+        FROM lekarze
         ORDER BY nazwisko, imie
       `);
       res.json(result.rows);
@@ -26,7 +26,7 @@ exports.createDoctor = async (req, res) => {
     }
     try {
       const result = await pool.query(
-        `INSERT INTO lekarz (imie, nazwisko, email, haslo, oddzial_id) 
+        `INSERT INTO lekarze (imie, nazwisko, email, haslo, oddzial_id) 
          VALUES ($1, $2, $3, $4, $5) RETURNING *`,
         [imie, nazwisko, email, haslo, oddzial_id || null]
       );
@@ -46,7 +46,7 @@ exports.updateDoctor = async (req, res) => {
     }
     try {
       const result = await pool.query(
-        `UPDATE lekarz SET imie=$1, nazwisko=$2, email=$3, haslo=$4, oddzial_id=$5
+        `UPDATE lekarze SET imie=$1, nazwisko=$2, email=$3, haslo=$4, oddzial_id=$5
          WHERE lekarz_id=$6 RETURNING *`,
         [imie, nazwisko, email, haslo, oddzial_id || null, doctorId]
       );
@@ -65,7 +65,7 @@ exports.deleteDoctor = async (req, res) => {
     const { doctorId } = req.params;
     try {
       const result = await pool.query(
-        'DELETE FROM lekarz WHERE lekarz_id = $1',
+        'DELETE FROM lekarze WHERE lekarz_id = $1',
         [doctorId]
       );
       if (result.rowCount === 0) {

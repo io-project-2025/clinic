@@ -8,7 +8,7 @@ const documentsRouter = require('./documents');
 const labResultsRouter = require('./labResults');
 const patientsRouter = require('./patients');
 const statisticsRouter = require('./statistics');
-const authRouter = require('./auth');
+const authRouter = require('./authRoutes');
 
 router.use('/api/appointments', appointmentsRouter);
 router.use('/api/departments', departmentsRouter);

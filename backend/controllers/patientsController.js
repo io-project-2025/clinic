@@ -1,5 +1,5 @@
 // Lekarz: Pacjenci
-// Obsługuje: GET /api/doctor/patients, GET /api/patients/:patientId
+// Obsługuje: GET /api/patients/doctor/:doctorId/patients, GET /api/patients/:patientId
 
 const pool = require('../model/model');
 

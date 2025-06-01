@@ -59,6 +59,43 @@ describe('Doctors API Integration Tests', () => {
       expect(res.body).toHaveProperty('lekarz_id');
       testDoctorId = res.body.lekarz_id; // Save the ID for later tests
     });
+
+    it('should return 400 when name is missing', async () => {
+      const invalidDoctor = {
+        ...testDoctor,
+        imie: ''
+      };
+      const res = await request(app)
+        .post('/api/doctors')
+        .send(invalidDoctor);
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'Imię i nazwisko są wymagane');
+    });
+
+    it('should return 400 when surname is missing', async () => {
+      const invalidDoctor = {
+        ...testDoctor,
+        nazwisko: ''
+      };
+      const res = await request(app)
+        .post('/api/doctors')
+        .send(invalidDoctor);
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'Imię i nazwisko są wymagane');
+    });
+
+    it('should return 400 when both name and surname are missing', async () => {
+      const invalidDoctor = {
+        ...testDoctor,
+        imie: '',
+        nazwisko: ''
+      };
+      const res = await request(app)
+        .post('/api/doctors')
+        .send(invalidDoctor);
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'Imię i nazwisko są wymagane');
+    });
   }
   );
 

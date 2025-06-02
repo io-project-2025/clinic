@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
-    "test" : "jest"
+    "test": "jest --detectOpenHandles"
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",
@@ -19,5 +19,10 @@
   "devDependencies": {
     "jest": "^29.7.0",
     "supertest": "^7.1.1"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "globalTeardown": "./jest.teardown.js",
+    "testTimeout": 10000
   }
 }

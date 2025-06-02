@@ -1,5 +1,5 @@
 // Lekarz: Recepty & Skierowania
-// Obsługuje: GET /api/patients/:patientId/documents
+// Obsługuje: GET /api/documents/patient/:patientId/documents GET /api/documents/patient/:patientId/notes
 
 const pool = require('../model/model');
 

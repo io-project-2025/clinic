@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../app'); // Import your Express app
-const pool = require('../model/model');
+const { pool } = require('./helpers/db');
 
 // Use a test database or specific test data that won't affect production
 describe('Doctors API Integration Tests', () => {
@@ -33,8 +33,8 @@ describe('Doctors API Integration Tests', () => {
       if (testDoctorId) {
         await pool.query('DELETE FROM lekarze WHERE lekarz_id = $1', [testDoctorId]);
       }
-      // You could close the pool if needed 
-      // await pool.end();
+      console.log('Test cleanup complete');
+
     } catch (error) {
       console.error('Test cleanup failed:', error);
     }

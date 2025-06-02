@@ -1,0 +1,186 @@
+const request = require('supertest');
+const app = require('../app');
+const { pool } = require('./helpers/db');
+
+describe('Auth API Integration Tests', () => {
+  // Use unique email addresses for test users
+  const timestamp = Date.now();
+  const testPatient = {
+    imie: 'TestPatient',
+    nazwisko: 'User',
+    email: `testpatient${timestamp}@example.com`,
+    haslo: 'testpass123'
+  };
+  
+  const testDoctor = {
+    imie: 'TestDoctor',
+    nazwisko: 'User',
+    email: `testdoctor${timestamp}@example.com`,
+    haslo: 'testpass123',
+    oddzial_id: null // Optional for testing
+  };
+  
+  // Track IDs for cleanup
+  let testPatientId;
+  let testDoctorId;
+  
+  // Clean up test data after tests
+  afterAll(async () => {
+    try {
+      // Delete test patient if created
+      if (testPatientId) {
+        await pool.query('DELETE FROM pacjenci WHERE pacjent_id = $1', [testPatientId]);
+        console.log(`Test patient ${testPatientId} removed`);
+      }
+      
+      // Delete test doctor if created
+      if (testDoctorId) {
+        await pool.query('DELETE FROM lekarze WHERE lekarz_id = $1', [testDoctorId]);
+        console.log(`Test doctor ${testDoctorId} removed`);
+      }
+
+      console.log('Test cleanup complete');
+      
+    } catch (error) {
+      console.error('Test cleanup failed:', error);
+    }
+  });
+
+  // Test patient registration
+  describe('POST /api/auth/register', () => {
+    it('should register a new patient with valid data', async () => {
+      const res = await request(app)
+        .post('/api/auth/register')
+        .send(testPatient);
+      
+      expect(res.statusCode).toBe(201);
+      expect(res.body).toHaveProperty('message', 'Pacjent zarejestrowany');
+      expect(res.body).toHaveProperty('patient');
+      expect(res.body.patient).toHaveProperty('pacjent_id');
+      expect(res.body.patient).toHaveProperty('email', testPatient.email);
+      
+      // Save ID for cleanup and later tests
+      testPatientId = res.body.patient.pacjent_id;
+    });
+    
+    it('should reject registration with missing fields', async () => {
+      const incompleteData = {
+        imie: 'Incomplete',
+        // missing other required fields
+      };
+      
+      const res = await request(app)
+        .post('/api/auth/register')
+        .send(incompleteData);
+      
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'Wszystkie pola są wymagane');
+    });
+    
+    it('should reject registration with duplicate email', async () => {
+      // Try to register with the same email again
+      const res = await request(app)
+        .post('/api/auth/register')
+        .send(testPatient);
+      
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'Email już jest zarejestrowany');
+    });
+  });
+
+  // Test login functionality
+  describe('POST /api/auth/login', () => {
+    // Create a test doctor for login tests
+    beforeAll(async () => {
+      try {
+        // Create test doctor
+        const result = await pool.query(
+          'INSERT INTO lekarze (imie, nazwisko, email, haslo) VALUES ($1, $2, $3, $4) RETURNING lekarz_id',
+          [testDoctor.imie, testDoctor.nazwisko, testDoctor.email, testDoctor.haslo]
+        );
+        testDoctorId = result.rows[0].lekarz_id;
+        console.log(`Test doctor created with ID ${testDoctorId}`);
+      } catch (error) {
+        console.error('Failed to create test doctor:', error);
+      }
+    });
+    
+    it('should login successfully as patient', async () => {
+      // Skip if patient registration failed
+      if (!testPatientId) {
+        console.log('Skipping test - no test patient created');
+        return;
+      }
+      
+      const res = await request(app)
+        .post('/api/auth/login')
+        .send({
+          email: testPatient.email,
+          haslo: testPatient.haslo
+        });
+      
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveProperty('role', 'pacjent');
+      expect(res.body).toHaveProperty('user');
+      expect(res.body.user).toHaveProperty('id', testPatientId);
+      expect(res.body.user).toHaveProperty('email', testPatient.email);
+    });
+    
+    it('should login successfully as doctor', async () => {
+      // Skip if doctor creation failed
+      if (!testDoctorId) {
+        console.log('Skipping test - no test doctor created');
+        return;
+      }
+      
+      const res = await request(app)
+        .post('/api/auth/login')
+        .send({
+          email: testDoctor.email,
+          haslo: testDoctor.haslo
+        });
+      
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveProperty('role', 'lekarz');
+      expect(res.body).toHaveProperty('user');
+      expect(res.body.user).toHaveProperty('id', testDoctorId);
+      expect(res.body.user).toHaveProperty('email', testDoctor.email);
+    });
+    
+    it('should reject login with incorrect password', async () => {
+      const res = await request(app)
+        .post('/api/auth/login')
+        .send({
+          email: testPatient.email,
+          haslo: 'wrongpassword'
+        });
+      
+      expect(res.statusCode).toBe(401);
+      expect(res.body).toHaveProperty('error', 'Nieprawidłowy email lub hasło');
+    });
+    
+    it('should reject login with non-existent email', async () => {
+      const res = await request(app)
+        .post('/api/auth/login')
+        .send({
+          email: `nonexistent${timestamp}@example.com`,
+          haslo: 'anypassword'
+        });
+      
+      expect(res.statusCode).toBe(401);
+      expect(res.body).toHaveProperty('error', 'Nieprawidłowy email lub hasło');
+    });
+    
+    it('should reject login with missing fields', async () => {
+      const res = await request(app)
+        .post('/api/auth/login')
+        .send({
+          email: testPatient.email
+          // Missing password
+        });
+      
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'Email i hasło są wymagane');
+    });
+  });
+});

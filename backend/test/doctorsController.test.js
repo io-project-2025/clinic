@@ -27,14 +27,14 @@ describe('Doctors API Integration Tests', () => {
   });
 
   afterAll(async () => {
-    // Clean up test data
     try {
       // Delete any test data created during tests
       if (testDoctorId) {
         await pool.query('DELETE FROM lekarze WHERE lekarz_id = $1', [testDoctorId]);
       }
+      // Close the pool connection
+      await pool.end();
       console.log('Test cleanup complete');
-
     } catch (error) {
       console.error('Test cleanup failed:', error);
     }

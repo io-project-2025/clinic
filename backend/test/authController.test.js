@@ -38,6 +38,8 @@ describe('Auth API Integration Tests', () => {
         await pool.query('DELETE FROM lekarze WHERE lekarz_id = $1', [testDoctorId]);
         console.log(`Test doctor ${testDoctorId} removed`);
       }
+      // Close the pool connection
+      await pool.end();
 
       console.log('Test cleanup complete');
       

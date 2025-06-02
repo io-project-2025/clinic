@@ -33,6 +33,8 @@ describe('Appointment API Integration Tests', () => {
       if (testAppointmentId) {
         await pool.query('DELETE FROM wizyty WHERE id = $1', [testAppointmentId]);
       }
+      // Close the pool connection
+      await pool.end();
       console.log('Test cleanup complete');
       
     } catch (error) {

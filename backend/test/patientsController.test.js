@@ -61,7 +61,9 @@ describe('Patients API Integration Tests', () => {
         await pool.query('DELETE FROM pacjenci WHERE pacjent_id = $1', [testPatientId]);
         console.log(`Test patient ${testPatientId} removed`);
       }
-
+      
+      // Close the pool connection
+      await pool.end();
       console.log('Test cleanup complete');
       
     } catch (error) {

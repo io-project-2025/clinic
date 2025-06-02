@@ -9,7 +9,15 @@ describe('Lab Results API Integration Tests', () => {
     // Variable to store a lab result ID for detailed test
     let testResultId;
 
-    
+    afterAll(async () => {
+        try {
+            // Close the pool connection
+            await pool.end();
+            console.log('Test cleanup complete');
+        } catch (error) {
+            console.error('Test cleanup failed:', error);
+        }
+    });
 
     // Test getPatientLabResults endpoint
     describe('GET /api/lab-results/patients/:patientId/lab-results', () => {

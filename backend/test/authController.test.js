@@ -88,6 +88,74 @@ describe('Auth API Integration Tests', () => {
       expect(res.statusCode).toBe(400);
       expect(res.body).toHaveProperty('error', 'Email już jest zarejestrowany');
     });
+    
+    describe('validation tests', () => {
+      it('should reject registration with weak password', async () => {
+        const weakPasswordUser = {
+          ...testPatient,
+          haslo: '123' // Too short
+        };
+        
+        const res = await request(app)
+          .post('/api/auth/register')
+          .send(weakPasswordUser);
+        
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty('error');
+      });
+
+      describe('email validation tests', () => {
+        const invalidEmails = [
+          { email: 'notanemail', desc: 'missing @ symbol' },
+          { email: 'missing.domain@', desc: 'missing domain' },
+          { email: '@missing.prefix', desc: 'missing prefix' },
+          { email: 'spaces in@email.com', desc: 'containing spaces' },
+          { email: 'double@@email.com', desc: 'double @ symbol' },
+          { email: 'invalid@domain', desc: 'incomplete domain' }
+        ];
+
+        invalidEmails.forEach(({ email, desc }) => {
+          it(`should reject registration with invalid email (${desc})`, async () => {
+            const invalidEmailUser = {
+              ...testPatient,
+              email: email
+            };
+            
+            const res = await request(app)
+              .post('/api/auth/register')
+              .send(invalidEmailUser);
+            
+            expect(res.statusCode).toBe(400);
+            expect(res.body).toHaveProperty('error', 'Nieprawidłowy format email');
+          });
+        });
+
+        const validEmails = [
+          'simple@example.com',
+          'with.dots@domain.com',
+          'with-hyphen@domain.com',
+          'with_underscore@domain.com',
+          'numbered123@domain.com',
+          'with.subdomain@sub.domain.com'
+        ];
+
+        validEmails.forEach(email => {
+          it(`should accept registration with valid email format: ${email}`, async () => {
+            const validEmailUser = {
+              ...testPatient,
+              email: `test.${Date.now()}.${email}` // Make unique
+            };
+            
+            const res = await request(app)
+              .post('/api/auth/register')
+              .send(validEmailUser);
+            
+            expect(res.statusCode).toBe(201);
+            expect(res.body).toHaveProperty('message', 'Pacjent zarejestrowany');
+          });
+        });
+      });
+    });
   });
 
   // Test login functionality
@@ -183,6 +251,22 @@ describe('Auth API Integration Tests', () => {
       
       expect(res.statusCode).toBe(400);
       expect(res.body).toHaveProperty('error', 'Email i hasło są wymagane');
+    });
+    
+    describe('email validation tests', () => {
+      it('should reject login with invalid email format', async () => {
+        const invalidLoginAttempt = {
+          email: 'notanemail',
+          haslo: 'anypassword'
+        };
+        
+        const res = await request(app)
+          .post('/api/auth/login')
+          .send(invalidLoginAttempt);
+        
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty('error', 'Nieprawidłowy format email');
+      });
     });
   });
 });

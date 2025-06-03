@@ -1,16 +1,9 @@
-// Administrator: Zarządzanie lekarzami
-// Obsługuje: GET /api/doctors, POST /api/doctors, PUT /api/doctors/:doctorId, DELETE /api/doctors/:doctorId
-
-const pool = require('../model/model');
+const db = require('../model/DatabaseService');
 
 // Pobieranie listy lekarzy
 exports.getDoctors = async (req, res) => {
     try {
-      const result = await pool.query(`
-        SELECT lekarz_id, imie, nazwisko, email, oddzial_id
-        FROM lekarz
-        ORDER BY nazwisko, imie
-      `);
+      const result = await db.getDoctors();
       res.json(result.rows);
     } catch (err) {
       console.error('Błąd pobierania lekarzy:', err);
@@ -25,11 +18,7 @@ exports.createDoctor = async (req, res) => {
       return res.status(400).json({ error: 'Imię i nazwisko są wymagane' });
     }
     try {
-      const result = await pool.query(
-        `INSERT INTO lekarz (imie, nazwisko, email, haslo, oddzial_id) 
-         VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-        [imie, nazwisko, email, haslo, oddzial_id || null]
-      );
+      const result = await db.createDoctor({ imie, nazwisko, email, haslo, oddzial_id });
       res.status(201).json(result.rows[0]);
     } catch (err) {
       console.error('Błąd dodawania lekarza:', err);
@@ -45,11 +34,7 @@ exports.updateDoctor = async (req, res) => {
       return res.status(400).json({ error: 'Imię i nazwisko są wymagane' });
     }
     try {
-      const result = await pool.query(
-        `UPDATE lekarz SET imie=$1, nazwisko=$2, email=$3, haslo=$4, oddzial_id=$5
-         WHERE lekarz_id=$6 RETURNING *`,
-        [imie, nazwisko, email, haslo, oddzial_id || null, doctorId]
-      );
+      const result = await db.updateDoctor(doctorId, { imie, nazwisko, email, haslo, oddzial_id });
       if (result.rowCount === 0) {
         return res.status(404).json({ error: 'Lekarz nie znaleziony' });
       }
@@ -64,10 +49,7 @@ exports.updateDoctor = async (req, res) => {
 exports.deleteDoctor = async (req, res) => {
     const { doctorId } = req.params;
     try {
-      const result = await pool.query(
-        'DELETE FROM lekarz WHERE lekarz_id = $1',
-        [doctorId]
-      );
+      const result = await db.deleteDoctor(doctorId);
       if (result.rowCount === 0) {
         return res.status(404).json({ error: 'Lekarz nie znaleziony' });
       }

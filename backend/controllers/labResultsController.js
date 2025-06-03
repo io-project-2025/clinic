@@ -1,18 +1,11 @@
-// Lekarz: Wyniki badań
-// Obsługuje: GET /api/patients/:patientId/lab-results, GET /api/lab-results/:resultId
-
-const pool = require('../model/model');
+const db = require('../model/DatabaseService');
 
 // Pobiera wszystkie wyniki badań dla pacjenta
 exports.getPatientLabResults = async (req, res) => {
     const { patientId } = req.params;
   
     try {
-      const result = await pool.query(
-        'SELECT badanie_id, wyniki FROM badania WHERE pacjent_id = $1',
-        [patientId]
-      );
-  
+      const result = await db.getPatientLabResults(patientId);
       res.status(200).json(result.rows);
     } catch (error) {
       console.error('Błąd przy pobieraniu wyników:', error);
@@ -25,10 +18,7 @@ exports.getLabResultDetails = async (req, res) => {
     const { resultId } = req.params;
   
     try {
-      const result = await pool.query(
-        'SELECT badanie_id, wyniki, pacjent_id FROM badania WHERE badanie_id = $1',
-        [resultId]
-      );
+      const result = await db.getLabResultDetails(resultId);
   
       if (result.rows.length === 0) {
         return res.status(404).json({ error: 'Wynik badania nie znaleziony.' });

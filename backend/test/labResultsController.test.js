@@ -9,7 +9,7 @@ describe('Lab Results API Integration Tests', () => {
 
     afterAll(async () => {
         try {
-            await pool.end();
+            await db.pool.end();
             console.log('Test cleanup complete');
         } catch (error) {
             console.error('Test cleanup failed:', error);
@@ -60,14 +60,14 @@ describe('Lab Results API Integration Tests', () => {
             let originalQuery;
 
             beforeEach(() => {
-                originalQuery = pool.query;
+                originalQuery = db.pool.query;
                 // Mock the query function to simulate a database error
-                pool.query = jest.fn().mockRejectedValue(new Error('Database error'));
+                db.pool.query = jest.fn().mockRejectedValue(new Error('Database error'));
             });
 
             afterEach(() => {
                 // Restore original query function
-                pool.query = originalQuery;
+                db.pool.query = originalQuery;
             });
 
             it('should handle database errors gracefully', async () => {
@@ -122,14 +122,14 @@ describe('Lab Results API Integration Tests', () => {
             let originalQuery;
 
             beforeEach(() => {
-                originalQuery = pool.query;
+                originalQuery = db.pool.query;
                 // Mock the query function to simulate a database error
-                pool.query = jest.fn().mockRejectedValue(new Error('Database error'));
+                db.pool.query = jest.fn().mockRejectedValue(new Error('Database error'));
             });
 
             afterEach(() => {
                 // Restore original query function
-                pool.query = originalQuery;
+                db.pool.query = originalQuery;
             });
 
             it('should handle database errors gracefully', async () => {

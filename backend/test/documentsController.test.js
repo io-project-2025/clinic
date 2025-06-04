@@ -9,7 +9,7 @@ describe('Documents API Integration Tests', () => {
   afterAll(async () => {
     try {
       // Close the pool connection
-      await pool.end();
+      await db.pool.end();
       console.log('Test cleanup complete');
     } catch (error) {
       console.error('Test cleanup failed:', error);

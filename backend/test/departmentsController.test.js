@@ -23,10 +23,10 @@ describe('Departments API Integration Tests', () => {
     // Clean up test data
     try {
       if (testDepartmentId) {
-        await pool.query('DELETE FROM oddzialy WHERE oddzial_id = $1', [testDepartmentId]);
+        await db.pool.query('DELETE FROM oddzialy WHERE oddzial_id = $1', [testDepartmentId]);
       }
       // Close the pool connection
-      await pool.end();
+      await db.pool.end();
       console.log('Test cleanup complete');
     } catch (error) {
       console.error('Test cleanup failed:', error);

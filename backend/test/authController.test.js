@@ -29,17 +29,17 @@ describe('Auth API Integration Tests', () => {
     try {
       // Delete test patient if created
       if (testPatientId) {
-        await pool.query('DELETE FROM pacjenci WHERE pacjent_id = $1', [testPatientId]);
+        await db.pool.query('DELETE FROM pacjenci WHERE pacjent_id = $1', [testPatientId]);
         console.log(`Test patient ${testPatientId} removed`);
       }
       
       // Delete test doctor if created
       if (testDoctorId) {
-        await pool.query('DELETE FROM lekarze WHERE lekarz_id = $1', [testDoctorId]);
+        await db.pool.query('DELETE FROM lekarze WHERE lekarz_id = $1', [testDoctorId]);
         console.log(`Test doctor ${testDoctorId} removed`);
       }
       // Close the pool connection
-      await pool.end();
+      await db.pool.end();
 
       console.log('Test cleanup complete');
       
@@ -164,7 +164,7 @@ describe('Auth API Integration Tests', () => {
     beforeAll(async () => {
       try {
         // Create test doctor
-        const result = await pool.query(
+        const result = await db.pool.query(
           'INSERT INTO lekarze (imie, nazwisko, email, haslo) VALUES ($1, $2, $3, $4) RETURNING lekarz_id',
           [testDoctor.imie, testDoctor.nazwisko, testDoctor.email, testDoctor.haslo]
         );

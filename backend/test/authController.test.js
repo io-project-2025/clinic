@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../app');
-const { pool } = require('./helpers/db');
+const db = require('../model/DatabaseService');
 
 describe('Auth API Integration Tests', () => {
   // Use unique email addresses for test users
@@ -29,15 +29,17 @@ describe('Auth API Integration Tests', () => {
     try {
       // Delete test patient if created
       if (testPatientId) {
-        await pool.query('DELETE FROM pacjenci WHERE pacjent_id = $1', [testPatientId]);
+        await db.pool.query('DELETE FROM pacjenci WHERE pacjent_id = $1', [testPatientId]);
         console.log(`Test patient ${testPatientId} removed`);
       }
       
       // Delete test doctor if created
       if (testDoctorId) {
-        await pool.query('DELETE FROM lekarze WHERE lekarz_id = $1', [testDoctorId]);
+        await db.pool.query('DELETE FROM lekarze WHERE lekarz_id = $1', [testDoctorId]);
         console.log(`Test doctor ${testDoctorId} removed`);
       }
+      // Close the pool connection
+      await db.pool.end();
 
       console.log('Test cleanup complete');
       
@@ -86,6 +88,74 @@ describe('Auth API Integration Tests', () => {
       expect(res.statusCode).toBe(400);
       expect(res.body).toHaveProperty('error', 'Email już jest zarejestrowany');
     });
+    
+    describe('validation tests', () => {
+      it('should reject registration with weak password', async () => {
+        const weakPasswordUser = {
+          ...testPatient,
+          haslo: '123' // Too short
+        };
+        
+        const res = await request(app)
+          .post('/api/auth/register')
+          .send(weakPasswordUser);
+        
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty('error');
+      });
+
+      describe('email validation tests', () => {
+        const invalidEmails = [
+          { email: 'notanemail', desc: 'missing @ symbol' },
+          { email: 'missing.domain@', desc: 'missing domain' },
+          { email: '@missing.prefix', desc: 'missing prefix' },
+          { email: 'spaces in@email.com', desc: 'containing spaces' },
+          { email: 'double@@email.com', desc: 'double @ symbol' },
+          { email: 'invalid@domain', desc: 'incomplete domain' }
+        ];
+
+        invalidEmails.forEach(({ email, desc }) => {
+          it(`should reject registration with invalid email (${desc})`, async () => {
+            const invalidEmailUser = {
+              ...testPatient,
+              email: email
+            };
+            
+            const res = await request(app)
+              .post('/api/auth/register')
+              .send(invalidEmailUser);
+            
+            expect(res.statusCode).toBe(400);
+            expect(res.body).toHaveProperty('error', 'Nieprawidłowy format email');
+          });
+        });
+
+        const validEmails = [
+          'simple@example.com',
+          'with.dots@domain.com',
+          'with-hyphen@domain.com',
+          'with_underscore@domain.com',
+          'numbered123@domain.com',
+          'with.subdomain@sub.domain.com'
+        ];
+
+        validEmails.forEach(email => {
+          it(`should accept registration with valid email format: ${email}`, async () => {
+            const validEmailUser = {
+              ...testPatient,
+              email: `test.${Date.now()}.${email}` // Make unique
+            };
+            
+            const res = await request(app)
+              .post('/api/auth/register')
+              .send(validEmailUser);
+            
+            expect(res.statusCode).toBe(201);
+            expect(res.body).toHaveProperty('message', 'Pacjent zarejestrowany');
+          });
+        });
+      });
+    });
   });
 
   // Test login functionality
@@ -94,7 +164,7 @@ describe('Auth API Integration Tests', () => {
     beforeAll(async () => {
       try {
         // Create test doctor
-        const result = await pool.query(
+        const result = await db.pool.query(
           'INSERT INTO lekarze (imie, nazwisko, email, haslo) VALUES ($1, $2, $3, $4) RETURNING lekarz_id',
           [testDoctor.imie, testDoctor.nazwisko, testDoctor.email, testDoctor.haslo]
         );
@@ -181,6 +251,22 @@ describe('Auth API Integration Tests', () => {
       
       expect(res.statusCode).toBe(400);
       expect(res.body).toHaveProperty('error', 'Email i hasło są wymagane');
+    });
+    
+    describe('email validation tests', () => {
+      it('should reject login with invalid email format', async () => {
+        const invalidLoginAttempt = {
+          email: 'notanemail',
+          haslo: 'anypassword'
+        };
+        
+        const res = await request(app)
+          .post('/api/auth/login')
+          .send(invalidLoginAttempt);
+        
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty('error', 'Nieprawidłowy format email');
+      });
     });
   });
 });

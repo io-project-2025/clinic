@@ -1,15 +1,20 @@
 const request = require('supertest');
 const app = require('../app');
-const { pool } = require('./helpers/db');
+const db = require('../model/DatabaseService');
 
 describe('Lab Results API Integration Tests', () => {
     // Use patient ID 1 for simplicity
     const patientId = 1;
-
-    // Variable to store a lab result ID for detailed test
     let testResultId;
 
-    
+    afterAll(async () => {
+        try {
+            await db.pool.end();
+            console.log('Test cleanup complete');
+        } catch (error) {
+            console.error('Test cleanup failed:', error);
+        }
+    });
 
     // Test getPatientLabResults endpoint
     describe('GET /api/lab-results/patients/:patientId/lab-results', () => {
@@ -40,6 +45,39 @@ describe('Lab Results API Integration Tests', () => {
             expect(Array.isArray(res.body)).toBe(true);
             expect(res.body).toHaveLength(0);
         });
+
+        it('should return 400 for invalid patient ID format', async () => {
+            const invalidId = 'abc';
+            
+            const res = await request(app)
+                .get(`/api/lab-results/patients/${invalidId}/lab-results`);
+                
+            expect(res.statusCode).toBe(400);
+            expect(res.body).toHaveProperty('error');
+        });
+
+        describe('database error handling', () => {
+            let originalQuery;
+
+            beforeEach(() => {
+                originalQuery = db.pool.query;
+                // Mock the query function to simulate a database error
+                db.pool.query = jest.fn().mockRejectedValue(new Error('Database error'));
+            });
+
+            afterEach(() => {
+                // Restore original query function
+                db.pool.query = originalQuery;
+            });
+
+            it('should handle database errors gracefully', async () => {
+                const res = await request(app)
+                    .get(`/api/lab-results/patients/${patientId}/lab-results`);
+                    
+                expect(res.statusCode).toBe(500);
+                expect(res.body).toHaveProperty('error', 'Błąd serwera przy pobieraniu wyników badań.');
+            });
+        });
     });
 
     // Test getLabResultDetails endpoint
@@ -68,6 +106,39 @@ describe('Lab Results API Integration Tests', () => {
 
             expect(res.statusCode).toBe(404);
             expect(res.body).toHaveProperty('error');
+        });
+
+        it('should return 400 for invalid result ID format', async () => {
+            const invalidId = 'abc';
+            
+            const res = await request(app)
+                .get(`/api/lab-results/${invalidId}`);
+                
+            expect(res.statusCode).toBe(400);
+            expect(res.body).toHaveProperty('error');
+        });
+
+        describe('database error handling', () => {
+            let originalQuery;
+
+            beforeEach(() => {
+                originalQuery = db.pool.query;
+                // Mock the query function to simulate a database error
+                db.pool.query = jest.fn().mockRejectedValue(new Error('Database error'));
+            });
+
+            afterEach(() => {
+                // Restore original query function
+                db.pool.query = originalQuery;
+            });
+
+            it('should handle database errors gracefully', async () => {
+                const res = await request(app)
+                    .get(`/api/lab-results/${testResultId || 1}`);
+                    
+                expect(res.statusCode).toBe(500);
+                expect(res.body).toHaveProperty('error', 'Błąd serwera przy pobieraniu szczegółów badania.');
+            });
         });
     });
 });

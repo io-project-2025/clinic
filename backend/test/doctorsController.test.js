@@ -1,10 +1,10 @@
 const request = require('supertest');
 const app = require('../app'); // Import your Express app
-const { pool } = require('./helpers/db');
+const db = require('../model/DatabaseService');
 
-// Use a test database or specific test data that won't affect production
-describe('Doctors API Integration Tests', () => {
-  let testDoctorId;
+// // Use a test database or specific test data that won't affect production
+ describe('Doctors API Integration Tests', () => {
+   let testDoctorId;
 
   // Test data
   const testDoctor = {
@@ -27,14 +27,14 @@ describe('Doctors API Integration Tests', () => {
   });
 
   afterAll(async () => {
-    // Clean up test data
     try {
       // Delete any test data created during tests
       if (testDoctorId) {
-        await pool.query('DELETE FROM lekarze WHERE lekarz_id = $1', [testDoctorId]);
+        await db.pool.query('DELETE FROM lekarze WHERE lekarz_id = $1', [testDoctorId]);
       }
+      // Close the pool connection
+      await db.pool.end();
       console.log('Test cleanup complete');
-
     } catch (error) {
       console.error('Test cleanup failed:', error);
     }
@@ -58,6 +58,43 @@ describe('Doctors API Integration Tests', () => {
       expect(res.statusCode).toBe(201);
       expect(res.body).toHaveProperty('lekarz_id');
       testDoctorId = res.body.lekarz_id; // Save the ID for later tests
+    });
+
+    it('should return 400 when name is missing', async () => {
+      const invalidDoctor = {
+        ...testDoctor,
+        imie: ''
+      };
+      const res = await request(app)
+        .post('/api/doctors')
+        .send(invalidDoctor);
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'Imię i nazwisko są wymagane');
+    });
+
+    it('should return 400 when surname is missing', async () => {
+      const invalidDoctor = {
+        ...testDoctor,
+        nazwisko: ''
+      };
+      const res = await request(app)
+        .post('/api/doctors')
+        .send(invalidDoctor);
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'Imię i nazwisko są wymagane');
+    });
+
+    it('should return 400 when both name and surname are missing', async () => {
+      const invalidDoctor = {
+        ...testDoctor,
+        imie: '',
+        nazwisko: ''
+      };
+      const res = await request(app)
+        .post('/api/doctors')
+        .send(invalidDoctor);
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error', 'Imię i nazwisko są wymagane');
     });
   }
   );

@@ -1,11 +1,20 @@
 const request = require('supertest');
 const app = require('../app');
-const { pool } = require('./helpers/db');
+const db = require('../model/DatabaseService');
 
 describe('Documents API Integration Tests', () => {
   // Use patient ID 1 for simplicity
   const patientId = 1;
 
+  afterAll(async () => {
+    try {
+      // Close the pool connection
+      await db.pool.end();
+      console.log('Test cleanup complete');
+    } catch (error) {
+      console.error('Test cleanup failed:', error);
+    }
+  });
 
   // Test getPatientDocuments endpoint
   describe('GET /api/documents/patient/:patientId/documents', () => {

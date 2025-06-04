@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../app'); // Import your Express app
-const { pool } = require('./helpers/db');
+const db = require('../model/DatabaseService');
 
 // Use a test database or specific test data that won't affect production
 describe('Appointment API Integration Tests', () => {
@@ -9,7 +9,7 @@ describe('Appointment API Integration Tests', () => {
   // Test data
   const testAppointment = {
     pacjent_id: 1, // Make sure this ID exists in your DB
-    data: '2025-06-01',
+    data: '2027-06-01', // wizyta jest do kardiologa na NFZ, dlatego taki szybki termin
     godzina: '10:00',
     lekarz_id: 1, // Make sure this ID exists in your DB
     rodzaj_wizyty_id: 1 // Make sure this ID exists in your DB
@@ -31,10 +31,11 @@ describe('Appointment API Integration Tests', () => {
     try {
       // Delete any test data created during tests
       if (testAppointmentId) {
-        await pool.query('DELETE FROM wizyty WHERE id = $1', [testAppointmentId]);
+        await db.query('DELETE FROM wizyty WHERE wizyta_id = $1', [testAppointmentId]);
       }
+      // Zamknij połączenie z bazą danych
+      await db.pool.end();
       console.log('Test cleanup complete');
-      
     } catch (error) {
       console.error('Test cleanup failed:', error);
     }
@@ -47,10 +48,42 @@ describe('Appointment API Integration Tests', () => {
         .send(testAppointment);
       
       expect(res.statusCode).toBe(201);
+      
+      // Sprawdź, czy odpowiedź zawiera identyfikator wizyty
       expect(res.body).toHaveProperty('wizyta_id');
       
       // Save the ID for later tests and cleanup
-      testAppointmentId = res.body.id;
+      testAppointmentId = res.body.wizyta_id;
+    });
+    
+    describe('validation tests', () => {
+      it('should reject appointment with invalid time format', async () => {
+        const invalidAppointment = {
+          ...testAppointment,
+          godzina: '25:00' // Invalid hour
+        };
+        const res = await request(app)
+          .post('/api/appointments')
+          .send(invalidAppointment);
+        
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty('error');
+      });
+
+      it('should reject appointment in the past', async () => {
+        const pastAppointment = {
+          ...testAppointment,
+          data: '2020-01-01'
+        };
+        const res = await request(app)
+          .post('/api/appointments')
+          .send(pastAppointment);
+        
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty('error');
+      });
+
+
     });
   });
   
@@ -72,7 +105,8 @@ describe('Appointment API Integration Tests', () => {
         .send(updatedData);
       
       expect(res.statusCode).toBe(200);
-      expect(res.body).toHaveProperty('godzina', '11:30');
+      // Sprawdź tylko czy godzina zaczyna się od "11:30", aby obsłużyć format "11:30:00"
+      expect(res.body.godzina.startsWith('11:30')).toBe(true);
     });
   });
   
@@ -104,13 +138,13 @@ describe('Appointment API Integration Tests', () => {
       const appointmentsRes = await request(app).get('/api/appointments');
       
       if (appointmentsRes.body.length > 0) {
-        const validId = appointmentsRes.body[0].id;
+        const validId = appointmentsRes.body[0].wizyta_id;
         
         const res = await request(app)
           .get(`/api/appointments/${validId}`);
         
         expect(res.statusCode).toBe(200);
-        expect(res.body).toHaveProperty('id', validId);
+        expect(res.body).toHaveProperty('wizyta_id', validId);
       } else {
         console.log('Skipping specific appointment test - no appointments found');
       }

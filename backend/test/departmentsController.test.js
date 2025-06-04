@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../app'); // Import your Express app
-const { pool } = require('./helpers/db');
+const db = require('../model/DatabaseService');
 
 // Use a test database or specific test data that won't affect production
 describe('Departments API Integration Tests', () => {

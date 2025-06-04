@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../app');
-const { pool } = require('./helpers/db');
+const db = require('../model/DatabaseService');
 
 describe('Documents API Integration Tests', () => {
   // Use patient ID 1 for simplicity

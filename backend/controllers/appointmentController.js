@@ -1,7 +1,4 @@
-// Lekarz: Wizyty
-// Obsługuje: PATCH /api/appointments/:id/status, DELETE /api/appointments/:id, PUT /api/appointments/:id, POST /api/appointments, POST /api/appointments/:id/approve
-
-const pool = require('../model/model');
+const db = require('../model/DatabaseService');
 
 // Walidacja formatu czasu (HH:MM)
 const validateTimeFormat = (time) => {
@@ -24,7 +21,7 @@ exports.deleteAppointment = async (req, res) => {
     const id = req.params.id;
   
     try {
-      await pool.query('DELETE FROM wizyty WHERE id = $1', [id]);
+      await db.deleteAppointment(id);
       res.json({ message: `Wizyta ${id} usunięta` });
     } catch (err) {
       console.error('Błąd przy usuwaniu wizyty:', err);
@@ -47,17 +44,10 @@ exports.updateAppointment = async (req, res) => {
         return res.status(400).json({ error: 'Data wizyty nie może być w przeszłości' });
     }
     try {
-        const result = await pool.query(
-            `UPDATE wizyty
-             SET data = $1, godzina = $2, lekarz_id = $3, rodzaj_wizyty_id = $4
-             WHERE id = $5 RETURNING *`,
-            [data, godzina, lekarz_id, rodzaj_wizyty_id, id]
-        );
-
+        const result = await db.updateAppointment(id, { data, godzina, lekarz_id, rodzaj_wizyty_id });
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Wizyta nie znaleziona' });
         }
-
         res.json(result.rows[0]);
     } catch (err) {
         console.error('Błąd przy aktualizacji wizyty:', err);
@@ -85,12 +75,7 @@ exports.createAppointment = async (req, res) => {
     }
 
     try {
-        const result = await pool.query(
-            `INSERT INTO wizyty (pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id)
-             VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-            [pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id]
-        );
-
+        const result = await db.createAppointment({ pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id });
         res.status(201).json(result.rows[0]);
     } catch (err) {
         console.error('Błąd przy tworzeniu wizyty:', err);

@@ -1,7 +1,4 @@
-// Administrator: Rejestracja i logowanie pacjentów i lekarzy
-// Obsługuje: POST /api/auth/register, POST /api/auth/login 
-
-const pool = require('../model/model');
+const db = require('../model/DatabaseService');
 
 // Funkcja walidacji emaila
 const validateEmail = (email) => {
@@ -23,16 +20,13 @@ exports.registerPatient = async (req, res) => {
   
     try {
       // Sprawdź czy email już istnieje w pacjentach
-      const exists = await pool.query('SELECT * FROM pacjenci WHERE email = $1', [email]);
+      const exists = await db.checkEmailExists(email);
       if (exists.rows.length > 0) {
         return res.status(400).json({ error: 'Email już jest zarejestrowany' });
       }
   
       // Dodaj pacjenta z hasłem w plain text
-      const result = await pool.query(
-        'INSERT INTO pacjenci (imie, nazwisko, email, haslo) VALUES ($1, $2, $3, $4) RETURNING pacjent_id, imie, nazwisko, email',
-        [imie, nazwisko, email, haslo]
-      );
+      const result = await db.registerPatient({ imie, nazwisko, email, haslo });
   
       res.status(201).json({ message: 'Pacjent zarejestrowany', patient: result.rows[0] });
     } catch (error) {
@@ -55,7 +49,7 @@ exports.login = async (req, res) => {
   
     try {
       // Szukaj w pacjentach
-      let result = await pool.query('SELECT * FROM pacjenci WHERE email = $1', [email]);
+      let result = await db.getPatientByEmail(email);
       if (result.rows.length > 0) {
         const user = result.rows[0];
         if (user.haslo !== haslo) {
@@ -74,7 +68,7 @@ exports.login = async (req, res) => {
       }
   
       // Szukaj w lekarzach
-      result = await pool.query('SELECT * FROM lekarze WHERE email = $1', [email]);
+      result = await db.getDoctorByEmail(email);
       if (result.rows.length > 0) {
         const user = result.rows[0];
         if (user.haslo !== haslo) {

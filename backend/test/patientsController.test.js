@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../app');
-const { pool } = require('./helpers/db');
+const db = require('../model/DatabaseService');
 
 describe('Patients API Integration Tests', () => {
   let testPatientId;
@@ -19,24 +19,24 @@ describe('Patients API Integration Tests', () => {
   beforeAll(async () => {
     try {
       // Create test patient
-      const patientResult = await pool.query(
+      const patientResult = await db.pool.query(
         'INSERT INTO pacjenci (imie, nazwisko, email, haslo) VALUES ($1, $2, $3, $4) RETURNING pacjent_id',
         [testPatient.imie, testPatient.nazwisko, testPatient.email, testPatient.haslo]
       );
       testPatientId = patientResult.rows[0].pacjent_id;
       
       // Get an existing doctor ID for doctor-patient tests
-      const doctorResult = await pool.query('SELECT lekarz_id FROM lekarze LIMIT 1');
+      const doctorResult = await db.pool.query('SELECT lekarz_id FROM lekarze LIMIT 1');
       if (doctorResult.rows.length > 0) {
         testDoctorId = doctorResult.rows[0].lekarz_id;
         
         // Create an appointment to link doctor and patient
         try {
           // First get a valid visit type ID
-          const visitTypeResult = await pool.query('SELECT rodzaj_wizyty_id FROM rodzaje_wizyt LIMIT 1');
+          const visitTypeResult = await db.pool.query('SELECT rodzaj_wizyty_id FROM rodzaje_wizyt LIMIT 1');
           const visitTypeId = visitTypeResult.rows[0]?.rodzaj_wizyty_id || 1;
           
-          await pool.query(
+          await db.pool.query(
             'INSERT INTO wizyty (pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id) VALUES ($1, $2, $3, $4, $5)',
             [testPatientId, '2025-06-10', '12:00', testDoctorId, visitTypeId]
           );
@@ -55,15 +55,15 @@ describe('Patients API Integration Tests', () => {
     try {
       if (testPatientId) {
         // First delete any appointments for this patient
-        await pool.query('DELETE FROM wizyty WHERE pacjent_id = $1', [testPatientId]);
+        await db.pool.query('DELETE FROM wizyty WHERE pacjent_id = $1', [testPatientId]);
         
         // Then delete the patient
-        await pool.query('DELETE FROM pacjenci WHERE pacjent_id = $1', [testPatientId]);
+        await db.pool.query('DELETE FROM pacjenci WHERE pacjent_id = $1', [testPatientId]);
         console.log(`Test patient ${testPatientId} removed`);
       }
       
       // Close the pool connection
-      await pool.end();
+      await db.pool.end();
       console.log('Test cleanup complete');
       
     } catch (error) {

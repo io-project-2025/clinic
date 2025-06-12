@@ -1,7 +1,7 @@
 import { AppBar, Toolbar, Typography, Button, Container, Grid, Card, CardContent, Box } from "@mui/material";
 import { Link as RouterLink } from "react-router";
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+
 
 const articles = [
 	{
@@ -55,15 +55,13 @@ export default function Home() {
 				</Typography>
 				<Grid container spacing={4}>
 					{articles.map((article, idx) => (
-						<Grid item xs={12} sm={6} md={3} key={idx}>
+						<Grid key={idx}>
 							<Card
 								sx={{
-									transition: "transform 0.3s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s",
-									"&:hover": {
-										transform: "scale(1.05)",
-										boxShadow: 6,
-									},
 									cursor: "pointer",
+									"&:hover .article-title": {
+										textDecoration: "underline",
+									},
 								}}
 							>
 								<Box
@@ -76,7 +74,16 @@ export default function Home() {
 									}}
 								/>
 								<CardContent>
-									<Typography variant="h6" gutterBottom>
+									<Typography
+										variant="h6"
+										gutterBottom
+										className="article-title"
+										sx={{
+											transition: "text-decoration 0.2s",
+											cursor: "pointer",
+											width: "fit-content",
+										}}
+									>
 										{article.title}
 									</Typography>
 									<Typography variant="body2" color="text.secondary">

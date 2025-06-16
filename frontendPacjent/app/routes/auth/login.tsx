@@ -16,10 +16,14 @@ export default function Login() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    let isSuccess = true; 
 
-    let isSuccess = true; // przydałoby się jeszcze zapisywać ID użytkownika w localStorage lub sessionStorage
-    if(isSuccess)
+    if(isSuccess){
         navigate("/panel");
+        const id = 1; // id uzytkownika ktory sie zalogował
+        localStorage.setItem("user", form.email.split("@")[0]); 
+        localStorage.setItem("id", id.toString()); // Simulacja ID użytkownika
+    }
     else
         alert("Błędny email lub hasło. Spróbuj ponownie.");
   };

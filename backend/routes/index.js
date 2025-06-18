@@ -1,4 +1,3 @@
-// index.js
 var express = require('express');
 var router = express.Router();
 
@@ -18,7 +17,7 @@ router.use('/api/documents', documentsRouter);
 router.use('/api/lab-results', labResultsRouter);
 router.use('/api/auth', authRouter);
 
-/* GET home page. */
+/* GET home page */
 router.get('/', function(req, res, next) {
   res.status(200).json({Works: true})
 });

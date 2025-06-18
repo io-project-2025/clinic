@@ -291,6 +291,23 @@ class DatabaseService {
     `;
     return this.query(query, [pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id]);
   }
+
+  /**
+   * Pobiera wizyty pacjenta
+   * @param {number} patientId - ID pacjenta
+   * @returns {Promise} - Lista wizyt pacjenta
+   */
+    async getAppointmentsByPatient(patientId) {
+      const query = `
+        SELECT * FROM wizyty
+        WHERE pacjent_id = $1
+        ORDER BY data DESC, godzina DESC
+      `;
+      return this.query(query, [patientId]);
+    }
+
 }
+
+
 
 module.exports = new DatabaseService();

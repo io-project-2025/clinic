@@ -7,6 +7,7 @@ export default [
     route("/register", "routes/auth/register.tsx"),
 
     route("/panel", "routes/panel/main.tsx", [
+        index("routes/panel/start.tsx"),
         route("/panel/umow-wizyte", "routes/panel/umow-wizyte.tsx"),
         route("/panel/wizyty", "routes/panel/wizyty.tsx"),
         route("/panel/badania", "routes/panel/badania.tsx"),

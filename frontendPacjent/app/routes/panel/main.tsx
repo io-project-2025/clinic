@@ -14,6 +14,8 @@ import {
   ListItemText,
   CssBaseline,
   Divider,
+  Avatar,
+  Paper,
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -122,6 +124,7 @@ function PanelSidebar({
   );
 }
 
+
 export default function PanelLayout() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -153,7 +156,6 @@ export default function PanelLayout() {
           bgcolor: "background.default",
           p: 3,
           pt: 10, 
-          ml: `${drawerWidth}px`,
           overflow: "auto", 
         }}
       >

@@ -11,21 +11,6 @@ exports.getDoctors = async (req, res) => {
     }
 };
 
-// Dodawanie nowego lekarza
-exports.createDoctor = async (req, res) => {
-    const { imie, nazwisko, email, haslo, oddzial_id } = req.body;
-    if (!imie || !nazwisko) {
-      return res.status(400).json({ error: 'Imię i nazwisko są wymagane' });
-    }
-    try {
-      const result = await db.createDoctor({ imie, nazwisko, email, haslo, oddzial_id });
-      res.status(201).json(result.rows[0]);
-    } catch (err) {
-      console.error('Błąd dodawania lekarza:', err);
-      res.status(500).json({ error: 'Błąd serwera' });
-    }
-};
-
 // Edytowanie lekarza
 exports.updateDoctor = async (req, res) => {
     const { doctorId } = req.params;
@@ -45,17 +30,3 @@ exports.updateDoctor = async (req, res) => {
     }
 };
 
-// Usuwanie lekarza
-exports.deleteDoctor = async (req, res) => {
-    const { doctorId } = req.params;
-    try {
-      const result = await db.deleteDoctor(doctorId);
-      if (result.rowCount === 0) {
-        return res.status(404).json({ error: 'Lekarz nie znaleziony' });
-      }
-      res.json({ message: `Lekarz ${doctorId} usunięty` });
-    } catch (err) {
-      console.error('Błąd usuwania lekarza:', err);
-      res.status(500).json({ error: 'Błąd serwera' });
-    }
-};

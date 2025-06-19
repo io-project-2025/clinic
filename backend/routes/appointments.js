@@ -13,22 +13,22 @@ router.post('/',
     appointmentController.createAppointment
 );
 
-router.put('/:id', 
-    authorizeRole(['lekarz']), 
+router.put('/:appointmentId', 
+    authorizeRole(['pacjent', 'lekarz']), 
     appointmentController.updateAppointment
 );
 
-router.delete('/:id', 
-    authorizeRole(['lekarz']), 
+router.delete('/:appointmentId', 
+    authorizeRole(['pacjent', 'lekarz']), 
     appointmentController.deleteAppointment
 );
 
-router.put('/:id/documents',
+router.put('/:appointmentId/documents',
     authorizeRole(['lekarz']),
     appointmentController.updateDocuments
 );
   
-router.put('/:id/notes',
+router.put('/:appointmentId/notes',
     authorizeRole(['lekarz']),
     appointmentController.updateNotes
 );

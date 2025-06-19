@@ -1,12 +1,16 @@
-// documents.js
 const express = require('express');
 const router = express.Router();
 const documentsController = require('../controllers/documentsController');
+const { authorizeRole } = require('../middleware/authMiddleware');
 
-// /api/documents/patient/:patientId/documents
-router.get('/patient/:patientId/documents', documentsController.getPatientDocuments);
+router.get('/patient/:patientId/documents', 
+    authorizeRole(['pacjent', 'lekarz']), 
+    documentsController.getPatientDocuments
+);
 
-// /api/documents/patient/:patientId/notes
-router.get('/patient/:patientId/notes', documentsController.getPatientNotes);
+router.get('/patient/:patientId/notes', 
+    authorizeRole(['pacjent', 'lekarz']), 
+    documentsController.getPatientNotes
+);
 
 module.exports = router;

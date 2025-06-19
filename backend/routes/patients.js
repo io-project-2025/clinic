@@ -1,12 +1,16 @@
-// patients.js
 const express = require('express');
 const router = express.Router();
 const patientsController = require('../controllers/patientsController');
+const { authorizeRole } = require('../middleware/authMiddleware');
 
-// Lista pacjentów lekarza
-router.get('/doctor/:doctorId/patients', patientsController.getDoctorPatients);
+router.get('/doctor/:doctorId/patients', 
+  authorizeRole(['lekarz']), 
+  patientsController.getDoctorPatients
+);
 
-// Szczegóły pacjenta
-router.get('/:patientId', patientsController.getPatientDetails);
+router.get('/:patientId', 
+  authorizeRole(['pacjent', 'lekarz']), 
+  patientsController.getPatientDetails
+);
 
 module.exports = router;

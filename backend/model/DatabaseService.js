@@ -285,12 +285,67 @@ class DatabaseService {
    */
   async createAppointment(appointmentData) {
     const { pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id } = appointmentData;
+    
+    const dokumenty_wizyty = { recepta: "", skierowanie: "" };
+    const notatki_wizyty = { objawy: "", diagnoza: "" };
+    
     const query = `
-      INSERT INTO wizyty (pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id)
-      VALUES ($1, $2, $3, $4, $5) RETURNING *
+      INSERT INTO wizyty 
+        (pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id, dokumenty_wizyty, notatki_wizyty)
+      VALUES ($1, $2, $3, $4, $5, $6, $7) 
+      RETURNING *
     `;
-    return this.query(query, [pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id]);
+    
+    return this.query(query, [
+      pacjent_id,
+      data,
+      godzina,
+      lekarz_id,
+      rodzaj_wizyty_id,
+      JSON.stringify(dokumenty_wizyty),
+      JSON.stringify(notatki_wizyty)
+    ]);
   }
+
+  /**
+   * Pobiera wizyty pacjenta
+   * @param {number} patientId - ID pacjenta
+   * @returns {Promise} - Lista wizyt pacjenta
+   */
+    async getAppointmentsByPatient(patientId) {
+      const query = `
+      SELECT w.wizyta_id, w.pacjent_id, w.lekarz_id, w.data, w.godzina, w.ocena,
+      r.opis AS rodzaj_wizyty_opis
+      FROM wizyty w
+      LEFT JOIN rodzaje_wizyt r ON w.rodzaj_wizyty_id = r.rodzaj_wizyty_id
+      WHERE w.pacjent_id = $1
+      ORDER BY w.data DESC, w.godzina DESC;
+      `;
+      return this.query(query, [patientId]);
+    }
+
+    /**
+     * Aktualizuje dokumenty wizyty (recepta, skierowanie).
+     * @param {number} appointmentId - ID wizyty
+     * @param {{ recepta?: string, skierowanie?: string }} documents - Dokumenty do zmiany
+     * @returns {Promise}
+     */
+    async updateAppointmentDocuments(appointmentId, documents) {
+      const query = 'UPDATE wizyty SET dokumenty_wizyty = $1 WHERE wizyta_id = $2';
+      return this.query(query, [documents, appointmentId]);
+    }
+
+    /**
+     * Aktualizuje notatki wizyty (objawy, diagnoza).
+     * @param {number} appointmentId - ID wizyty
+     * @param {{ objawy?: string, diagnoza?: string }} notes - Notatki do zmiany
+     * @returns {Promise}
+     */ 
+    async updateAppointmentNotes(appointmentId, notes) {
+      const query = 'UPDATE wizyty SET notatki_wizyty = $1 WHERE wizyta_id = $2';
+      return this.query(query, [notes, appointmentId]);
+    }
+
 }
 
 module.exports = new DatabaseService();

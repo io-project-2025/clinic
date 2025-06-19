@@ -76,7 +76,7 @@ exports.login = async (req, res) => {
       console.error('Błąd logowania:', error);
       res.status(500).json({ error: 'Błąd serwera' });
     }
-  };
+};
 
 // Pobranie profilu użytkownika (pacjent lub lekarz)
 exports.getUserProfile = async (req, res) => {

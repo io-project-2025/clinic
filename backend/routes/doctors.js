@@ -8,19 +8,9 @@ router.get('/',
     doctorsController.getDoctors
 );
 
-router.post('/', 
-    authorizeRole(['lekarz']), 
-    doctorsController.createDoctor
-);
-
 router.put('/:doctorId', 
     authorizeRole(['lekarz']), 
     doctorsController.updateDoctor
-);
-
-router.delete('/:doctorId', 
-    authorizeRole(['lekarz']), 
-    doctorsController.deleteDoctor
 );
 
 module.exports = router;

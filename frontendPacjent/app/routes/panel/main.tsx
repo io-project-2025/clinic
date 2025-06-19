@@ -40,7 +40,6 @@ function PanelAppBar() {
 
   const handleLogout = () => {
     navigate("/");
-    localStorage.removeItem("user")
     localStorage.removeItem("id");
   };
 
@@ -132,16 +131,10 @@ export default function PanelLayout() {
 
   useEffect(() => {
     // Sprawdzenie czy użytkownik jest zalogowany
-    const user = localStorage.getItem("user");
-    if (!user) {
+    const id = localStorage.getItem("id");
+    if (!id) {
       navigate("/login");
-    } else {
-      // Jeśli użytkownik jest zalogowany, sprawdź czy ma ID
-      const id = localStorage.getItem("id");
-      if (!id) {
-        navigate("/login");
-      }
-    }
+    } 
   }, [])
 
   return (

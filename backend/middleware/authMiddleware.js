@@ -19,3 +19,5 @@ function authorizeRole(allowedRoles = []) {
     next();
   };
 }
+
+module.exports = {authorizeRole}

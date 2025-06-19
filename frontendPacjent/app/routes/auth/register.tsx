@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, Container, TextField, Typography, Paper } from "@mui/material";
+import { Box, Button, Container, TextField, Typography, Paper, Alert } from "@mui/material";
 import { useNavigate } from "react-router";
 
 export default function Register() {
@@ -10,27 +10,56 @@ export default function Register() {
     firstName: "",
     lastName: "",
   });
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (form.password !== form.confirmPassword) {
-      alert("Hasła nie są takie same!");
+    setError("");
+
+    // Sprawdzenie czy wszystkie pola są wypełnione
+    if (
+      !form.firstName.trim() ||
+      !form.lastName.trim() ||
+      !form.email.trim() ||
+      !form.password.trim() ||
+      !form.confirmPassword.trim()
+    ) {
+      setError("Wszystkie pola muszą być wypełnione!");
       return;
     }
 
-    // tutaj wysłanie do backendu i sprawdzenie czy udała się rejestracja
-    let isSuccess = true; // symulacja sukcesu rejestracji
+    if (form.password !== form.confirmPassword) {
+      setError("Hasła nie są takie same!");
+      return;
+    }
 
-    if(isSuccess)
-        navigate("/login")
-    else
-        alert("Rejestracja nie powiodła się. Spróbuj ponownie.");
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: form.email,
+          haslo: form.password,
+          imie: form.firstName,
+          nazwisko: form.lastName,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data?.error || "Rejestracja nie powiodła się. Spróbuj ponownie.");
+        return;
+      }
+
+      navigate("/login");
+    } catch (err) {
+      setError("Błąd połączenia z serwerem.");
+    }
   };
 
   return (
@@ -88,6 +117,11 @@ export default function Register() {
             value={form.confirmPassword}
             onChange={handleChange}
           />
+          {error && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {error}
+            </Alert>
+          )}
           <Button
             type="submit"
             fullWidth

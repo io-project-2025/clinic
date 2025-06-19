@@ -1,40 +1,52 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Container, TextField, Typography, Paper } from "@mui/material";
+import { Box, Button, Container, TextField, Typography, Paper, Alert } from "@mui/material";
 import { useNavigate } from "react-router";
 
 export default function Login() {
-
-  useEffect( () => {
-    if(localStorage.getItem("user") && localStorage.getItem("id")) {
-      // Jeśli użytkownik jest już zalogowany, przekieruj go do panelu
-      navigate("/panel");
-    }
-  }, [])
-
-
   const [form, setForm] = useState({
     email: "",
-    password: "",
+    haslo: "",
   });
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem("id")) {
+      navigate("/panel");
+    }
+  }, [navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-  let isSuccess = true; 
+    setError("");
 
-    if(isSuccess){
-        navigate("/panel");
-        const id = 1; // id uzytkownika ktory sie zalogował
-        localStorage.setItem("user", form.email.split("@")[0]); 
-        localStorage.setItem("id", id.toString()); // Simulacja ID użytkownika
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data?.error || "Błędny email lub hasło. Spróbuj ponownie.");
+        return;
+      }
+
+      const data = await res.json();
+      localStorage.setItem("id", String(data.user.id));
+      localStorage.setItem("firstName", String(data.user.imie));
+      localStorage.setItem("lastName", String(data.user.nazwisko));
+      localStorage.setItem("email", String(data.user.email));
+
+      navigate("/panel");
+    } catch (err) {
+      setError("Błąd połączenia z serwerem.");
     }
-    else
-        alert("Błędny email lub hasło. Spróbuj ponownie.");
   };
 
   return (
@@ -59,11 +71,16 @@ export default function Login() {
             required
             fullWidth
             label="Hasło"
-            name="password"
+            name="haslo"
             type="password"
-            value={form.password}
+            value={form.haslo}
             onChange={handleChange}
           />
+          {error && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {error}
+            </Alert>
+          )}
           <Button
             type="submit"
             fullWidth

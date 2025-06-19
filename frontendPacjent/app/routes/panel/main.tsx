@@ -21,6 +21,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import EventIcon from "@mui/icons-material/Event";
 import ScienceIcon from "@mui/icons-material/Science";
 import DescriptionIcon from "@mui/icons-material/Description";
+import ContactMailIcon from "@mui/icons-material/ContactMail";
 
 const drawerWidth = 220;
 
@@ -29,7 +30,7 @@ const sidebarItems = [
     { text: "Twoje Wizyty", icon: <CalendarMonthIcon />, path: "wizyty" },
     { text: "Twoje Badania", icon: <ScienceIcon />, path: "badania" },
     { text: "Twoje Dokumenty", icon: <DescriptionIcon />, path: "dokumenty" },
-
+    { text: "Kontakt z doktorem", icon: <ContactMailIcon />, path: "kontakt" },
 ];
 
 function PanelAppBar() {

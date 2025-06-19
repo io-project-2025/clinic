@@ -70,7 +70,7 @@ exports.updateDocuments = async (req, res) => {
 
   try {
     await db.updateAppointmentDocuments(id, { recepta, skierowanie });
-    res.json({ message: 'Dokumenty wizyty zaktualizowane', data: { recepta, skierowanie } });
+    res.status(200).json({ recepta, skierowanie });
   } catch (err) {
     console.error('Błąd przy aktualizacji dokumentów wizyty:', err);
     res.status(500).json({ error: 'Błąd serwera przy aktualizacji dokumentów' });
@@ -84,7 +84,7 @@ exports.updateNotes = async (req, res) => {
 
   try {
     await db.updateAppointmentNotes(id, { objawy, diagnoza });
-    res.json({ message: 'Notatki wizyty zaktualizowane', data: { objawy, diagnoza } });
+    res.status(200).json({ objawy, diagnoza });
   } catch (err) {
     console.error('Błąd przy aktualizacji notatek wizyty:', err);
     res.status(500).json({ error: 'Błąd serwera przy aktualizacji notatek' });

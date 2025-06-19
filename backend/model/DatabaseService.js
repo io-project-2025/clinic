@@ -23,6 +23,25 @@ class DatabaseService {
     }
   }
 
+  /**
+   * Pobiera pacjenta na postawie ID
+   * @param {number} doctorId - ID pacjenta
+   * @returns {Promise} - Szczegóły pacjenta
+   */
+  async getPatientById(id) {
+    const query = 'SELECT * FROM pacjenci WHERE pacjent_id = $1';
+    return this.query(query, [id]);
+  }
+  /**
+   * Pobiera lekarza na podstawie ID
+   * @param {number} doctorId - ID lekarza
+   * @returns {Promise} - Szczegóły lekarza
+   */
+  async getDoctorById(id) {
+    const query = 'SELECT * FROM lekarze WHERE lekarz_id = $1';
+    return this.query(query, [id]);
+  }
+
   // ==================== PACJENCI ====================
 
   /**

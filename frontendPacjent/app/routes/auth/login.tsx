@@ -1,8 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Button, Container, TextField, Typography, Paper } from "@mui/material";
 import { useNavigate } from "react-router";
 
 export default function Login() {
+
+  useEffect( () => {
+    if(localStorage.getItem("user") && localStorage.getItem("id")) {
+      // Jeśli użytkownik jest już zalogowany, przekieruj go do panelu
+      navigate("/panel");
+    }
+  }, [])
+
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -16,7 +25,7 @@ export default function Login() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    let isSuccess = true; 
+  let isSuccess = true; 
 
     if(isSuccess){
         navigate("/panel");

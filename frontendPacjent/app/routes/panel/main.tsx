@@ -1,5 +1,5 @@
 import {useEffect} from 'react'
-import { Outlet, useNavigate, useLocation } from "react-router";
+import { Outlet, useNavigate, useLocation, Link as RouterLink } from "react-router";
 import {
   Box,
   AppBar,
@@ -50,7 +50,14 @@ function PanelAppBar() {
       }}
     >
       <Toolbar>
-        <IconButton color="inherit" edge="start" sx={{ mr: 1 }}>
+        <IconButton
+          color="inherit"
+          edge="start"
+          sx={{ mr: 1 }}
+          component={RouterLink}
+          to="/panel/"
+          aria-label="Panel główny"
+        >
           <HomeIcon />
         </IconButton>
         <IconButton color="inherit" edge="start" sx={{ mr: 2 }}>
@@ -66,7 +73,6 @@ function PanelAppBar() {
             sx={{ ml: 2 }}
             aria-label="Wyloguj się"
           >
-            {/* Możesz użyć innej ikony, np. Logout */}
             <Typography variant="button" sx={{ fontWeight: 600 }}>
               Wyloguj
             </Typography>

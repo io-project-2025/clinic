@@ -5,20 +5,17 @@
  */
 function authorizeRole(allowedRoles = []) {
   return (req, res, next) => {
-    // Pobierz rolę użytkownika z nagłówka
     const userRole = req.headers['x-user-role'];
-    
-    // Sprawdź czy rola istnieje i czy jest dozwolona
+    const userId = req.headers['x-user-id'];
+
     if (!userRole || !allowedRoles.includes(userRole)) {
       return res.status(403).json({ error: 'Brak dostępu' });
     }
-    
-    // Dodaj rolę do obiektu req dla łatwego dostępu w kontrolerach
-    req.userRole = userRole;
-    
-    // Kontynuuj przetwarzanie żądania
+    if (!userId) {
+      return res.status(400).json({ error: 'Brak id użytkownika w nagłówkach' });
+    }
+
+    req.user = { id: userId, role: userRole };
     next();
   };
 }
-
-module.exports = { authorizeRole };

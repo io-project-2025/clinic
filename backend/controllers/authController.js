@@ -77,3 +77,44 @@ exports.login = async (req, res) => {
       res.status(500).json({ error: 'Błąd serwera' });
     }
   };
+
+// Pobranie profilu użytkownika (pacjent lub lekarz)
+exports.getUserProfile = async (req, res) => {
+  const { id, role } = req.user;
+
+  try {
+    let result;
+    if (role === 'pacjent') {
+      result = await db.getPatientById(id);
+    } else if (role === 'lekarz') {
+      result = await db.getDoctorById(id);
+    } else {
+      return res.status(400).json({ error: 'Nieznana rola użytkownika' });
+    }
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Użytkownik nie znaleziony' });
+    }
+
+    const user = result.rows[0];
+    res.json({
+      id,
+      role,
+      imie: user.imie,
+      nazwisko: user.nazwisko,
+      email: user.email,
+      ...(role === 'lekarz' && { oddzial_id: user.oddzial_id }),
+    });
+  } catch (error) {
+    console.error('Błąd pobierania profilu użytkownika:', error);
+    res.status(500).json({ error: 'Błąd serwera' });
+  }
+};
+
+// Wylogowanie użytkownika
+exports.logout = (req, res) => {
+  // Jeśli sesja, tu ją zniszczysz
+  // Jeśli tokeny — frontend powinien po prostu usunąć token
+  // Ta aplikacja nie zawiera tokenów ani sesji, więc po prostu zwraca komunikat
+  res.json({ message: 'Wylogowano pomyślnie' });
+};

@@ -5,7 +5,8 @@ const { authorizeRole } = require('../middleware/authMiddleware');
 
 router.get('/', 
     authorizeRole(['pacjent', 'lekarz']), 
-    departmentsController.getDepartments);
+    departmentsController.getDepartments
+);
 
 router.post('/', 
     authorizeRole(['lekarz']), 

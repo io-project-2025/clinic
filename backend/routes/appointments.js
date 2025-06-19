@@ -3,7 +3,7 @@ const router = express.Router();
 const appointmentController = require('../controllers/appointmentController');
 const { authorizeRole } = require('../middleware/authMiddleware');
 
-router.get('/patient/:patientId', 
+router.get('/patient/:patientId',
     authorizeRole(['pacjent']), 
     appointmentController.getPatientAppointments
 );
@@ -21,6 +21,16 @@ router.put('/:id',
 router.delete('/:id', 
     authorizeRole(['lekarz']), 
     appointmentController.deleteAppointment
+);
+
+router.put('/:id/documents',
+    authorizeRole(['lekarz']),
+    appointmentController.updateDocuments
+);
+  
+router.put('/:id/notes',
+    authorizeRole(['lekarz']),
+    appointmentController.updateNotes
 );
 
 module.exports = router;

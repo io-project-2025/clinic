@@ -24,8 +24,8 @@ exports.registerPatient = async (req, res) => {
     }
   };
   
-  // Logowanie (pacjent lub lekarz, plain text password)
-  exports.login = async (req, res) => {
+// Logowanie (pacjent lub lekarz, plain text password)
+exports.login = async (req, res) => {
     const { email, haslo } = req.body;
     if (!email || !haslo) {
       return res.status(400).json({ error: 'Email i hasło są wymagane' });

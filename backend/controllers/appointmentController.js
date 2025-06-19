@@ -62,3 +62,31 @@ exports.getPatientAppointments = async (req, res) => {
     res.status(500).json({ error: 'Błąd serwera przy pobieraniu wizyt' });
   }
 };
+
+// aktualizacja dokumentów wizyty
+exports.updateDocuments = async (req, res) => {
+  const { id } = req.params;
+  const { recepta = '', skierowanie = '' } = req.body;
+
+  try {
+    await db.updateAppointmentDocuments(id, { recepta, skierowanie });
+    res.status(200).json({ recepta, skierowanie });
+  } catch (err) {
+    console.error('Błąd przy aktualizacji dokumentów wizyty:', err);
+    res.status(500).json({ error: 'Błąd serwera przy aktualizacji dokumentów' });
+  }
+};
+
+// aktualizacja notatek wizyty
+exports.updateNotes = async (req, res) => {
+  const { id } = req.params;
+  const { objawy = '', diagnoza = '' } = req.body;
+
+  try {
+    await db.updateAppointmentNotes(id, { objawy, diagnoza });
+    res.status(200).json({ objawy, diagnoza });
+  } catch (err) {
+    console.error('Błąd przy aktualizacji notatek wizyty:', err);
+    res.status(500).json({ error: 'Błąd serwera przy aktualizacji notatek' });
+  }
+};

@@ -9,22 +9,28 @@ router.get('/patient/:patientId',
     appointmentController.getPatientAppointments
 );
 
-// Stwórz nową wizytę
+// Stwórz nową wizytę - domyślny status to 'zaplanowana'
 router.post('/', 
     authorizeRole(['pacjent', 'lekarz']), 
     appointmentController.createAppointment
 );
 
-// Zaktualizuj szczegóły wizyty
-router.put('/:appointmentId', 
-    authorizeRole(['pacjent', 'lekarz']), 
-    appointmentController.updateAppointment
+// Anulowanie wizyty
+router.put('/:appointmentId/cancel', 
+    authorizeRole(['lekarz', 'pacjent']), 
+    appointmentController.cancelAppointment
 );
 
-// Usuń wizytę
-router.delete('/:appointmentId', 
-    authorizeRole(['pacjent', 'lekarz']), 
-    appointmentController.deleteAppointment
+// Oznaczenie wizyty jako zrealizowana
+router.put('/:appointmentId/done', 
+    authorizeRole(['lekarz']), 
+    appointmentController.markAppointmentDone
+);
+
+// Oznaczenie wizyty jako nieobecność pacjenta
+router.put('/:appointmentId/no-show', 
+    authorizeRole(['lekarz']), 
+    appointmentController.markNoShow
 );
 
 // Zaktualizuj dokumenty wizyty

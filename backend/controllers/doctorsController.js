@@ -78,3 +78,16 @@ exports.getDoctorDetails = async (req, res) => {
     res.status(500).json({ error: 'Błąd serwera podczas pobierania lekarza.' });
   }
 };
+
+// Pobiera wszystkich pacjentów danego lekarza (na podstawie wizyt)
+exports.getDoctorPatients = async (req, res) => {
+  const { doctorId } = req.params;
+
+  try {
+    const result = await db.getDoctorPatients(doctorId);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Błąd pobierania pacjentów lekarza:', error);
+    res.status(500).json({ error: 'Błąd serwera podczas pobierania pacjentów.' });
+  }
+};

@@ -101,12 +101,6 @@ export default function Start() {
       path: "patients",
     },
     {
-      title: "Dane pacjentów",
-      value: data.historia,
-      description: "Przeglądaj historię leczenia pacjentów",
-      path: "patients", 
-    },
-    {
       title: "Prośby wizyt",
       value: data.badania,
       description: "Przyjmij lub dostosuj wizyty pacjentów",

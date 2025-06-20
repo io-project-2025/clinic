@@ -1,18 +1,5 @@
 const db = require('../model/DatabaseService');
 
-// Pobiera wszystkich pacjentów danego lekarza (na podstawie wizyt)
-exports.getDoctorPatients = async (req, res) => {
-  const { doctorId } = req.params;
-
-  try {
-    const result = await db.getDoctorPatients(doctorId);
-    res.status(200).json(result.rows);
-  } catch (error) {
-    console.error('Błąd pobierania pacjentów lekarza:', error);
-    res.status(500).json({ error: 'Błąd serwera podczas pobierania pacjentów.' });
-  }
-};
-
 // Pobiera szczegóły konkretnego pacjenta
 exports.getPatientDetails = async (req, res) => {
   const { patientId } = req.params;

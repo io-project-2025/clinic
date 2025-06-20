@@ -1,7 +1,7 @@
 const db = require('../model/DatabaseService');
 
-// Usunięcie wizyty
-exports.deleteAppointment = async (req, res) => {
+// Odwołanie wizyty
+exports.cancelAppointment = async (req, res) => {
   const id = req.params.id;
 
   try {
@@ -10,18 +10,17 @@ exports.deleteAppointment = async (req, res) => {
       return res.status(404).json({ error: 'Wizyta nie znaleziona' });
     }
 
-    await db.deleteAppointment(id);
-    res.json({ message: `Wizyta ${id} usunięta` });
+    const result = await db.updateAppointmentStatus(id, 'odwolana');
+    res.json({ message: `Wizyta ${id} anulowana`, appointment: result.rows[0] });
   } catch (err) {
-    console.error('Błąd przy usuwaniu wizyty:', err);
-    res.status(500).json({ error: 'Błąd serwera przy usuwaniu' });
+    console.error('Błąd przy anulowaniu wizyty:', err);
+    res.status(500).json({ error: 'Błąd serwera' });
   }
 };
 
-// Aktualizacja wizyty
-exports.updateAppointment = async (req, res) => {
+// Ustaw status na 'zrealizowana'
+exports.markAppointmentDone = async (req, res) => {
   const id = req.params.id;
-  const { data, godzina, lekarz_id, rodzaj_wizyty_id } = req.body;
 
   try {
     const appointmentResult = await db.getAppointmentById(id);
@@ -29,11 +28,29 @@ exports.updateAppointment = async (req, res) => {
       return res.status(404).json({ error: 'Wizyta nie znaleziona' });
     }
 
-    const result = await db.updateAppointment(id, { data, godzina, lekarz_id, rodzaj_wizyty_id });
-    res.json(result.rows[0]);
+    const result = await db.updateAppointmentStatus(id, 'zrealizowana');
+    res.json({ message: `Wizyta ${id} oznaczona jako zrealizowana`, appointment: result.rows[0] });
   } catch (err) {
-    console.error('Błąd przy aktualizacji wizyty:', err);
-    res.status(500).json({ error: 'Błąd serwera przy aktualizacji' });
+    console.error('Błąd przy aktualizacji statusu wizyty:', err);
+    res.status(500).json({ error: 'Błąd serwera' });
+  }
+};
+
+// Ustaw status na 'nieobecność pacjenta'
+exports.markNoShow = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const appointmentResult = await db.getAppointmentById(id);
+    if (appointmentResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Wizyta nie znaleziona' });
+    }
+
+    const result = await db.updateAppointmentStatus(id, 'nieobecność pacjenta');
+    res.json({ message: `Wizyta ${id} oznaczona jako nieobecność pacjenta`, appointment: result.rows[0] });
+  } catch (err) {
+    console.error('Błąd przy aktualizacji statusu wizyty:', err);
+    res.status(500).json({ error: 'Błąd serwera' });
   }
 };
 
@@ -91,7 +108,7 @@ exports.updateNotes = async (req, res) => {
   }
 };
 
-// Ocena wizyty przez pacjenta – uproszczona wersja
+// Ocena wizyty przez pacjenta
 exports.rateAppointment = async (req, res) => {
   const { id: pacjentId } = req.user;
   const { wizytaId, ocena } = req.body;

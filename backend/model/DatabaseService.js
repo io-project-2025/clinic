@@ -314,29 +314,19 @@ class DatabaseService {
   // ==================== WIZYTY ====================
 
   /**
-   * Usuwa wizytę
+   * Aktualizuje status wizyty
    * @param {number} appointmentId - ID wizyty
-   * @returns {Promise} - Wynik operacji
-   */
-  async deleteAppointment(appointmentId) {
-    const query = 'DELETE FROM wizyty WHERE wizyta_id = $1';
-    return this.query(query, [appointmentId]);
-  }
-
-  /**
-   * Aktualizuje wizytę
-   * @param {number} appointmentId - ID wizyty
-   * @param {Object} appointmentData - Dane wizyty
+   * @param {string} status - Nowy status wizyty ('zaplanowana', 'zrealizowana', 'nieobecność pacjenta', 'odwołana')
    * @returns {Promise} - Zaktualizowana wizyta
    */
-  async updateAppointment(appointmentId, appointmentData) {
-    const { data, godzina, lekarz_id, rodzaj_wizyty_id } = appointmentData;
+  async updateAppointmentStatus(appointmentId, status) {
     const query = `
       UPDATE wizyty
-      SET data = $1, godzina = $2, lekarz_id = $3, rodzaj_wizyty_id = $4
-      WHERE wizyta_id = $5 RETURNING *
+      SET status = $1
+      WHERE wizyta_id = $2
+      RETURNING *
     `;
-    return this.query(query, [data, godzina, lekarz_id, rodzaj_wizyty_id, appointmentId]);
+    return this.query(query, [status, appointmentId]);
   }
 
   /**

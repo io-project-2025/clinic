@@ -30,7 +30,7 @@ exports.updateDoctor = async (req, res) => {
     }
 };
 
-// Dodawanie nowego lekarzaAdd commentMore actions
+// Dodawanie nowego lekarza
 exports.createDoctor = async (req, res) => {
   const { imie, nazwisko, email, haslo, oddzial_id } = req.body;
   if (!imie || !nazwisko) {
@@ -46,7 +46,7 @@ exports.createDoctor = async (req, res) => {
 };
 
 
-// Usuwanie lekarzaAdd commentMore actions
+// Usuwanie lekarza
 exports.deleteDoctor = async (req, res) => {
   const { doctorId } = req.params;
   try {
@@ -79,7 +79,7 @@ exports.getDoctorDetails = async (req, res) => {
   }
 };
 
-// Pobiera wszystkich pacjentów danego lekarza (na podstawie wizyt)
+// Pobiera wszystkich pacjentów danego lekarza
 exports.getDoctorPatients = async (req, res) => {
   const { doctorId } = req.params;
 

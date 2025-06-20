@@ -30,3 +30,15 @@ exports.getPatientDetails = async (req, res) => {
     res.status(500).json({ error: 'Błąd serwera podczas pobierania pacjenta.' });
   }
 };
+
+// Pobiera wszystkich pacjentów
+exports.getAllPatients = async (req, res) => {
+  try {
+    const result = await db.getAllPatients();
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Błąd pobierania pacjentów:', error);
+    res.status(500).json({ error: 'Błąd serwera podczas pobierania pacjentów.' });
+  }
+};

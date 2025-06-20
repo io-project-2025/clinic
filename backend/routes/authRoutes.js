@@ -5,7 +5,7 @@ const { authorizeRole } = require('../middleware/authMiddleware');
 
 router.post('/register', authController.registerPatient);
 router.post('/login', authController.login);
-router.get('/profile', authorizeRole(['pacjent', 'lekarz']), authController.getUserProfile);
-router.post('/logout', authorizeRole(['pacjent', 'lekarz']), authController.logout);
+router.get('/profile', authorizeRole(['pacjent', 'lekarz', 'admin']), authController.getUserProfile);
+router.post('/logout', authorizeRole(['pacjent', 'lekarz', 'admin']), authController.logout);
 
 module.exports = router;

@@ -4,22 +4,22 @@ const departmentsController = require('../controllers/departmentsController');
 const { authorizeRole } = require('../middleware/authMiddleware');
 
 router.get('/', 
-    authorizeRole(['pacjent', 'lekarz']), 
+    authorizeRole(['pacjent', 'lekarz', 'admin']), 
     departmentsController.getDepartments
 );
 
 router.post('/', 
-    authorizeRole(['lekarz']), 
+    authorizeRole(['admin']), 
     departmentsController.createDepartment
 );
 
 router.put('/:departmentId', 
-    authorizeRole(['lekarz']), 
+    authorizeRole(['admin']), 
     departmentsController.updateDepartment
 );
 
 router.delete('/:departmentId', 
-    authorizeRole(['lekarz']), 
+    authorizeRole(['admin']), 
     departmentsController.deleteDepartment
 );
 

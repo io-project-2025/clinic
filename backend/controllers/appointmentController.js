@@ -90,3 +90,17 @@ exports.updateNotes = async (req, res) => {
     res.status(500).json({ error: 'Błąd serwera przy aktualizacji notatek' });
   }
 };
+
+// Ocena wizyty przez pacjenta – uproszczona wersja
+exports.rateAppointment = async (req, res) => {
+  const { id: pacjentId } = req.user;
+  const { wizytaId, ocena } = req.body;
+
+  try {
+    await db.rateAppointment(wizytaId, pacjentId, ocena);
+    res.json({ message: 'Ocena zapisana' });
+  } catch (err) {
+    console.error('Błąd zapisu oceny:', err);
+    res.status(500).json({ error: 'Błąd serwera' });
+  }
+};

@@ -389,7 +389,7 @@ class DatabaseService {
      * Aktualizuje dokumenty wizyty (recepta, skierowanie).
      * @param {number} appointmentId - ID wizyty
      * @param {{ recepta?: string, skierowanie?: string }} documents - Dokumenty do zmiany
-     * @returns {Promise}
+     * @returns {Promise} - Wynik operacji aktualizacji
      */
     async updateAppointmentDocuments(appointmentId, documents) {
       const query = 'UPDATE wizyty SET dokumenty_wizyty = $1 WHERE wizyta_id = $2';
@@ -400,11 +400,64 @@ class DatabaseService {
      * Aktualizuje notatki wizyty (objawy, diagnoza).
      * @param {number} appointmentId - ID wizyty
      * @param {{ objawy?: string, diagnoza?: string }} notes - Notatki do zmiany
-     * @returns {Promise}
+     * @returns {Promise} - Wynik operacji aktualizacji
      */ 
     async updateAppointmentNotes(appointmentId, notes) {
       const query = 'UPDATE wizyty SET notatki_wizyty = $1 WHERE wizyta_id = $2';
       return this.query(query, [notes, appointmentId]);
+    }
+
+    /**
+     * Ocenia wizytę pacjenta.
+     * @param {number} wizytaId - ID wizyty
+     * @param {number} pacjentId - ID pacjenta
+     * @param {number} ocena - Ocena wizyty
+     * @returns {Promise} - Wynik operacji aktualizacji oceny wizyty
+     */ 
+    async rateAppointment(wizytaId, pacjentId, ocena) {
+      const query = `
+        UPDATE wizyty 
+        SET ocena = $1 
+        WHERE wizyta_id = $2 AND pacjent_id = $3
+        RETURNING *;
+      `;
+      return this.query(query, [ocena, wizytaId, pacjentId]);
+    }
+
+
+    // ==================== WIADOMOŚCI ====================
+
+    /**
+     * Wysyła wiadomość między pacjentem a lekarzem
+     * @param {number} pacjentId - ID pacjenta
+     * @param {number} lekarzId - ID lekarza
+     * @param {'pacjent'|'lekarz'} nadawca - Nadawca wiadomości
+     * @param {string} tresc - Treść wiadomości
+     * @returns {Promise} - Wynik operacji (wstawiona wiadomość)
+     */
+    async sendMessage(pacjentId, lekarzId, nadawca, tresc) {
+      const query = `
+        INSERT INTO wiadomosci (pacjent_id, lekarz_id, nadawca, tresc)
+        VALUES ($1, $2, $3::nadawca_typ, $4)
+        RETURNING *;
+      `;
+      return this.query(query, [pacjentId, lekarzId, nadawca, tresc]);
+    }
+    
+
+    /**
+     * Pobiera wszystkie wiadomości między pacjentem a lekarzem
+     * @param {number} pacjentId - ID pacjenta
+     * @param {number} lekarzId - ID lekarza
+     * @returns {Promise} - Wynik operacji z wiadomościami
+     */
+    async getMessagesBetween(pacjentId, lekarzId) {
+      const query = `
+        SELECT * FROM wiadomosci
+        WHERE pacjent_id = $1 AND lekarz_id = $2
+        ORDER BY data ASC;
+      `;
+      return this.query(query, [pacjentId, lekarzId]);
     }
 
 }

@@ -39,4 +39,11 @@ router.put('/:appointmentId/notes',
     appointmentController.updateNotes
 );
 
+// Oceń wizytę
+router.post('/:appointmentId/rate', 
+    authorizeRole(['pacjent']), 
+    appointmentController.rateAppointment
+);
+
+
 module.exports = router;

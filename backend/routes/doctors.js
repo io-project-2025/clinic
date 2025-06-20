@@ -30,13 +30,13 @@ router.delete('/:doctorId',
 // Pobierz szczegóły konkretnego lekarza
 router.get('/:doctorId', 
     authorizeRole(['admin']), 
-    controller.getDoctorDetails
+    doctorsController.getDoctorDetails
 );
 
 // Pobierz pacjentów przypisanych do konkretnego lekarza
 router.get('/:doctorId/patients', 
   authorizeRole(['lekarz']), 
-  patientsController.getDoctorPatients
+  doctorsController.getDoctorPatients
 );
 
 module.exports = router;

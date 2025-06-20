@@ -14,7 +14,7 @@ router.get('/:patientId',
 // Pobierz wszystkich pacjentów
 router.get('/', 
   authorizeRole(['admin']), 
-  controller.getAllPatients
+  patientsController.getAllPatients
 );
 
 // Pobierz wyniki badań konkretnego pacjenta

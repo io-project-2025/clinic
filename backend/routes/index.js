@@ -4,16 +4,16 @@ var router = express.Router();
 const appointmentsRouter = require('./appointments');
 const departmentsRouter = require('./departments');
 const doctorsRouter = require('./doctors');
-const documentsRouter = require('./documents');
-const labResultsRouter = require('./labResults');
 const patientsRouter = require('./patients');
-const authRouter = require('./authRoutes');
+const authRouter = require('./auth');
+const messagesRouter = require('./messages');
 
 router.use('/api/appointments', appointmentsRouter);
 router.use('/api/departments', departmentsRouter);
 router.use('/api/doctors', doctorsRouter);
 router.use('/api/patients', patientsRouter);
 router.use('/api/auth', authRouter);
+router.use('/api/messages', messagesRouter);
 
 /* GET home page */
 router.get('/', function(req, res, next) {

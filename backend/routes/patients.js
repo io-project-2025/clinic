@@ -13,4 +13,9 @@ router.get('/:patientId',
   patientsController.getPatientDetails
 );
 
+router.get('/patients', 
+  authorizeRole(['admin']), 
+  controller.getAllPatients
+);
+
 module.exports = router;

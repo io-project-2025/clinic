@@ -23,25 +23,6 @@ class DatabaseService {
     }
   }
 
-  /**
-   * Pobiera pacjenta na postawie ID
-   * @param {number} doctorId - ID pacjenta
-   * @returns {Promise} - Szczegóły pacjenta
-   */
-  async getPatientById(id) {
-    const query = 'SELECT * FROM pacjenci WHERE pacjent_id = $1';
-    return this.query(query, [id]);
-  }
-  /**
-   * Pobiera lekarza na podstawie ID
-   * @param {number} doctorId - ID lekarza
-   * @returns {Promise} - Szczegóły lekarza
-   */
-  async getDoctorById(id) {
-    const query = 'SELECT * FROM lekarze WHERE lekarz_id = $1';
-    return this.query(query, [id]);
-  }
-
   // ==================== PACJENCI ====================
 
   /**
@@ -71,6 +52,12 @@ class DatabaseService {
       WHERE pacjent_id = $1
     `;
     return this.query(query, [patientId]);
+  }
+
+  // Pobiera wszystkich pacjentów
+  async getAllPatients() {
+    const query = 'SELECT * FROM pacjenci';
+    return this.query(query);
   }
 
   // ==================== WYNIKI BADAŃ ====================
@@ -179,6 +166,13 @@ class DatabaseService {
     return this.query(query, [doctorId]);
   }
 
+  // Pobiera lekarza po ID
+  async getDoctorById(doctorId) {
+    const query = 'SELECT * FROM lekarze WHERE lekarz_id = $1';
+    return this.query(query, [doctorId]);
+  }
+
+
   // ==================== ODDZIAŁY ====================
 
   /**
@@ -230,8 +224,16 @@ class DatabaseService {
    * @param {string} email - Email do sprawdzenia
    * @returns {Promise} - Wynik sprawdzenia
    */
-  async checkEmailExists(email) {
-    const query = 'SELECT * FROM pacjenci WHERE email = $1';
+  async checkPatientEmailExists(email) {
+    const query = 'SELECT 1 FROM pacjenci WHERE email = $1';
+    return this.query(query, [email]);
+  }
+  async checkDoctorEmailExists(email) {
+    const query = 'SELECT 1 FROM lekarze WHERE email = $1';
+    return this.query(query, [email]);
+  }
+  async checkAdminEmailExists(email) {
+    const query = 'SELECT 1 FROM admini WHERE email = $1';
     return this.query(query, [email]);
   }
 
@@ -267,6 +269,46 @@ class DatabaseService {
   async getDoctorByEmail(email) {
     const query = 'SELECT * FROM lekarze WHERE email = $1';
     return this.query(query, [email]);
+  }
+
+  /**
+   * Pobiera administratora na podstawie emaila
+   * @param {string} email - Email admina
+   * @returns {Promise} - Dane administratora
+   */getAdminByEmail
+   async getAdminByEmail(email) {
+    const query = 'SELECT * FROM admini WHERE email = $1';
+    return this.query(query, [email]);
+  }
+
+  /**
+   * Pobiera pacjenta na postawie ID
+   * @param {number} doctorId - ID pacjenta
+   * @returns {Promise} - Szczegóły pacjenta
+   */
+  async getPatientById(id) {
+    const query = 'SELECT * FROM pacjenci WHERE pacjent_id = $1';
+    return this.query(query, [id]);
+  }
+
+  /**
+   * Pobiera lekarza na podstawie ID
+   * @param {number} doctorId - ID lekarza
+   * @returns {Promise} - Szczegóły lekarza
+   */
+  async getDoctorById(id) {
+    const query = 'SELECT * FROM lekarze WHERE lekarz_id = $1';
+    return this.query(query, [id]);
+  }
+
+  /**
+   * Pobiera administratora na podstawie ID
+   * @param {number} id - ID administratora
+   * @returns {Promise} - Dane administratora
+   */
+  async getAdminById(id) {
+    const query = 'SELECT * FROM admini WHERE admin_id = $1';
+    return this.query(query, [id]);
   }
 
   // ==================== WIZYTY ====================

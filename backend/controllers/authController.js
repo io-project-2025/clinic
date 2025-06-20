@@ -8,15 +8,23 @@ exports.registerPatient = async (req, res) => {
     }
   
     try {
-      // Sprawdź czy email już istnieje w pacjentach
-      const exists = await db.checkEmailExists(email);
-      if (exists.rows.length > 0) {
+      // Sprawdź czy email już istnieje w pacjentach, lekarzach lub administratorach
+      const [patientExists, doctorExists, adminExists] = await Promise.all([
+        db.checkPatientEmailExists(email),
+        db.checkDoctorEmailExists(email),
+        db.checkAdminEmailExists(email),
+      ]);
+      
+      if (
+        patientExists.rows.length > 0 ||
+        doctorExists.rows.length > 0 ||
+        adminExists.rows.length > 0
+      ) {
         return res.status(400).json({ error: 'Email już jest zarejestrowany' });
       }
   
       // Dodaj pacjenta z hasłem w plain text
       const result = await db.registerPatient({ imie, nazwisko, email, haslo });
-  
       res.status(201).json({ message: 'Pacjent zarejestrowany', patient: result.rows[0] });
     } catch (error) {
       console.error('Błąd rejestracji pacjenta:', error);
@@ -71,6 +79,25 @@ exports.login = async (req, res) => {
         });
       }
   
+      // Szukaj w adminach
+      result = await db.getAdminByEmail(email);
+      if (result.rows.length > 0) {
+        const user = result.rows[0];
+        if (user.haslo !== haslo) {
+          return res.status(401).json({ error: 'Nieprawidłowy email lub hasło' });
+        }
+        return res.json({
+          message: 'Zalogowano jako administrator',
+          role: 'admin',
+          user: {
+            id: user.admin_id,
+            imie: user.imie,
+            nazwisko: user.nazwisko,
+            email: user.email,
+          },
+        });
+      }
+
       res.status(401).json({ error: 'Nieprawidłowy email lub hasło' });
     } catch (error) {
       console.error('Błąd logowania:', error);
@@ -88,6 +115,8 @@ exports.getUserProfile = async (req, res) => {
       result = await db.getPatientById(id);
     } else if (role === 'lekarz') {
       result = await db.getDoctorById(id);
+    } else if (role === 'admin') {
+      result = await db.getAdminById(id);
     } else {
       return res.status(400).json({ error: 'Nieznana rola użytkownika' });
     }

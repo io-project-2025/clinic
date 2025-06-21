@@ -275,8 +275,8 @@ class DatabaseService {
    * Pobiera administratora na podstawie emaila
    * @param {string} email - Email admina
    * @returns {Promise} - Dane administratora
-   */getAdminByEmail
-   async getAdminByEmail(email) {
+   */
+  async getAdminByEmail(email) {
     const query = 'SELECT * FROM admini WHERE email = $1';
     return this.query(query, [email]);
   }

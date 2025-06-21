@@ -1,5 +1,5 @@
-const { Pool } = require('pg');
-require('dotenv').config();
+const { Pool } = require("pg");
+require("dotenv").config();
 
 const pool = new Pool({
   user: process.env.DB_USER,
@@ -7,28 +7,34 @@ const pool = new Pool({
   database: process.env.DB_NAME,
   password: process.env.DB_PASS,
   port: 5432,
-  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+  ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false,
   max: 10,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
 });
 
-pool.connect()
-  .then(client => {
+pool
+  .connect()
+  .then((client) => {
     return client
       .query("SET search_path TO clinic;")
       .then(() => {
         client.release();
-        console.log('Połączono z bazą i ustawiono search_path na clinic');
+        console.log("Połączono z bazą i ustawiono search_path na clinic");
       })
-      .catch(err => {
+      .catch((err) => {
         client.release();
-        console.error('Błąd ustawiania search_path:', err.stack);
+        console.error("Błąd ustawiania search_path:", err.stack);
       });
   })
-  .catch(err => {
-    console.error('Błąd połączenia z bazą danych:', err.stack);
+  .catch((err) => {
+    console.error("Błąd połączenia z bazą danych:", err.stack);
   });
 
-  
+pool.on("connect", (client) => {
+  client
+    .query("SET search_path TO clinic;")
+    .catch((err) => console.error("Błąd ustawiania search_path:", err.stack));
+});
+
 module.exports = pool;

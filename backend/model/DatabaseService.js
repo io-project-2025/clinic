@@ -341,6 +341,31 @@ class DatabaseService {
   // ==================== WIZYTY ====================
 
   /**
+   * Pobiera listę wizyt danego lekarza na dziś (lub inny dzień)
+   * @param {number} doctorId - ID lekarza
+   * @param {string} [date] - Data w formacie YYYY-MM-DD (domyślnie dzisiaj)
+   * @returns {Promise} - Lista wizyt
+   */
+  async getTodaysAppointmentsForDoctor(doctorId, date = null) {
+    const query = `
+    SELECT 
+      w.wizyta_id AS id,
+      CONCAT(p.imie, ' ', p.nazwisko) AS "patientName",
+      w.godzina AS time,
+      rw.opis AS reason,
+      COALESCE(w.notatki_wizyty->>'diagnoza', '') AS notes
+    FROM wizyty w
+    JOIN pacjenci p ON w.pacjent_id = p.pacjent_id
+    JOIN rodzaje_wizyt rw ON w.rodzaj_wizyty_id = rw.rodzaj_wizyty_id
+    WHERE w.lekarz_id = $1
+      AND w.data = $2
+    ORDER BY w.godzina;
+  `;
+    const today = date || new Date().toISOString().split("T")[0];
+    return this.query(query, [doctorId, today]);
+  }
+
+  /**
    * Aktualizuje status wizyty
    * @param {number} appointmentId - ID wizyty
    * @param {string} status - Nowy status wizyty ('zaplanowana', 'zrealizowana', 'nieobecność pacjenta', 'odwołana')

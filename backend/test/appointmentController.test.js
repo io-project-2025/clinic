@@ -59,57 +59,48 @@ describe('Appointment API Integration Tests', () => {
     });
   });
   
-  describe('PUT /api/appointments/:id', () => {
-    it('should update an appointment', async () => {
+  describe('PUT /api/appointments/:id/done', () => {
+    it('should mark an appointment as done', async () => {
       // Skip if we don't have a test appointment
       if (!testAppointmentId) {
         console.log('Skipping update test - no test appointment');
         return;
       }
       
-      const updatedData = {
-        ...testAppointment,
-        godzina: '11:30' // Change the time
-      };
-      
       const res = await request(app)
-        .put(`/api/appointments/${testAppointmentId}`)
+        .put(`/api/appointments/${testAppointmentId}/done`)
         .set('x-user-id', '1')
         .set('x-user-role', 'lekarz') // Assuming a doctor updates the appointment
-        .send(updatedData);
+        .send();
       
       expect(res.statusCode).toBe(200);
-      // Sprawdź tylko czy godzina zaczyna się od "11:30", aby obsłużyć format "11:30:00"
-      expect(res.body.godzina.startsWith('11:30')).toBe(true);
+      expect(res.body.appointment).toHaveProperty('status', 'zrealizowana');
     });
   });
   
-  describe('DELETE /api/appointments/:id', () => {
-    it('should delete an appointment', async () => {
+  describe('PUT /api/appointments/:id/cancel', () => {
+    it('should cancel an appointment', async () => {
       // Skip if we don't have a test appointment
       if (!testAppointmentId) {
-        console.log('Skipping delete test - no test appointment');
+        console.log('Skipping cancel test - no test appointment');
         return;
       }
       
       const res = await request(app)
-        .delete(`/api/appointments/${testAppointmentId}`)
+        .put(`/api/appointments/${testAppointmentId}/cancel`)
         .set('x-user-id', '1')
-        .set('x-user-role', 'pacjent') // Assuming a patient can delete
+        .set('x-user-role', 'pacjent') // Assuming a patient can cancel
         .send();
       
       expect(res.statusCode).toBe(200);
-      expect(res.body).toHaveProperty('message', `Wizyta ${testAppointmentId} usunięta`);
-      
-      // Clear the ID since we've deleted it
-      testAppointmentId = null;
+      expect(res.body.appointment).toHaveProperty('status', 'odwolana');
     });
   });
   
-  describe('GET /api/appointments/:id', () => {
+  describe('GET /api/appointments/patient/:patientId', () => {
     // This test needs an existing appointment ID
     // You might need to query the database first or skip if no data exists
-    it('should return a specific appointment if it exists', async () => {
+    it('should return all appointments for a patient', async () => {
       // Create a temporary appointment to ensure one exists for the test
       const tempAppointment = { ...testAppointment, godzina: '15:00' };
       const createRes = await request(app)
@@ -120,14 +111,17 @@ describe('Appointment API Integration Tests', () => {
       
       expect(createRes.statusCode).toBe(201);
       const tempId = createRes.body.wizyta_id;
+      const patientId = tempAppointment.pacjent_id;
         
       const res = await request(app)
-        .get(`/api/appointments/${tempId}`)
+        .get(`/api/appointments/patient/${patientId}`)
         .set('x-user-id', '1')
         .set('x-user-role', 'pacjent');
       
       expect(res.statusCode).toBe(200);
-      expect(res.body).toHaveProperty('wizyta_id', tempId);
+      expect(Array.isArray(res.body)).toBe(true);
+      const found = res.body.find(a => a.wizyta_id === tempId);
+      expect(found).toBeDefined();
 
       // Clean up the temporary appointment
       if (tempId) {

@@ -2,7 +2,7 @@ const db = require('../model/DatabaseService');
 
 // Odwołanie wizyty
 exports.cancelAppointment = async (req, res) => {
-  const id = req.params.id;
+  const id = req.params.appointmentId;
 
   try {
     const appointmentResult = await db.getAppointmentById(id);
@@ -20,7 +20,7 @@ exports.cancelAppointment = async (req, res) => {
 
 // Ustaw status na 'zrealizowana'
 exports.markAppointmentDone = async (req, res) => {
-  const id = req.params.id;
+  const id = req.params.appointmentId;
 
   try {
     const appointmentResult = await db.getAppointmentById(id);
@@ -38,7 +38,7 @@ exports.markAppointmentDone = async (req, res) => {
 
 // Ustaw status na 'nieobecność pacjenta'
 exports.markNoShow = async (req, res) => {
-  const id = req.params.id;
+  const id = req.params.appointmentId;
 
   try {
     const appointmentResult = await db.getAppointmentById(id);
@@ -82,7 +82,7 @@ exports.getPatientAppointments = async (req, res) => {
 
 // aktualizacja dokumentów wizyty
 exports.updateDocuments = async (req, res) => {
-  const { id } = req.params;
+  const id = req.params.appointmentId;
   const { recepta = '', skierowanie = '' } = req.body;
 
   try {
@@ -96,7 +96,7 @@ exports.updateDocuments = async (req, res) => {
 
 // aktualizacja notatek wizyty
 exports.updateNotes = async (req, res) => {
-  const { id } = req.params;
+  const id = req.params.appointmentId;
   const { objawy = '', diagnoza = '' } = req.body;
 
   try {

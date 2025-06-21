@@ -311,6 +311,16 @@ class DatabaseService {
     return this.query(query, [id]);
   }
 
+  /**
+   * Pobiera wizytę na podstawie ID
+   * @param {number} appointmentId - ID wizyty
+   * @returns {Promise} - Dane wizyty
+   */
+  async getAppointmentById(appointmentId) {
+    const query = 'SELECT * FROM wizyty WHERE wizyta_id = $1';
+    return this.query(query, [appointmentId]);
+  }
+
   // ==================== WIZYTY ====================
 
   /**

@@ -17,11 +17,13 @@ describe('Documents API Integration Tests', () => {
   });
 
   // Test getPatientDocuments endpoint
-  describe('GET /api/documents/patient/:patientId/documents', () => {
+  describe('GET /api/patients/:patientId/documents', () => {
     it('should return documents for patient with ID ${patientId}', async () => {
 
       const res = await request(app)
-        .get(`/api/documents/patient/${patientId}/documents`);
+        .get(`/api/patients/${patientId}/documents`)
+        .set('x-user-id', '1')
+        .set('x-user-role', 'lekarz');
       
       expect(res.statusCode).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
@@ -32,10 +34,12 @@ describe('Documents API Integration Tests', () => {
   });
 
   // Test getPatientNotes endpoint
-  describe('GET /api/documents/patient/:patientId/notes', () => {
+  describe('GET /api/patients/:patientId/notes', () => {
     it('should return notes for patient with ID ${patientId}', async () => {
       const res = await request(app)
-        .get(`/api/documents/patient/${patientId}/notes`);
+        .get(`/api/patients/${patientId}/notes`)
+        .set('x-user-id', '1')
+        .set('x-user-role', 'lekarz');
       
       expect(res.statusCode).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
@@ -51,7 +55,9 @@ describe('Documents API Integration Tests', () => {
       const nonExistentId = 999999;
       
       const res = await request(app)
-        .get(`/api/documents/patient/${nonExistentId}/documents`);
+        .get(`/api/patients/${nonExistentId}/documents`)
+        .set('x-user-id', '1')
+        .set('x-user-role', 'lekarz');
       
       expect(res.statusCode).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
@@ -62,7 +68,9 @@ describe('Documents API Integration Tests', () => {
       const nonExistentId = 999999;
       
       const res = await request(app)
-        .get(`/api/documents/patient/${nonExistentId}/notes`);
+        .get(`/api/patients/${nonExistentId}/notes`)
+        .set('x-user-id', '1')
+        .set('x-user-role', 'lekarz');
       
       expect(res.statusCode).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);

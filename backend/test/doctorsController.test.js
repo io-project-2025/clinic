@@ -43,7 +43,10 @@ const db = require('../model/DatabaseService');
 
   describe('GET /api/doctors', () => {
     it('should return an array of doctors', async () => {
-      const res = await request(app).get('/api/doctors');
+      const res = await request(app)
+        .get('/api/doctors')
+        .set('x-user-id', '1')
+        .set('x-user-role', 'admin');
       expect(res.statusCode).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
     });
@@ -54,6 +57,8 @@ const db = require('../model/DatabaseService');
     it('should create a new doctor', async () => {
       const res = await request(app)
         .post('/api/doctors')
+        .set('x-user-id', '1')
+        .set('x-user-role', 'admin')
         .send(testDoctor);
       expect(res.statusCode).toBe(201);
       expect(res.body).toHaveProperty('lekarz_id');
@@ -67,6 +72,8 @@ const db = require('../model/DatabaseService');
       };
       const res = await request(app)
         .post('/api/doctors')
+        .set('x-user-id', '1')
+        .set('x-user-role', 'admin')
         .send(invalidDoctor);
       expect(res.statusCode).toBe(400);
       expect(res.body).toHaveProperty('error', 'Imię i nazwisko są wymagane');
@@ -79,6 +86,8 @@ const db = require('../model/DatabaseService');
       };
       const res = await request(app)
         .post('/api/doctors')
+        .set('x-user-id', '1')
+        .set('x-user-role', 'admin')
         .send(invalidDoctor);
       expect(res.statusCode).toBe(400);
       expect(res.body).toHaveProperty('error', 'Imię i nazwisko są wymagane');
@@ -92,6 +101,8 @@ const db = require('../model/DatabaseService');
       };
       const res = await request(app)
         .post('/api/doctors')
+        .set('x-user-id', '1')
+        .set('x-user-role', 'admin')
         .send(invalidDoctor);
       expect(res.statusCode).toBe(400);
       expect(res.body).toHaveProperty('error', 'Imię i nazwisko są wymagane');
@@ -108,6 +119,8 @@ const db = require('../model/DatabaseService');
       };
       const res = await request(app)
         .put(`/api/doctors/${testDoctorId}`)
+        .set('x-user-id', '1')
+        .set('x-user-role', 'admin')
         .send(updatedDoctor);
       expect(res.statusCode).toBe(200);
       expect(res.body.imie).toBe('Updated');
@@ -117,7 +130,10 @@ const db = require('../model/DatabaseService');
 
   describe('DELETE /api/doctors/:doctorId', () => {
     it('should delete a doctor', async () => {
-      const res = await request(app).delete(`/api/doctors/${testDoctorId}`);
+      const res = await request(app)
+        .delete(`/api/doctors/${testDoctorId}`)
+        .set('x-user-id', '1')
+        .set('x-user-role', 'admin');
       expect(res.statusCode).toBe(200);
       expect(res.body).toHaveProperty('message');
     });

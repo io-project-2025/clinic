@@ -156,8 +156,21 @@ describe('Doctors API Integration Tests', () => {
 
   describe('DELETE /api/doctors/:doctorId', () => {
     it('should delete a doctor', async () => {
+      // Create a doctor to be deleted in this test
+      const doctorToDelete = {
+        imie: 'ToDelete',
+        nazwisko: 'Doctor',
+        email: `todelete.${Date.now()}@example.com`,
+        haslo: 'pass123'
+      };
+      const result = await db.pool.query(
+        'INSERT INTO lekarze (imie, nazwisko, email, haslo) VALUES ($1, $2, $3, $4) RETURNING lekarz_id',
+        [doctorToDelete.imie, doctorToDelete.nazwisko, doctorToDelete.email, doctorToDelete.haslo]
+      );
+      const doctorIdToDelete = result.rows[0].lekarz_id;
+
       const res = await request(app)
-        .delete(`/api/doctors/${testDoctorId}`)
+        .delete(`/api/doctors/${doctorIdToDelete}`)
         .set('x-user-id', '1')
         .set('x-user-role', 'admin');
       expect(res.statusCode).toBe(200);

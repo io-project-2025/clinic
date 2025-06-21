@@ -17,10 +17,12 @@ describe('Lab Results API Integration Tests', () => {
     });
 
     // Test getPatientLabResults endpoint
-    describe('GET /api/lab-results/patients/:patientId/lab-results', () => {
+    describe('GET /api/patients/:patientId/lab-results', () => {
         it('should return lab results for patient with ID ${patientId}', async () => {
             const res = await request(app)
-                .get(`/api/lab-results/patients/${patientId}/lab-results`);
+                .get(`/api/patients/${patientId}/lab-results`)
+                .set('x-user-id', '1')
+                .set('x-user-role', 'lekarz');
 
             expect(res.statusCode).toBe(200);
             expect(Array.isArray(res.body)).toBe(true);
@@ -39,7 +41,9 @@ describe('Lab Results API Integration Tests', () => {
             const nonExistentId = 999999;
 
             const res = await request(app)
-                .get(`/api/lab-results/patients/${nonExistentId}/lab-results`);
+                .get(`/api/patients/${nonExistentId}/lab-results`)
+                .set('x-user-id', '1')
+                .set('x-user-role', 'lekarz');
                 
             expect(res.statusCode).toBe(200);
             expect(Array.isArray(res.body)).toBe(true);
@@ -50,7 +54,9 @@ describe('Lab Results API Integration Tests', () => {
             const invalidId = 'abc';
             
             const res = await request(app)
-                .get(`/api/lab-results/patients/${invalidId}/lab-results`);
+                .get(`/api/patients/${invalidId}/lab-results`)
+                .set('x-user-id', '1')
+                .set('x-user-role', 'lekarz');
                 
             expect(res.statusCode).toBe(400);
             expect(res.body).toHaveProperty('error');
@@ -72,7 +78,9 @@ describe('Lab Results API Integration Tests', () => {
 
             it('should handle database errors gracefully', async () => {
                 const res = await request(app)
-                    .get(`/api/lab-results/patients/${patientId}/lab-results`);
+                    .get(`/api/patients/${patientId}/lab-results`)
+                    .set('x-user-id', '1')
+                    .set('x-user-role', 'lekarz');
                     
                 expect(res.statusCode).toBe(500);
                 expect(res.body).toHaveProperty('error', 'Błąd serwera przy pobieraniu wyników badań.');
@@ -81,7 +89,7 @@ describe('Lab Results API Integration Tests', () => {
     });
 
     // Test getLabResultDetails endpoint
-    describe('GET /api/lab-results/:resultId', () => {
+    describe('GET /api/patients/:patientId/lab-results/:resultId', () => {
         it('should return details for a specific lab result if available', async () => {
             // Skip if no test result ID is available
             if (!testResultId) {
@@ -90,7 +98,9 @@ describe('Lab Results API Integration Tests', () => {
             }
 
             const res = await request(app)
-                .get(`/api/lab-results/${testResultId}`);
+                .get(`/api/patients/${patientId}/lab-results/${testResultId}`)
+                .set('x-user-id', '1')
+                .set('x-user-role', 'lekarz');
 
             expect(res.statusCode).toBe(200);
             expect(res.body).toHaveProperty('badanie_id', testResultId);
@@ -102,7 +112,9 @@ describe('Lab Results API Integration Tests', () => {
             const nonExistentId = 999999;
 
             const res = await request(app)
-                .get(`/api/lab-results/${nonExistentId}`);
+                .get(`/api/patients/${patientId}/lab-results/${nonExistentId}`)
+                .set('x-user-id', '1')
+                .set('x-user-role', 'lekarz');
 
             expect(res.statusCode).toBe(404);
             expect(res.body).toHaveProperty('error');
@@ -112,7 +124,9 @@ describe('Lab Results API Integration Tests', () => {
             const invalidId = 'abc';
             
             const res = await request(app)
-                .get(`/api/lab-results/${invalidId}`);
+                .get(`/api/patients/${patientId}/lab-results/${invalidId}`)
+                .set('x-user-id', '1')
+                .set('x-user-role', 'lekarz');
                 
             expect(res.statusCode).toBe(400);
             expect(res.body).toHaveProperty('error');
@@ -134,7 +148,9 @@ describe('Lab Results API Integration Tests', () => {
 
             it('should handle database errors gracefully', async () => {
                 const res = await request(app)
-                    .get(`/api/lab-results/${testResultId || 1}`);
+                    .get(`/api/patients/${patientId}/lab-results/${testResultId || 1}`)
+                    .set('x-user-id', '1')
+                    .set('x-user-role', 'lekarz');
                     
                 expect(res.statusCode).toBe(500);
                 expect(res.body).toHaveProperty('error', 'Błąd serwera przy pobieraniu szczegółów badania.');

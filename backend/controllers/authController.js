@@ -1,10 +1,21 @@
 const db = require('../model/DatabaseService');
 
+// Funkcja walidacji emaila
+const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+};
+
 // Rejestracja pacjenta (plain text password)
 exports.registerPatient = async (req, res) => {
     const { imie, nazwisko, email, haslo } = req.body;
     if (!imie || !nazwisko || !email || !haslo) {
       return res.status(400).json({ error: 'Wszystkie pola są wymagane' });
+    }
+
+    // Sprawdź format emaila
+    if (!validateEmail(email)) {
+      return res.status(400).json({ error: 'Nieprawidłowy format email' });
     }
   
     try {
@@ -30,13 +41,18 @@ exports.registerPatient = async (req, res) => {
       console.error('Błąd rejestracji pacjenta:', error);
       res.status(500).json({ error: 'Błąd serwera' });
     }
-  };
+};
   
 // Logowanie (pacjent lub lekarz, plain text password)
 exports.login = async (req, res) => {
     const { email, haslo } = req.body;
     if (!email || !haslo) {
       return res.status(400).json({ error: 'Email i hasło są wymagane' });
+    }
+
+    // Sprawdź format emaila
+    if (!validateEmail(email)) {
+      return res.status(400).json({ error: 'Nieprawidłowy format email' });
     }
   
     try {

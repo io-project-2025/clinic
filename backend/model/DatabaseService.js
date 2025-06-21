@@ -275,8 +275,8 @@ class DatabaseService {
    * Pobiera administratora na podstawie emaila
    * @param {string} email - Email admina
    * @returns {Promise} - Dane administratora
-   */getAdminByEmail
-   async getAdminByEmail(email) {
+   */
+  async getAdminByEmail(email) {
     const query = 'SELECT * FROM admini WHERE email = $1';
     return this.query(query, [email]);
   }
@@ -309,6 +309,16 @@ class DatabaseService {
   async getAdminById(id) {
     const query = 'SELECT * FROM admini WHERE admin_id = $1';
     return this.query(query, [id]);
+  }
+
+  /**
+   * Pobiera wizytę na podstawie ID
+   * @param {number} appointmentId - ID wizyty
+   * @returns {Promise} - Dane wizyty
+   */
+  async getAppointmentById(appointmentId) {
+    const query = 'SELECT * FROM wizyty WHERE wizyta_id = $1';
+    return this.query(query, [appointmentId]);
   }
 
   // ==================== WIZYTY ====================

@@ -1,65 +1,73 @@
-// const request = require('supertest');
-// const app = require('../app'); // Import your Express app
-// const pool = require('../model/model');
+const request = require('supertest');
+const app = require('../app');
+const db = require('../model/DatabaseService');
 
-// // Use a test database or specific test data that won't affect production
-// describe('Patients API Integration Tests', () => {
-//   let testPatientId;
+describe('Patients API Integration Tests', () => {
+  let testPatientId;
 
-//   // Test data
-//   const testPatient = {
-//     imie: 'Test',
-//     nazwisko: 'Patient',
-//     email: 'testpatient@example.com',
-//     haslo: 'pass'
-//   };
-//   // Helper to reset database state or set up test data
-//   beforeAll(async () => {
-//     // Optional: Create test data that your tests will use
-//     try {
-//       // You can create test records here if needed
-//       console.log('Test setup complete');
-//     } catch (error) {
-//       console.error('Test setup failed:', error);
-//     }
-//   });
+  // Test data with unique email (using timestamp)
+  const timestamp = Date.now();
+  const testPatient = {
+    imie: 'Test',
+    nazwisko: 'Patient',
+    email: `testpatient${timestamp}@example.com`,
+    haslo: 'pass123'
+  };
 
-//   afterAll(async () => {
-//     // Clean up test data
-//     try {
-//       // Delete any test data created during tests
-//       if (testPatientId) {
-//         await pool.query('DELETE FROM pacjenci WHERE pacjent_id = $1', [testPatientId]);
-//       }
-//       // You could close the pool if needed 
-//       // await pool.end();
-//     } catch (error) {
-//       console.error('Test cleanup failed:', error);
-//     }
-//   });
+  // Create test patient before running tests
+  beforeAll(async () => {
+    try {
+      // Create test patient
+      const patientResult = await db.pool.query(
+        'INSERT INTO pacjenci (imie, nazwisko, email, haslo) VALUES ($1, $2, $3, $4) RETURNING pacjent_id',
+        [testPatient.imie, testPatient.nazwisko, testPatient.email, testPatient.haslo]
+      );
+      testPatientId = patientResult.rows[0].pacjent_id;
+      
+      console.log(`Test setup complete: Created patient ID ${testPatientId}`);
+    } catch (error) {
+      console.error('Test setup failed:', error);
+    }
+  });
 
-//   describe('GET /api/patients/:patientId', () => {
-//     it('should return patient details or 404', async () => {
-//       const res = await request(app).get('/api/patients/1');
-//       expect([200, 404]).toContain(res.statusCode);
-//       if (res.statusCode === 200) {
-//         expect(res.body).toHaveProperty('pacjent_id');
-//       }
-//     });
-//   });
+  afterAll(async () => {
+    try {
+      if (testPatientId) {
+        // First delete any appointments for this patient
+        await db.pool.query('DELETE FROM wizyty WHERE pacjent_id = $1', [testPatientId]);
+        
+        // Then delete the patient
+        await db.pool.query('DELETE FROM pacjenci WHERE pacjent_id = $1', [testPatientId]);
+        console.log(`Test patient ${testPatientId} removed`);
+      }
+      
+      // Close the pool connection
+      await db.pool.end();
+      console.log('Test cleanup complete');
+      
+    } catch (error) {
+      console.error('Test cleanup failed:', error);
+    }
+  });
 
-//   describe('GET /api/patients/doctor/:doctorId/patients', () => {
-//     it('should return patients for a doctor or 404', async () => {
-//       const res = await request(app).get('/api/patients/doctor/1/patients');
-//       expect([200, 404]).toContain(res.statusCode);
-//       if (res.statusCode === 200) {
-//         expect(Array.isArray(res.body)).toBe(true);
-//         if (res.body.length > 0) {
-//           expect(res.body[0]).toHaveProperty('pacjent_id');
-//           expect(res.body[0]).toHaveProperty('imie');
-//           expect(res.body[0]).toHaveProperty('nazwisko');
-//         }
-//       }
-//     });
-//   });
-// });
+  describe('GET /api/patients/:patientId', () => {
+    it('should return details for our test patient', async () => {
+      // Skip if setup failed
+      if (!testPatientId) {
+        console.log('Skipping test - no test patient ID available');
+        return;
+      }
+      
+      const res = await request(app)
+        .get(`/api/patients/${testPatientId}`)
+        .set('x-user-id', testPatientId)
+        .set('x-user-role', 'pacjent');
+      
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveProperty('pacjent_id', testPatientId);
+      expect(res.body).toHaveProperty('imie', testPatient.imie);
+      expect(res.body).toHaveProperty('nazwisko', testPatient.nazwisko);
+      expect(res.body).toHaveProperty('email', testPatient.email);
+    });
+  });
+});

@@ -3,6 +3,11 @@ const db = require('../model/DatabaseService');
 // Pobiera wszystkie wyniki badań dla pacjenta
 exports.getPatientLabResults = async (req, res) => {
   const { patientId } = req.params;
+  
+  // Validate patientId is a number
+  if (isNaN(patientId)) {
+    return res.status(400).json({ error: 'ID pacjenta musi być liczbą.' });
+  }
 
   try {
     const result = await db.getPatientLabResults(patientId);
@@ -16,6 +21,12 @@ exports.getPatientLabResults = async (req, res) => {
 // Pobiera szczegóły jednego wyniku
 exports.getLabResultDetails = async (req, res) => {
   const { resultId } = req.params;
+
+  // Validate resultId is a number
+  if (isNaN(resultId)) {
+      return res.status(400).json({ error: 'ID wyniku badania musi być liczbą.' });
+  }
+  
 
   try {
     const result = await db.getLabResultDetails(resultId);

@@ -13,22 +13,15 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000,
 });
 
-pool.connect()
-  .then(client => {
-    return client
-      .query("SET search_path TO clinic;")
-      .then(() => {
-        client.release();
-        console.log('Połączono z bazą i ustawiono search_path na clinic');
-      })
-      .catch(err => {
-        client.release();
-        console.error('Błąd ustawiania search_path:', err.stack);
-      });
-  })
-  .catch(err => {
-    console.error('Błąd połączenia z bazą danych:', err.stack);
-  });
+// Set the search_path for all queries
+pool.on('connect', (client) => {
+  client.query('SET search_path TO clinic;')
+    .then(() => {
+      console.log('Search path set to clinic');
+    })
+    .catch((err) => {
+      console.error('Error setting search_path:', err.stack);
+    });
+});
 
-  
 module.exports = pool;

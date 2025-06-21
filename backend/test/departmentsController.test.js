@@ -35,7 +35,10 @@ describe('Departments API Integration Tests', () => {
 
   describe('GET /api/departments', () => {
     it('should return an array of departments', async () => {
-      const res = await request(app).get('/api/departments');
+      const res = await request(app)
+        .get('/api/departments')
+        .set('x-user-id', '1') // Mock admin user
+        .set('x-user-role', 'admin');
       expect(res.statusCode).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
     });
@@ -45,6 +48,8 @@ describe('Departments API Integration Tests', () => {
     it('should create a new department', async () => {
       const res = await request(app)
         .post('/api/departments')
+        .set('x-user-id', '1') // Mock admin user
+        .set('x-user-role', 'admin')
         .send(testDepartment);
       expect(res.statusCode).toBe(201);
       expect(res.body).toHaveProperty('oddzial_id');
@@ -57,6 +62,8 @@ describe('Departments API Integration Tests', () => {
       const updatedData = { nazwa: 'Updated Department', adres: 'Updated Address' };
       const res = await request(app)
         .put(`/api/departments/${testDepartmentId}`)
+        .set('x-user-id', '1') // Mock admin user
+        .set('x-user-role', 'admin')
         .send(updatedData);
       expect(res.statusCode).toBe(200);
       expect(res.body.nazwa).toBe(updatedData.nazwa);
@@ -65,7 +72,10 @@ describe('Departments API Integration Tests', () => {
 
   describe('DELETE /api/departments/:departmentId', () => {
     it('should delete an existing department', async () => {
-      const res = await request(app).delete(`/api/departments/${testDepartmentId}`);
+      const res = await request(app)
+      .delete(`/api/departments/${testDepartmentId}`)
+      .set('x-user-id', '1') // Mock admin user
+      .set('x-user-role', 'admin');
       expect(res.statusCode).toBe(200);
       expect(res.body).toHaveProperty('message', `Oddział ${testDepartmentId} usunięty`);
     });

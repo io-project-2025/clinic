@@ -347,15 +347,14 @@ class DatabaseService {
    * @returns {Promise} - Utworzona wizyta
    */
   async createAppointment(appointmentData) {
-    const { pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id } = appointmentData;
+    const { pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id, tytul,  objawy, diagnoza = ""} = appointmentData;
     
     const dokumenty_wizyty = { recepta: "", skierowanie: "" };
-    const notatki_wizyty = { objawy: "", diagnoza: "" };
-    
+
     const query = `
       INSERT INTO wizyty 
-        (pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id, dokumenty_wizyty, notatki_wizyty)
-      VALUES ($1, $2, $3, $4, $5, $6, $7) 
+        (pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id,  tytul, dokumenty_wizyty, notatki_wizyty)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
       RETURNING *
     `;
     
@@ -365,6 +364,7 @@ class DatabaseService {
       godzina,
       lekarz_id,
       rodzaj_wizyty_id,
+      tytul,
       JSON.stringify(dokumenty_wizyty),
       JSON.stringify(notatki_wizyty)
     ]);

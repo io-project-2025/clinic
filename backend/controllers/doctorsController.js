@@ -119,7 +119,7 @@ exports.getDoctorTodayShift = async (req, res) => {
     const result = await db.getDoctorTodayShift(doctorId);
 
     if (result.rows.length === 0) {
-      return res.status(200).json({ grafik: "Brak zmiany dzisiaj" });
+      return res.status(200).json({ grafik: "Brak dyżuru" });
     }
     const shiftName = result.rows[0].shift;
     const shiftMap = {

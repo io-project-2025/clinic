@@ -16,7 +16,8 @@ import {
   Button,
 } from "@mui/material";
 
-// Loader do pobierania badań - nie działa, dane są pobierane z API
+// jest endpoint do pobierania badań
+// /api/patients/:patientId/lab-results
 
 // (mock)
 

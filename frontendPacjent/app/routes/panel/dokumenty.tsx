@@ -11,26 +11,29 @@ import {
   Button,
 } from "@mui/material";
 
+// jest endpoint do pobierania dokumentów 
+// /api/patients/:patientId/documents
+
 // Mock funkcja do pobierania dokumentów (np. skierowań)
-export async function clientLoader() {
-  // Tu można pobrać dane z API, na razie mock:
-  return [
-    {
-      id: 1,
-      type: "Skierowanie",
-      date: "2025-06-10",
-      doctor: "dr Anna Kowalska",
-      description: "Skierowanie na badanie krwi.",
-    },
-    {
-      id: 2,
-      type: "Skierowanie",
-      date: "2025-06-15",
-      doctor: "dr Jan Nowak",
-      description: "Skierowanie na USG jamy brzusznej.",
-    },
-  ];
-}
+// export async function clientLoader() {
+//   // Tu można pobrać dane z API, na razie mock:
+//   return [
+//     {
+//       id: 1,
+//       type: "Skierowanie",
+//       date: "2025-06-10",
+//       doctor: "dr Anna Kowalska",
+//       description: "Skierowanie na badanie krwi.",
+//     },
+//     {
+//       id: 2,
+//       type: "Skierowanie",
+//       date: "2025-06-15",
+//       doctor: "dr Jan Nowak",
+//       description: "Skierowanie na USG jamy brzusznej.",
+//     },
+//   ];
+// }
 
 function handleDownload(doc: { id: number; type: string; date: string; doctor: string; description: string }) {
   // symulacja pobierania dokumentu

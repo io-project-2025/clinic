@@ -1,5 +1,11 @@
 const db = require("../model/DatabaseService");
 
+const dayjs = require("dayjs");
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 // Pobieranie listy lekarzy
 exports.getDoctors = async (req, res) => {
   try {
@@ -137,7 +143,7 @@ exports.getDoctorSchedule = async (req, res) => {
     const result = await db.getDoctorSchedule(doctorId);
     console.log(result.rows);
     const mapped = result.rows.map(({ date, shift }) => ({
-      date: date.toISOString().split("T")[0], // Pobiera tylko datę bez czasu
+      date: dayjs.utc(date).tz("Europe/Warsaw").format("YYYY-MM-DD"), // Pobiera tylko datę bez czasu
       type:
         shift === "Ranna"
           ? "06:00-14:00"

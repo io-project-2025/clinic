@@ -603,7 +603,8 @@ class DatabaseService {
     WHERE ld.lekarz_id = $1
     ORDER BY d.data;
   `;
-    return this.query(query, [doctorId]);
+    console.log(await this.query(query, [doctorId]));
+    return await this.query(query, [doctorId]);
   }
 }
 

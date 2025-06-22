@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLoaderData } from "react-router";
 import {
   Box,
   Button,
@@ -10,7 +11,7 @@ import {
   Stack,
 } from "@mui/material";
 
-export async function doctorsLoader() {
+export async function clientLoader() {
   try {
     const res = await fetch("/api/doctors", {
       method: "GET",
@@ -29,8 +30,6 @@ export async function doctorsLoader() {
     const doctors = data.map((doc: any) => ({
       id: doc.lekarz_id,
       name: `dr ${doc.imie} ${doc.nazwisko}`,
-      email: doc.email,
-      oddzial_id: doc.oddzial_id,
     }));
 
     return { doctors, error: null };
@@ -48,6 +47,10 @@ export async function doctorsLoader() {
 
 
 export default function Kontakt() {
+  const data = useLoaderData() as { doctors: Array<{ id: number; name: string }>; error: string | null };
+  const doctors = data.doctors;
+  const err = data.error;
+
   const [doctor, setDoctor] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");

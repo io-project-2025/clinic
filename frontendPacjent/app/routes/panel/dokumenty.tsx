@@ -14,26 +14,29 @@ import {
 // jest endpoint do pobierania dokumentów 
 // /api/patients/:patientId/documents
 
-// Mock funkcja do pobierania dokumentów (np. skierowań)
-// export async function clientLoader() {
-//   // Tu można pobrać dane z API, na razie mock:
-//   return [
-//     {
-//       id: 1,
-//       type: "Skierowanie",
-//       date: "2025-06-10",
-//       doctor: "dr Anna Kowalska",
-//       description: "Skierowanie na badanie krwi.",
-//     },
-//     {
-//       id: 2,
-//       type: "Skierowanie",
-//       date: "2025-06-15",
-//       doctor: "dr Jan Nowak",
-//       description: "Skierowanie na USG jamy brzusznej.",
-//     },
-//   ];
-// }
+export async function clientLoader() {
+  try {
+    const patientId = localStorage.getItem("id") || "";
+    const res = await fetch(`/api/patients/${patientId}/documents`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-user-id": patientId,
+        "x-user-role": localStorage.getItem("role") || "pacjent",
+      },
+    });
+
+    if (!res.ok) throw new Error("Błąd pobierania dokumentów");
+
+    // Zakładamy, że backend zwraca tablicę dokumentów w takim formacie jak poniżej:
+    // [{ id, type, date, doctor, description }]
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    // Zwróć pustą tablicę w razie błędu
+    return [];
+  }
+}
 
 function handleDownload(doc: { id: number; type: string; date: string; doctor: string; description: string }) {
   // symulacja pobierania dokumentu

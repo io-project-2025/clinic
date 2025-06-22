@@ -19,28 +19,27 @@ import {
 // jest endpoint do pobierania badań
 // /api/patients/:patientId/lab-results
 
-// (mock)
+export async function clientLoader() {
+  try {
+    const patientId = localStorage.getItem("id") || "";
+    const res = await fetch(`/api/patients/${patientId}/lab-results`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-user-id": patientId,
+        "x-user-role": localStorage.getItem("role") || "pacjent",
+      },
+    });
 
-// export async function clientLoader() {
-//   return [
-//     {
-//       id: 1,
-//       date: "2025-06-05",
-//       type: "Morfologia",
-//       doctor: "dr Anna Kowalska",
-//       result: "WBC: 6.2, RBC: 4.8, HGB: 13.5, PLT: 250",
-//       description: "Badanie krwi - morfologia.",
-//     },
-//     {
-//       id: 2,
-//       date: "2025-06-12",
-//       type: "USG jamy brzusznej",
-//       doctor: "dr Jan Nowak",
-//       result: "Wynik prawidłowy. Brak zmian ogniskowych.",
-//       description: "USG jamy brzusznej.",
-//     },
-//   ];
-// }
+    if (!res.ok) throw new Error("Błąd pobierania badań");
+
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    // Zwróć pustą tablicę w razie błędu
+    return [];
+  }
+}
 
 /**
  * Komponent wyświetlający listę badań.

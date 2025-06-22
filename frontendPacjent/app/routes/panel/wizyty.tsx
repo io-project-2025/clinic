@@ -103,6 +103,7 @@ export default function Wizyty() {
   const [alert, setAlert] = React.useState<string | null>(null);
   const [noteOpen, setNoteOpen] = useState(false);
   const [note, setNote] = useState("");
+  const [loadingNote, setLoadingNote] = useState(false);
 
   const handleRatingChange = (id: number, value: number | null) => {
     setRatings((prev) => ({ ...prev, [id]: value || 0 }));
@@ -137,7 +138,7 @@ export default function Wizyty() {
     }
   };
 
-  const handleListItemClick = (e: React.MouseEvent, visitId: number) => {
+  const handleListItemClick = async (e: React.MouseEvent, visitId: number) => {
     // Nie otwieraj modala jeśli kliknięto w Rating lub Button
     if (
       e.currentTarget.querySelector(".MuiRating-root")?.contains(e.target as Node) ||
@@ -145,8 +146,24 @@ export default function Wizyty() {
     ) {
       return;
     }
-    setNote(getRandomNote());
+    setLoadingNote(true);
     setNoteOpen(true);
+    try {
+      const res = await fetch(`/api/appointments/${visitId}/note`, { // to jest endpoint niezaimplementowany w backendzie
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": localStorage.getItem("id") || "",
+          "x-user-role": localStorage.getItem("role") || "pacjent",
+        },
+      });
+      if (!res.ok) throw new Error("Błąd pobierania notatki");
+      const data = await res.json();
+      setNote(data.note || "Brak notatki od lekarza.");
+    } catch (err) {
+      setNote("Nie udało się pobrać notatki od lekarza.");
+    }
+    setLoadingNote(false);
   };
 
   const handleClose = () => setNoteOpen(false);
@@ -213,7 +230,13 @@ export default function Wizyty() {
       <Dialog open={noteOpen} onClose={handleClose}>
         <DialogTitle>Notatka od lekarza</DialogTitle>
         <DialogContent>
-          <Typography>{note}</Typography>
+          {loadingNote ? (
+            <Box sx={{ display: "flex", justifyContent: "center", my: 2 }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Typography>{note}</Typography>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">Zamknij</Button>

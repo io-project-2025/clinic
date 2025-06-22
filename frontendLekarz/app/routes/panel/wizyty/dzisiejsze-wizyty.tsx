@@ -32,20 +32,8 @@ type Visit = {
   notes?: string;
 };
 
-// Mockowany clientLoader
-// export async function  clientLoader() {
-//   const visits: Visit[] = [
-//     { id: "1", patientName: "Jan Kowalski", time: "09:00", reason: "Kontrola", notes: "" },
-//     { id: "2", patientName: "Anna Nowak", time: "10:00", reason: "Ból głowy", notes: "" },
-//     { id: "3", patientName: "Piotr Wiśniewski", time: "11:30", reason: "Badania okresowe", notes: "Pacjent w dobrym stanie." },
-//     { id: "4", patientName: "Maria Wójcik", time: "13:00", reason: "Szczepienie", notes: "" },
-//     { id: "5", patientName: "Tomasz Kaczmarek", time: "14:30", reason: "Konsultacja", notes: "" },
-//   ];
-//   return { visits };
-// }
-
 export async function clientLoader() {
-  const doctorId = localStorage.getItem("id"); // <- zamień na dynamiczne źródło jeśli trzeba (np. z auth)
+  const doctorId = localStorage.getItem("id");
 
   try {
     const res = await fetch(`/api/appointments/doctor/${doctorId}/today`, {
@@ -59,7 +47,7 @@ export async function clientLoader() {
 
     if (!res.ok) throw new Error("Nie udało się pobrać wizyt");
 
-    const visits = await res.json(); 
+    const visits = await res.json();
     return { visits };
   } catch (error) {
     console.error("Błąd podczas ładowania wizyt:", error);
@@ -201,29 +189,73 @@ export default function DzisiejszeWizyty() {
     console.log("Edycja wizyty ID:", visit.id);
   };
 
-  // Zapisz zmiany (mock)
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!selectedVisit) return;
-    const updatedVisits = visits.map((v) =>
-      v.id === selectedVisit.id ? { ...v, notes } : v
-    );
-    setVisits(updatedVisits);
-    setSelectedVisit(null);
-    setNotes("");
-    setFile(null);
+    const doctorId = localStorage.getItem("id");
+    try {
+      const response = await fetch(
+        `/api/appointments/${selectedVisit.id}/notes`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user-id": doctorId || "",
+            "x-user-role": "lekarz",
+          },
+          body: JSON.stringify({ diagnoza: notes }), // tylko diagnoza – można dodać objawy
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Nie udało się zapisać notatek");
+      }
+
+      // Zaktualizuj lokalny stan (dla UI)
+      const updatedVisits = visits.map((v) =>
+        v.id === selectedVisit.id ? { ...v, notes } : v
+      );
+
+      setVisits(updatedVisits);
+      setSelectedVisit(null);
+      setNotes("");
+      setFile(null);
+    } catch (error) {
+      console.error("Błąd podczas zapisu notatek:", error);
+    }
   };
 
-  // Usuń notatki (mock)
-  const handleDeleteNotes = () => {
+  const handleDeleteNotes = async () => {
     if (!selectedVisit) return;
-    // Mock "usuwania" na backendzie
-    console.log("Usuwanie notatek dla wizyty ID:", selectedVisit.id);
-    const updatedVisits = visits.map((v) =>
-      v.id === selectedVisit.id ? { ...v, notes: "" } : v
-    );
-    setVisits(updatedVisits);
-    setNotes("");
-    // Nie zamykamy modala, żeby użytkownik widział, że input jest pusty
+    const doctorId = localStorage.getItem("id");
+    try {
+      const response = await fetch(
+        `/api/appointments/${selectedVisit.id}/notes`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user-id": doctorId || "",
+            "x-user-role": "lekarz",
+          },
+          body: JSON.stringify({ diagnoza: "" }), // "usuwamy" notatkę poprzez wyczyszczenie pola
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Nie udało się usunąć notatki");
+      }
+
+      // Aktualizujemy frontendowy stan
+      const updatedVisits = visits.map((v) =>
+        v.id === selectedVisit.id ? { ...v, notes: "" } : v
+      );
+
+      setVisits(updatedVisits);
+      setNotes(""); 
+      // modal nie jest zamykany – użytkownik widzi pusty input
+    } catch (error) {
+      console.error("Błąd podczas usuwania notatki:", error);
+    }
   };
 
   return (

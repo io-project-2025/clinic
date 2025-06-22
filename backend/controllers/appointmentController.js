@@ -120,11 +120,10 @@ exports.updateDocuments = async (req, res) => {
 
 // aktualizacja notatek wizyty
 exports.updateNotes = async (req, res) => {
-  const { id } = req.params;
+  const { appointmentId } = req.params;
   const { objawy = "", diagnoza = "" } = req.body;
-
   try {
-    await db.updateAppointmentNotes(id, { objawy, diagnoza });
+    await db.updateAppointmentNotes(appointmentId, { objawy, diagnoza });
     res.status(200).json({ objawy, diagnoza });
   } catch (err) {
     console.error("Błąd przy aktualizacji notatek wizyty:", err);

@@ -11,11 +11,17 @@ import {
 } from "@mui/material";
 
 // Przykładowa lista doktorów (możesz pobierać z API)
-const doctors = [
-  { id: 1, name: "dr Anna Kowalska" },
-  { id: 2, name: "dr Jan Nowak" },
-  { id: 3, name: "dr Ewa Zielińska" },
-];
+// const doctors = [
+//   { id: 1, name: "dr Anna Kowalska" },
+//   { id: 2, name: "dr Jan Nowak" },
+//   { id: 3, name: "dr Ewa Zielińska" },
+// ];
+
+// zwracane jest (SELECT) lekarz_id, imie, nazwisko, email, oddzial_id
+// jest endpoint do pobierania lekarzy
+// /api/doctors/:patientId/lab-results
+
+
 
 export default function Kontakt() {
   const [doctor, setDoctor] = useState("");

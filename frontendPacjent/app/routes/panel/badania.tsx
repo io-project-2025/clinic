@@ -16,27 +16,30 @@ import {
   Button,
 } from "@mui/material";
 
-// Loader do pobierania badań (mock)
-export async function clientLoader() {
-  return [
-    {
-      id: 1,
-      date: "2025-06-05",
-      type: "Morfologia",
-      doctor: "dr Anna Kowalska",
-      result: "WBC: 6.2, RBC: 4.8, HGB: 13.5, PLT: 250",
-      description: "Badanie krwi - morfologia.",
-    },
-    {
-      id: 2,
-      date: "2025-06-12",
-      type: "USG jamy brzusznej",
-      doctor: "dr Jan Nowak",
-      result: "Wynik prawidłowy. Brak zmian ogniskowych.",
-      description: "USG jamy brzusznej.",
-    },
-  ];
-}
+// Loader do pobierania badań - nie działa, dane są pobierane z API
+
+// (mock)
+
+// export async function clientLoader() {
+//   return [
+//     {
+//       id: 1,
+//       date: "2025-06-05",
+//       type: "Morfologia",
+//       doctor: "dr Anna Kowalska",
+//       result: "WBC: 6.2, RBC: 4.8, HGB: 13.5, PLT: 250",
+//       description: "Badanie krwi - morfologia.",
+//     },
+//     {
+//       id: 2,
+//       date: "2025-06-12",
+//       type: "USG jamy brzusznej",
+//       doctor: "dr Jan Nowak",
+//       result: "Wynik prawidłowy. Brak zmian ogniskowych.",
+//       description: "USG jamy brzusznej.",
+//     },
+//   ];
+// }
 
 /**
  * Komponent wyświetlający listę badań.

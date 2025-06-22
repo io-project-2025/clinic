@@ -15,7 +15,7 @@ exports.getDoctorTodaysAppointments = async (req, res) => {
 
 // Odwołanie wizyty
 exports.cancelAppointment = async (req, res) => {
-  const id = req.params.id;
+  const id = req.params.appointmentId;
 
   try {
     const appointmentResult = await db.getAppointmentById(id);
@@ -36,7 +36,7 @@ exports.cancelAppointment = async (req, res) => {
 
 // Ustaw status na 'zrealizowana'
 exports.markAppointmentDone = async (req, res) => {
-  const id = req.params.id;
+  const id = req.params.appointmentId;
 
   try {
     const appointmentResult = await db.getAppointmentById(id);
@@ -47,6 +47,27 @@ exports.markAppointmentDone = async (req, res) => {
     const result = await db.updateAppointmentStatus(id, "zrealizowana");
     res.json({
       message: `Wizyta ${id} oznaczona jako zrealizowana`,
+      appointment: result.rows[0],
+    });
+  } catch (err) {
+    console.error("Błąd przy aktualizacji statusu wizyty:", err);
+    res.status(500).json({ error: "Błąd serwera" });
+  }
+};
+
+// Ustaw status na 'zrealizowana'
+exports.markAppointmentAccepted = async (req, res) => {
+  const id = req.params.appointmentId;
+
+  try {
+    const appointmentResult = await db.getAppointmentById(id);
+    if (appointmentResult.rows.length === 0) {
+      return res.status(404).json({ error: "Wizyta nie znaleziona" });
+    }
+
+    const result = await db.updateAppointmentStatus(id, "zaakceptowana");
+    res.json({
+      message: `Wizyta ${id} oznaczona jako zaakceptowana`,
       appointment: result.rows[0],
     });
   } catch (err) {
@@ -146,6 +167,18 @@ exports.rateAppointment = async (req, res) => {
     res.json({ message: 'Ocena zapisana', data: result.rows[0] });
   } catch (err) {
     console.error("Błąd zapisu oceny:", err);
+    res.status(500).json({ error: "Błąd serwera" });
+  }
+};
+
+exports.getVisitRequests = async (req, res) => {
+  const doctorId = parseInt(req.params.doctorId);
+
+  try {
+    const result = await db.getUpcomingVisitRequestsForDoctor(doctorId);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error("Błąd przy pobieraniu zgłoszeń wizyt:", err);
     res.status(500).json({ error: "Błąd serwera" });
   }
 };

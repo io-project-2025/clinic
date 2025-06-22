@@ -210,6 +210,26 @@ export default function DzisiejszeWizyty() {
         throw new Error("Nie udało się zapisać notatek");
       }
 
+      try {
+        const response = await fetch(
+          `/api/appointments/${selectedVisit.id}/done`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "x-user-id": doctorId || "",
+              "x-user-role": "lekarz",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Nie udało się zmienić statusu wizyty");
+        }
+      } catch (error) {
+        console.error("Błąd podczas zmiany statusu wizyty", error);
+      }
+
       // Zaktualizuj lokalny stan (dla UI)
       const updatedVisits = visits.map((v) =>
         v.id === selectedVisit.id ? { ...v, notes } : v
@@ -245,13 +265,33 @@ export default function DzisiejszeWizyty() {
         throw new Error("Nie udało się usunąć notatki");
       }
 
+      try {
+        const response = await fetch(
+          `/api/appointments/${selectedVisit.id}/accept`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "x-user-id": doctorId || "",
+              "x-user-role": "lekarz",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Nie udało się zmienić statusu wizyty");
+        }
+      } catch (error) {
+        console.error("Błąd podczas zmiany statusu wizyty", error);
+      }
+
       // Aktualizujemy frontendowy stan
       const updatedVisits = visits.map((v) =>
         v.id === selectedVisit.id ? { ...v, notes: "" } : v
       );
 
       setVisits(updatedVisits);
-      setNotes(""); 
+      setNotes("");
       // modal nie jest zamykany – użytkownik widzi pusty input
     } catch (error) {
       console.error("Błąd podczas usuwania notatki:", error);

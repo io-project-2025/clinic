@@ -341,6 +341,18 @@ class DatabaseService {
   // ==================== WIZYTY ====================
 
   /**
+   * Pobiera wizytę po ID
+   * @param {number} appointmentId - ID wizyty
+   * @returns {Promise}
+   */
+  async getAppointmentById(appointmentId) {
+    const query = `
+    SELECT * FROM wizyty WHERE wizyta_id = $1
+  `;
+    return this.query(query, [appointmentId]);
+  }
+
+  /**
    * Pobiera listę wizyt danego lekarza na dziś (lub inny dzień)
    * @param {number} doctorId - ID lekarza
    * @param {string} [date] - Data w formacie YYYY-MM-DD (domyślnie dzisiaj)
@@ -359,6 +371,7 @@ class DatabaseService {
     JOIN rodzaje_wizyt rw ON w.rodzaj_wizyty_id = rw.rodzaj_wizyty_id
     WHERE w.lekarz_id = $1
       AND w.data = $2
+      AND w.status IN ('zaakceptowana', 'zrealizowana')
     ORDER BY w.godzina;
   `;
     const today = date || new Date().toISOString().split("T")[0];
@@ -368,7 +381,7 @@ class DatabaseService {
   /**
    * Aktualizuje status wizyty
    * @param {number} appointmentId - ID wizyty
-   * @param {string} status - Nowy status wizyty ('zaplanowana', 'zrealizowana', 'nieobecność pacjenta', 'odwołana')
+   * @param {string} status - Nowy status wizyty ('zaplanowana', 'zaakceptowana', 'zrealizowana', 'nieobecność pacjenta', 'odwołana')
    * @returns {Promise} - Zaktualizowana wizyta
    */
   async updateAppointmentStatus(appointmentId, status) {
@@ -467,6 +480,29 @@ class DatabaseService {
       return this.query(query, [ocena, appointmentId, patientId]);
     }
 
+
+  /**
+   * Pobiera zaplanowane wizyty lekarza (do przeglądu / akceptacji)
+   * @param {number} doctorId
+   * @returns {Promise<VisitRequest[]>}
+   */
+  async getUpcomingVisitRequestsForDoctor(doctorId) {
+    const query = `
+    SELECT 
+      w.wizyta_id AS id,
+      CONCAT(p.imie, ' ', p.nazwisko) AS "patientName",
+      TO_CHAR(w.data, 'YYYY-MM-DD') || ' ' || w.godzina AS "requestedDate",
+      rw.opis AS reason,
+      COALESCE(w.notatki_wizyty->>'objawy', '') AS details
+    FROM wizyty w
+    JOIN pacjenci p ON p.pacjent_id = w.pacjent_id
+    JOIN rodzaje_wizyt rw ON rw.rodzaj_wizyty_id = w.rodzaj_wizyty_id
+    WHERE w.lekarz_id = $1
+      AND w.status = 'zaplanowana'
+    ORDER BY w.data, w.godzina;
+  `;
+    return this.query(query, [doctorId]);
+  }
 
   // ==================== WIADOMOŚCI ====================
 

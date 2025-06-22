@@ -31,6 +31,13 @@ router.put(
   appointmentController.markAppointmentDone
 );
 
+// Oznaczenie wizyty jako zaakceptowana
+router.put(
+  "/:appointmentId/accept",
+  authorizeRole(["lekarz"]),
+  appointmentController.markAppointmentAccepted
+);
+
 // Oznaczenie wizyty jako nieobecność pacjenta
 router.put(
   "/:appointmentId/no-show",
@@ -64,6 +71,12 @@ router.get(
   "/doctor/:doctorId/today",
   authorizeRole(["lekarz"]),
   appointmentController.getDoctorTodaysAppointments
+);
+
+router.get(
+  "/doctor/:doctorId/requests",
+  authorizeRole(["lekarz"]),
+  appointmentController.getVisitRequests
 );
 
 module.exports = router;

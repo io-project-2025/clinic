@@ -56,10 +56,10 @@ exports.markNoShow = async (req, res) => {
 
 // Utworzenie wizyty
 exports.createAppointment = async (req, res) => {
-  const { pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id } = req.body;
+  const { pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id, tytul, objawy, diagnoza = ""} = req.body;
 
   try {
-    const result = await db.createAppointment({ pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id });
+    const result = await db.createAppointment({ pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id, tytul, objawy, diagnoza});
     res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error('Błąd przy tworzeniu wizyty:', err);

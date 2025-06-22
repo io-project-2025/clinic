@@ -211,7 +211,7 @@ export default function Wizyty() {
         )}
       </Paper>
       <Dialog open={noteOpen} onClose={handleClose}>
-        <DialogTitle>Losowa notatka od lekarza</DialogTitle>
+        <DialogTitle>Notatka od lekarza</DialogTitle>
         <DialogContent>
           <Typography>{note}</Typography>
         </DialogContent>

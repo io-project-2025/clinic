@@ -416,14 +416,14 @@ class DatabaseService {
      * @param {number} ocena - Ocena wizyty
      * @returns {Promise} - Wynik operacji aktualizacji oceny wizyty
      */ 
-    async rateAppointment(wizytaId, pacjentId, ocena) {
+    async rateAppointment(appointmentId, patientId, ocena) {
       const query = `
         UPDATE wizyty 
         SET ocena = $1 
         WHERE wizyta_id = $2 AND pacjent_id = $3
         RETURNING *;
       `;
-      return this.query(query, [ocena, wizytaId, pacjentId]);
+      return this.query(query, [ocena, appointmentId, patientId]);
     }
 
 

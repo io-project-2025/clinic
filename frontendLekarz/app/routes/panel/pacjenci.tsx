@@ -1,8 +1,17 @@
 import * as React from "react";
 import { useLoaderData } from "react-router";
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  Paper, TextField, Typography, Stack, TableSortLabel
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  TextField,
+  Typography,
+  Stack,
+  TableSortLabel,
 } from "@mui/material";
 
 // Typ pacjenta
@@ -17,19 +26,32 @@ type Patient = {
 };
 
 // Mockowany clientLoader
-export async function loader() {
-  const patients: Patient[] = [
-    { id: "1", firstName: "Jan", lastName: "Kowalski", pesel: "90010112345", birthDate: "1990-01-01", phone: "500111222", email: "jan.kowalski@example.com" },
-    { id: "2", firstName: "Anna", lastName: "Nowak", pesel: "85050567890", birthDate: "1985-05-05", phone: "500222333", email: "anna.nowak@example.com" },
-    { id: "3", firstName: "Piotr", lastName: "Wiśniewski", pesel: "92030345678", birthDate: "1992-03-03", phone: "500333444", email: "piotr.wisniewski@example.com" },
-    { id: "4", firstName: "Maria", lastName: "Wójcik", pesel: "95070798765", birthDate: "1995-07-07", phone: "500444555", email: "maria.wojcik@example.com" },
-    { id: "5", firstName: "Tomasz", lastName: "Kaczmarek", pesel: "88080823456", birthDate: "1988-08-08", phone: "500555666", email: "tomasz.kaczmarek@example.com" },
-    { id: "6", firstName: "Katarzyna", lastName: "Mazur", pesel: "93090934567", birthDate: "1993-09-09", phone: "500666777", email: "katarzyna.mazur@example.com" },
-    { id: "7", firstName: "Michał", lastName: "Krawczyk", pesel: "87020245678", birthDate: "1987-02-02", phone: "500777888", email: "michal.krawczyk@example.com" },
-    { id: "8", firstName: "Agnieszka", lastName: "Piotrowska", pesel: "91040456789", birthDate: "1991-04-04", phone: "500888999", email: "agnieszka.piotrowska@example.com" },
-    { id: "9", firstName: "Paweł", lastName: "Grabowski", pesel: "94060667890", birthDate: "1994-06-06", phone: "500999000", email: "pawel.grabowski@example.com" },
-    { id: "10", firstName: "Ewa", lastName: "Zielińska", pesel: "89090978901", birthDate: "1989-09-09", phone: "500000111", email: "ewa.zielinska@example.com" },
-  ];
+// export async function loader() {
+//   const patients: Patient[] = [
+//     { id: "1", firstName: "Jan", lastName: "Kowalski", pesel: "90010112345", birthDate: "1990-01-01", phone: "500111222", email: "jan.kowalski@example.com" },
+//     { id: "2", firstName: "Anna", lastName: "Nowak", pesel: "85050567890", birthDate: "1985-05-05", phone: "500222333", email: "anna.nowak@example.com" },
+//     { id: "3", firstName: "Piotr", lastName: "Wiśniewski", pesel: "92030345678", birthDate: "1992-03-03", phone: "500333444", email: "piotr.wisniewski@example.com" },
+//     { id: "4", firstName: "Maria", lastName: "Wójcik", pesel: "95070798765", birthDate: "1995-07-07", phone: "500444555", email: "maria.wojcik@example.com" },
+//     { id: "5", firstName: "Tomasz", lastName: "Kaczmarek", pesel: "88080823456", birthDate: "1988-08-08", phone: "500555666", email: "tomasz.kaczmarek@example.com" },
+//     { id: "6", firstName: "Katarzyna", lastName: "Mazur", pesel: "93090934567", birthDate: "1993-09-09", phone: "500666777", email: "katarzyna.mazur@example.com" },
+//     { id: "7", firstName: "Michał", lastName: "Krawczyk", pesel: "87020245678", birthDate: "1987-02-02", phone: "500777888", email: "michal.krawczyk@example.com" },
+//     { id: "8", firstName: "Agnieszka", lastName: "Piotrowska", pesel: "91040456789", birthDate: "1991-04-04", phone: "500888999", email: "agnieszka.piotrowska@example.com" },
+//     { id: "9", firstName: "Paweł", lastName: "Grabowski", pesel: "94060667890", birthDate: "1994-06-06", phone: "500999000", email: "pawel.grabowski@example.com" },
+//     { id: "10", firstName: "Ewa", lastName: "Zielińska", pesel: "89090978901", birthDate: "1989-09-09", phone: "500000111", email: "ewa.zielinska@example.com" },
+//   ];
+//   return { patients };
+// }
+
+export async function clientLoader() {
+  const doctorId = localStorage.getItem("id");
+  const res = await fetch(`/api/doctors/${doctorId}/patients`, {
+    headers: {
+      "x-user-id": doctorId || "",
+      "x-user-role": "lekarz",
+    },
+  });
+
+  const patients = await res.json();
   return { patients };
 }
 
@@ -84,9 +106,10 @@ export default function PatientsList() {
   };
 
   const filteredPatients = React.useMemo(() => {
-    return patients.filter((p) =>
-      p.pesel.includes(peselFilter) &&
-      p.lastName.toLowerCase().includes(lastNameFilter.toLowerCase())
+    return patients.filter(
+      (p) =>
+        p.pesel.includes(peselFilter) &&
+        p.lastName.toLowerCase().includes(lastNameFilter.toLowerCase())
     );
   }, [patients, peselFilter, lastNameFilter]);
 

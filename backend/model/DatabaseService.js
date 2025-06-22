@@ -26,20 +26,27 @@ class DatabaseService {
   // ==================== PACJENCI ====================
 
   /**
-   * Pobiera pacjentów danego lekarza
-   * @param {number} doctorId - ID lekarza
-   * @returns {Promise} - Lista pacjentów
+   * Pobiera pacjentów przypisanych do danego lekarza, z pełnymi danymi
+   * @param {number} doctorId
+   * @returns {Promise}
    */
   async getDoctorPatients(doctorId) {
     const query = `
-      SELECT DISTINCT p.pacjent_id, p.imie, p.nazwisko
-      FROM pacjenci p
-      JOIN wizyty w ON p.pacjent_id = w.pacjent_id
-      WHERE w.lekarz_id = $1
-    `;
+    SELECT DISTINCT 
+      p.pacjent_id AS id,
+      p.imie AS "firstName",
+      p.nazwisko AS "lastName",
+      p.pesel,
+      p.data_urodzenia AS "birthDate",
+      p.telefon AS "phone",
+      p.email
+    FROM pacjenci p
+    JOIN wizyty w ON p.pacjent_id = w.pacjent_id
+    WHERE w.lekarz_id = $1
+  `;
     return this.query(query, [doctorId]);
   }
-
+  
   /**
    * Pobiera szczegóły pacjenta
    * @param {number} patientId - ID pacjenta

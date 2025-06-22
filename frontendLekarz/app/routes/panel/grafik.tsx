@@ -288,7 +288,7 @@ function DutyInfoDialog({
               Grafik: <b>{info.grafik}</b>
             </Typography>
             <Typography>
-              Dzisiejsze wizyty: <b>{info.dzisiejszeWizyty}</b>
+              Zaplanowane wizyty: <b>{info.dzisiejszeWizyty}</b>
             </Typography>
           </>
         ) : (

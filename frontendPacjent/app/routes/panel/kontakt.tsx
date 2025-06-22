@@ -12,15 +12,15 @@ import {
 import { useLoaderData } from "react-router";
 
 // Przykładowa lista doktorów (możesz pobierać z API)
-export async function clientLoader() {
-  const doctors = [
-  { id: 1, name: "dr Anna Kowalska" },
-  { id: 2, name: "dr Jan Nowak" },
-  { id: 3, name: "dr Ewa Zielińska" },
-];
+// const doctors = [
+//   { id: 1, name: "dr Anna Kowalska" },
+//   { id: 2, name: "dr Jan Nowak" },
+//   { id: 3, name: "dr Ewa Zielińska" },
+// ];
 
-  return doctors
-}
+// zwracane jest (SELECT) lekarz_id, imie, nazwisko, email, oddzial_id
+// jest endpoint do pobierania lekarzy
+// /api/doctors/:patientId/lab-results
 
 export default function Kontakt() {
   const doctors = useLoaderData() as { id: number; name: string }[];

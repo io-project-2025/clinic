@@ -9,6 +9,7 @@ import {
   Alert,
   Stack,
 } from "@mui/material";
+import { useLoaderData } from "react-router";
 
 // Przykładowa lista doktorów (możesz pobierać z API)
 // const doctors = [
@@ -21,9 +22,9 @@ import {
 // jest endpoint do pobierania lekarzy
 // /api/doctors/:patientId/lab-results
 
-
-
 export default function Kontakt() {
+  const doctors = useLoaderData() as { id: number; name: string }[];
+
   const [doctor, setDoctor] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");

@@ -9,15 +9,22 @@ import {
   Alert,
   Stack,
 } from "@mui/material";
+import { useLoaderData } from "react-router";
 
 // Przykładowa lista doktorów (możesz pobierać z API)
-const doctors = [
+export async function clientLoader() {
+  const doctors = [
   { id: 1, name: "dr Anna Kowalska" },
   { id: 2, name: "dr Jan Nowak" },
   { id: 3, name: "dr Ewa Zielińska" },
 ];
 
+  return doctors
+}
+
 export default function Kontakt() {
+  const doctors = useLoaderData() as { id: number; name: string }[];
+
   const [doctor, setDoctor] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");

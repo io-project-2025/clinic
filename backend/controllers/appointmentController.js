@@ -108,14 +108,19 @@ exports.updateNotes = async (req, res) => {
   }
 };
 
-// Ocena wizyty przez pacjenta
 exports.rateAppointment = async (req, res) => {
-  const { id: pacjentId } = req.user;
-  const { wizytaId, ocena } = req.body;
+  const patientId = req.user.id;
+  const appointmentId = parseInt(req.params.appointmentId, 10);
+  const { ocena } = req.body;
 
   try {
-    await db.rateAppointment(wizytaId, pacjentId, ocena);
-    res.json({ message: 'Ocena zapisana' });
+    const result = await db.rateAppointment(appointmentId, patientId, ocena);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Nie znaleziono wizyty do oceny' });
+    }
+
+    res.json({ message: 'Ocena zapisana', data: result.rows[0] });
   } catch (err) {
     console.error('Błąd zapisu oceny:', err);
     res.status(500).json({ error: 'Błąd serwera' });

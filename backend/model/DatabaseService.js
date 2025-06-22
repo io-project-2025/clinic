@@ -68,7 +68,19 @@ class DatabaseService {
    * @returns {Promise} - Lista wyników badań
    */
   async getPatientLabResults(patientId) {
-    const query = 'SELECT badanie_id, wyniki FROM badania WHERE pacjent_id = $1';
+    const query = `
+      SELECT 
+        b.badanie_id AS id,
+        b.data AS date,
+        b.wyniki->>'badanie' AS type,
+        b.wyniki->>'wynik' AS result,
+        l.imie || ' ' || l.nazwisko AS doctor,
+        b.opis AS description
+      FROM badania b
+      LEFT JOIN lekarze l ON b.lekarz_id = l.lekarz_id
+      WHERE b.pacjent_id = $1
+      ORDER BY b.data DESC
+    `;
     return this.query(query, [patientId]);
   }
 

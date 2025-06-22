@@ -9,22 +9,45 @@ import {
   Alert,
   Stack,
 } from "@mui/material";
-import { useLoaderData } from "react-router";
 
-// Przykładowa lista doktorów (możesz pobierać z API)
-// const doctors = [
-//   { id: 1, name: "dr Anna Kowalska" },
-//   { id: 2, name: "dr Jan Nowak" },
-//   { id: 3, name: "dr Ewa Zielińska" },
-// ];
+export async function doctorsLoader() {
+  try {
+    const res = await fetch("/api/doctors", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-user-id": localStorage.getItem("id") || "",
+        "x-user-role": localStorage.getItem("role") || "pacjent",
+      },
+    });
+
+    if (!res.ok) throw new Error("Nie udało się pobrać listy lekarzy");
+
+    const data = await res.json();
+
+    // Mapowanie do prostszego formatu
+    const doctors = data.map((doc: any) => ({
+      id: doc.lekarz_id,
+      name: `dr ${doc.imie} ${doc.nazwisko}`,
+      email: doc.email,
+      oddzial_id: doc.oddzial_id,
+    }));
+
+    return { doctors, error: null };
+  } catch (err) {
+    return { doctors: [], error: "Wystąpił błąd podczas pobierania lekarzy" };
+  }
+}
 
 // zwracane jest (SELECT) lekarz_id, imie, nazwisko, email, oddzial_id
 // jest endpoint do pobierania lekarzy
 // /api/doctors/:patientId/lab-results
 
-export default function Kontakt() {
-  const doctors = useLoaderData() as { id: number; name: string }[];
+// jest też endpoint wiadomosci /api/messages'  (wysyłanie jednej (POST) oraz (GET) pobieranie wszystkich poprzednich)
+// dane zwracane są w dokumentacji i model/DatabaseService.js
 
+
+export default function Kontakt() {
   const [doctor, setDoctor] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");

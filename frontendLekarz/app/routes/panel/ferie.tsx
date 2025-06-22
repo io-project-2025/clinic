@@ -13,7 +13,7 @@ import {
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import pl from "date-fns/locale/pl";
+import { pl } from "date-fns/locale/pl";
 
 export default function FerieForm() {
   const [startDate, setStartDate] = React.useState<Date | null>(null);
@@ -56,7 +56,7 @@ export default function FerieForm() {
             <TextField
               label="Powód urlopu"
               value={reason}
-              onChange={e => setReason(e.target.value)}
+              onChange={(e) => setReason(e.target.value)}
               required
               multiline
               minRows={2}
@@ -82,8 +82,8 @@ export default function FerieForm() {
           <Button onClick={() => setDialogOpen(false)} autoFocus>
             Zamknij
           </Button>
-              </DialogActions>
-            </Dialog>
-          </LocalizationProvider>
-        );
-      }
+        </DialogActions>
+      </Dialog>
+    </LocalizationProvider>
+  );
+}

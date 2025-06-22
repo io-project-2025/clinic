@@ -1,9 +1,22 @@
 import * as React from "react";
 import { useLoaderData } from "react-router";
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  Paper, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions,
-  Stack, Snackbar, Alert
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Stack,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 
 // Typ prośby o wizytę
@@ -15,33 +28,27 @@ type VisitRequest = {
   details: string;
 };
 
-// Mockowany clientLoader
-export async function loader() {
-  // Przykładowe prośby o wizyty
-  const requests: VisitRequest[] = [
-    {
-      id: "1",
-      patientName: "Jan Kowalski",
-      requestedDate: "2025-06-21 10:00",
-      reason: "Ból głowy",
-      details: "Pacjent zgłasza silny ból głowy od 2 dni.",
-    },
-    {
-      id: "2",
-      patientName: "Anna Nowak",
-      requestedDate: "2025-06-22 12:30",
-      reason: "Kontrola",
-      details: "Wizyta kontrolna po zabiegu.",
-    },
-    {
-      id: "3",
-      patientName: "Piotr Wiśniewski",
-      requestedDate: "2025-06-23 09:00",
-      reason: "Badania okresowe",
-      details: "Badania okresowe do pracy.",
-    },
-  ];
-  return { requests };
+export async function clientLoader() {
+  const doctorId = localStorage.getItem("id");
+
+  try {
+    const res = await fetch(`/api/appointments/doctor/${doctorId}/requests`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-user-id": doctorId || "",
+        "x-user-role": "lekarz",
+      },
+    });
+
+    if (!res.ok) throw new Error("Nie udało się pobrać zgłoszeń wizyt");
+
+    const requests = await res.json(); // type: VisitRequest[]
+    return { requests };
+  } catch (error) {
+    console.error("Błąd ładowania zgłoszeń:", error);
+    return { requests: [] };
+  }
 }
 
 // Komponent wiersza tabeli prośby o wizytę
@@ -119,10 +126,18 @@ function ReviewVisitDialog({
 
 // Główny komponent
 export default function NoweWizyty() {
-  const { requests: initialRequests } = useLoaderData() as { requests: VisitRequest[] };
-  const [requests, setRequests] = React.useState<VisitRequest[]>(initialRequests);
-  const [selectedRequest, setSelectedRequest] = React.useState<VisitRequest | null>(null);
-  const [snackbar, setSnackbar] = React.useState<{ open: boolean; message: string; severity: "success" | "info" }>({ open: false, message: "", severity: "success" });
+  const { requests: initialRequests } = useLoaderData() as {
+    requests: VisitRequest[];
+  };
+  const [requests, setRequests] =
+    React.useState<VisitRequest[]>(initialRequests);
+  const [selectedRequest, setSelectedRequest] =
+    React.useState<VisitRequest | null>(null);
+  const [snackbar, setSnackbar] = React.useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "info" | "error";
+  }>({ open: false, message: "", severity: "success" });
 
   // Otwórz modal do przeglądania prośby
   const handleReview = (request: VisitRequest) => {
@@ -130,20 +145,102 @@ export default function NoweWizyty() {
   };
 
   // Akceptuj wizytę (mock)
-  const handleAccept = () => {
+  // const handleAccept = () => {
+  //   if (!selectedRequest) return;
+  //   setRequests(requests.filter((r) => r.id !== selectedRequest.id));
+  //   setSnackbar({
+  //     open: true,
+  //     message: "Wizyta została przyjęta.",
+  //     severity: "success",
+  //   });
+  //   setSelectedRequest(null);
+  // };
+
+  const handleAccept = async () => {
     if (!selectedRequest) return;
-    setRequests(requests.filter(r => r.id !== selectedRequest.id));
-    setSnackbar({ open: true, message: "Wizyta została przyjęta.", severity: "success" });
-    setSelectedRequest(null);
+
+    try {
+      const response = await fetch(
+        `/api/appointments/${selectedRequest.id}/accept`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user-id": localStorage.getItem("id") || "",
+            "x-user-role": "lekarz",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Nie udało się zaakceptować wizyty");
+      }
+
+      // Usuń wizytę z listy UI
+      setRequests((prev) => prev.filter((r) => r.id !== selectedRequest.id));
+      setSnackbar({
+        open: true,
+        message: "Wizyta została przyjęta.",
+        severity: "success",
+      });
+      setSelectedRequest(null);
+    } catch (error) {
+      console.error("Błąd przy akceptacji wizyty:", error);
+      setSnackbar({
+        open: true,
+        message: "Wystąpił błąd przy przyjmowaniu wizyty.",
+        severity: "error",
+      });
+    }
   };
 
   // Odrzuć wizytę (mock)
-  const handleReject = () => {
-    if (!selectedRequest) return;
-    setRequests(requests.filter(r => r.id !== selectedRequest.id));
-    setSnackbar({ open: true, message: "Wizyta została odrzucona.", severity: "info" });
+  // const handleReject = () => {
+  //   if (!selectedRequest) return;
+  //   setRequests(requests.filter((r) => r.id !== selectedRequest.id));
+  //   setSnackbar({
+  //     open: true,
+  //     message: "Wizyta została odrzucona.",
+  //     severity: "info",
+  //   });
+  //   setSelectedRequest(null);
+  // };
+
+
+  const handleReject = async () => {
+  if (!selectedRequest) return;
+
+  try {
+    const response = await fetch(`/api/appointments/${selectedRequest.id}/cancel`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "x-user-id": localStorage.getItem("id") || "",
+        "x-user-role": "lekarz",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Nie udało się odrzucić wizyty");
+    }
+
+    setRequests((prev) => prev.filter((r) => r.id !== selectedRequest.id));
+    setSnackbar({
+      open: true,
+      message: "Wizyta została odrzucona.",
+      severity: "info",
+    });
     setSelectedRequest(null);
-  };
+  } catch (error) {
+    console.error("Błąd przy odrzucaniu wizyty:", error);
+    setSnackbar({
+      open: true,
+      message: "Wystąpił błąd przy odrzucaniu wizyty.",
+      severity: "error",
+    });
+  }
+};
+
 
   return (
     <Stack spacing={3}>
@@ -198,5 +295,5 @@ export default function NoweWizyty() {
         </Alert>
       </Snackbar>
     </Stack>
-  )
+  );
 }

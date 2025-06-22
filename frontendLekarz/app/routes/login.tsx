@@ -46,15 +46,15 @@ export default function Login() {
       }
 
       //   const data = await res.json();
-      const data = {
-        user: {
-          id: 1,
-          imie: "Jan",
-          nazwisko: "Kowalski",
-          email: "jan.kowalski@gmail.com",
-        },
-      };
-
+      // const data = {
+      //   user: {
+      //     id: 1,
+      //     imie: "Jan",
+      //     nazwisko: "Kowalski",
+      //     email: "jan.kowalski@gmail.com",
+      //   },
+      // };
+      const data = await res.json();
       localStorage.setItem("id", String(data.user.id));
       localStorage.setItem("firstName", String(data.user.imie));
       localStorage.setItem("lastName", String(data.user.nazwisko));

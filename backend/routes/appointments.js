@@ -73,6 +73,7 @@ router.get(
   appointmentController.getDoctorTodaysAppointments
 );
 
+//Pobierz zapytanie o wizytę do lekarza
 router.get(
   "/doctor/:doctorId/requests",
   authorizeRole(["lekarz"]),

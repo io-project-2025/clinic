@@ -46,7 +46,7 @@ class DatabaseService {
   `;
     return this.query(query, [doctorId]);
   }
-  
+
   /**
    * Pobiera szczegóły pacjenta
    * @param {number} patientId - ID pacjenta
@@ -407,8 +407,17 @@ class DatabaseService {
    * @returns {Promise} - Utworzona wizyta
    */
   async createAppointment(appointmentData) {
-    const { pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id, tytul,  objawy, diagnoza = ""} = appointmentData;
-    
+    const {
+      pacjent_id,
+      data,
+      godzina,
+      lekarz_id,
+      rodzaj_wizyty_id,
+      tytul,
+      objawy,
+      diagnoza = "",
+    } = appointmentData;
+
     const dokumenty_wizyty = { recepta: "", skierowanie: "" };
 
     const query = `
@@ -470,23 +479,22 @@ class DatabaseService {
     return this.query(query, [notes, appointmentId]);
   }
 
-    /**
-     * Ocenia wizytę pacjenta.
-     * @param {number} wizytaId - ID wizyty
-     * @param {number} pacjentId - ID pacjenta
-     * @param {number} ocena - Ocena wizyty
-     * @returns {Promise} - Wynik operacji aktualizacji oceny wizyty
-     */ 
-    async rateAppointment(appointmentId, patientId, ocena) {
-      const query = `
+  /**
+   * Ocenia wizytę pacjenta.
+   * @param {number} wizytaId - ID wizyty
+   * @param {number} pacjentId - ID pacjenta
+   * @param {number} ocena - Ocena wizyty
+   * @returns {Promise} - Wynik operacji aktualizacji oceny wizyty
+   */
+  async rateAppointment(appointmentId, patientId, ocena) {
+    const query = `
         UPDATE wizyty 
         SET ocena = $1 
         WHERE wizyta_id = $2 AND pacjent_id = $3
         RETURNING *;
       `;
-      return this.query(query, [ocena, appointmentId, patientId]);
-    }
-
+    return this.query(query, [ocena, appointmentId, patientId]);
+  }
 
   /**
    * Pobiera zaplanowane wizyty lekarza (do przeglądu / akceptacji)
@@ -543,6 +551,19 @@ class DatabaseService {
         ORDER BY data ASC;
       `;
     return this.query(query, [pacjentId, lekarzId]);
+  }
+
+  // ==================== DYŻURY LEKARZY ====================
+  async getDoctorTodayShift(doctorId) {
+    const query = `
+    SELECT z.opis AS shift
+    FROM lekarze_dyzury ld
+    JOIN dyzury d ON ld.dyzur_id = d.dyzur_id
+    JOIN zmiany z ON d.zmiana_id = z.zmiana_id
+    WHERE ld.lekarz_id = $1 AND d.data = CURRENT_DATE
+    LIMIT 1;
+  `;
+    return await this.query(query, [doctorId]);
   }
 }
 

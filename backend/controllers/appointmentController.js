@@ -99,10 +99,28 @@ exports.markNoShow = async (req, res) => {
 
 // Utworzenie wizyty
 exports.createAppointment = async (req, res) => {
-  const { pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id, tytul, objawy, diagnoza = ""} = req.body;
+  const {
+    pacjent_id,
+    data,
+    godzina,
+    lekarz_id,
+    rodzaj_wizyty_id,
+    tytul,
+    objawy,
+    diagnoza = "",
+  } = req.body;
 
   try {
-    const result = await db.createAppointment({ pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id, tytul, objawy, diagnoza});
+    const result = await db.createAppointment({
+      pacjent_id,
+      data,
+      godzina,
+      lekarz_id,
+      rodzaj_wizyty_id,
+      tytul,
+      objawy,
+      diagnoza,
+    });
     res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error("Błąd przy tworzeniu wizyty:", err);
@@ -152,6 +170,7 @@ exports.updateNotes = async (req, res) => {
   }
 };
 
+// Ocena wizyty
 exports.rateAppointment = async (req, res) => {
   const patientId = req.user.id;
   const appointmentId = parseInt(req.params.appointmentId, 10);
@@ -161,16 +180,17 @@ exports.rateAppointment = async (req, res) => {
     const result = await db.rateAppointment(appointmentId, patientId, ocena);
 
     if (result.rowCount === 0) {
-      return res.status(404).json({ error: 'Nie znaleziono wizyty do oceny' });
+      return res.status(404).json({ error: "Nie znaleziono wizyty do oceny" });
     }
 
-    res.json({ message: 'Ocena zapisana', data: result.rows[0] });
+    res.json({ message: "Ocena zapisana", data: result.rows[0] });
   } catch (err) {
     console.error("Błąd zapisu oceny:", err);
     res.status(500).json({ error: "Błąd serwera" });
   }
 };
 
+//  Pobranie zgłoszeń wizyt dla lekarza
 exports.getVisitRequests = async (req, res) => {
   const doctorId = parseInt(req.params.doctorId);
 
@@ -180,5 +200,20 @@ exports.getVisitRequests = async (req, res) => {
   } catch (err) {
     console.error("Błąd przy pobieraniu zgłoszeń wizyt:", err);
     res.status(500).json({ error: "Błąd serwera" });
+  }
+};
+
+// Pobranie wizyt lekarza z danego dnia
+exports.getAppointmentsCountByDate = async (req, res) => {
+  const { doctorId, date } = req.params;
+
+  try {
+    const result = await db.getTodaysAppointmentsForDoctor(doctorId, date);
+    res.status(200).json({ count: result.rows.length });
+  } catch (error) {
+    console.error("Błąd pobierania liczby wizyt lekarza:", error);
+    res
+      .status(500)
+      .json({ error: "Błąd serwera podczas pobierania liczby wizyt." });
   }
 };

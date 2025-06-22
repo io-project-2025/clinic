@@ -80,4 +80,11 @@ router.get(
   appointmentController.getVisitRequests
 );
 
+// Pobierz wizyty lekarza w danym dniu
+router.get(
+  "/doctor/:doctorId/day/:date",
+  authorizeRole(["lekarz"]),
+  appointmentController.getAppointmentsCountByDate
+);
+
 module.exports = router;

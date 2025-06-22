@@ -554,6 +554,11 @@ class DatabaseService {
   }
 
   // ==================== DYŻURY LEKARZY ====================
+  /**
+   * Pobiera dzisiejszy dyżur lekarza
+   * @param {number} doctorId - ID lekarza
+   * @returns {Promise} - Godzina dyżuru
+   */
   async getDoctorTodayShift(doctorId) {
     const query = `
     SELECT z.opis AS shift
@@ -564,6 +569,41 @@ class DatabaseService {
     LIMIT 1;
   `;
     return await this.query(query, [doctorId]);
+  }
+
+  /**
+   * Pobiera dyżur lekarza na konkretny dzień
+   * @param {number} doctorId - ID lekarza
+   * @param {string} date - Data w formacie YYYY-MM-DD
+   * @returns {Promise} - Godzina dyżuru
+   */
+  async getDoctorShiftByDate(doctorId, date) {
+    const query = `
+    SELECT z.opis AS shift
+    FROM lekarze_dyzury ld
+    JOIN dyzury d ON ld.dyzur_id = d.dyzur_id
+    JOIN zmiany z ON d.zmiana_id = z.zmiana_id
+    WHERE ld.lekarz_id = $1 AND d.data = $2
+    LIMIT 1;
+  `;
+    return await this.query(query, [doctorId, date]);
+  }
+
+  /**
+   * Pobiera grafik dyżurów lekarza
+   * @param {number} doctorId - ID lekarza
+   * @returns {Promise} - Lista dyżurów lekarza
+   */
+  async getDoctorSchedule(doctorId) {
+    const query = `
+    SELECT d.data AS date, z.opis AS shift
+    FROM lekarze_dyzury ld
+    JOIN dyzury d ON ld.dyzur_id = d.dyzur_id
+    JOIN zmiany z ON d.zmiana_id = z.zmiana_id
+    WHERE ld.lekarz_id = $1
+    ORDER BY d.data;
+  `;
+    return this.query(query, [doctorId]);
   }
 }
 

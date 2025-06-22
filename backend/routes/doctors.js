@@ -48,4 +48,18 @@ router.get(
   doctorsController.getDoctorTodayShift
 );
 
+// Pobierz harmonogram lekarza
+router.get(
+  "/:doctorId/schedule",
+  authorizeRole(["lekarz"]),
+  doctorsController.getDoctorSchedule
+);
+
+// Pobierz harmonogram lekarza na konkretny dzień
+router.get(
+  "/:doctorId/schedule/:date",
+  authorizeRole(["lekarz"]),
+  doctorsController.getDoctorShiftByDate
+);
+
 module.exports = router;

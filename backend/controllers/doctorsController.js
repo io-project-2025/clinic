@@ -119,7 +119,6 @@ exports.getDoctorTodayShift = async (req, res) => {
     const shiftMap = {
       Ranna: "06:00-14:00",
       Dzienna: "14:00-22:00",
-      Nocna: "22:00-06:00",
     };
 
     const grafik = shiftMap[shiftName] || "Nieznana zmiana";
@@ -127,6 +126,55 @@ exports.getDoctorTodayShift = async (req, res) => {
     res.status(200).json({ grafik });
   } catch (error) {
     console.error("Błąd pobierania dzisiejszego dyżuru lekarza:", error);
+    res.status(500).json({ error: "Błąd serwera podczas pobierania dyżuru." });
+  }
+};
+
+// Pobiera grafik lekarza
+exports.getDoctorSchedule = async (req, res) => {
+  const { doctorId } = req.params;
+  try {
+    const result = await db.getDoctorSchedule(doctorId);
+    console.log(result.rows);
+    const mapped = result.rows.map(({ date, shift }) => ({
+      date: date.toISOString().split("T")[0], // Pobiera tylko datę bez czasu
+      type:
+        shift === "Ranna"
+          ? "06:00-14:00"
+          : shift === "Dzienna"
+          ? "14:00-22:00"
+          : "Nieznana",
+    }));
+    console.log(mapped);
+    res.status(200).json(mapped);
+  } catch (error) {
+    console.error("Błąd pobierania wszystkich dyżurów lekarza:", error);
+    res.status(500).json({ error: "Błąd serwera podczas pobierania dyżurów" });
+  }
+};
+
+// Pobiera dyżur lekarza w danym dniu
+
+exports.getDoctorShiftByDate = async (req, res) => {
+  const { doctorId, date } = req.params;
+
+  try {
+    const result = await db.getDoctorShiftByDate(doctorId, date);
+    if (result.rows.length === 0) {
+      return res.status(200).json({ type: null }); // brak dyżuru
+    }
+
+    const shift = result.rows[0].shift;
+    const type =
+      shift === "Ranna"
+        ? "06:00-14:00"
+        : shift === "Dzienna"
+        ? "14:00-22:00"
+        : "Nieznana";
+
+    res.status(200).json({ type });
+  } catch (error) {
+    console.error("Błąd pobierania dyżuru lekarza:", error);
     res.status(500).json({ error: "Błąd serwera podczas pobierania dyżuru." });
   }
 };

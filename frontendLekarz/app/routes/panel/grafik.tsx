@@ -13,17 +13,44 @@ import {
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { pl } from "date-fns/locale";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import { format, isSameDay, startOfMonth, endOfMonth, addMonths } from "date-fns";
+import {
+  format,
+  isSameDay,
+  startOfMonth,
+  endOfMonth,
+  addMonths,
+} from "date-fns";
 
 // Mockowane pobieranie dyżurów
+// export async function clientLoader() {
+//   // Przykładowe dyżury na dwa miesiące
+//   return [
+//     { date: "2025-06-21", type: "1. zmiana" },
+//     { date: "2025-06-25", type: "2. zmiana" },
+//     { date: "2025-07-03", type: "1. zmiana" },
+//     { date: "2025-07-15", type: "2. zmiana" },
+//   ];
+// }
+
 export async function clientLoader() {
-  // Przykładowe dyżury na dwa miesiące
-  return [
-    { date: "2025-06-21", type: "1. zmiana" },
-    { date: "2025-06-25", type: "2. zmiana" },
-    { date: "2025-07-03", type: "1. zmiana" },
-    { date: "2025-07-15", type: "2. zmiana" },
-  ];
+  const doctorId = localStorage.getItem("id");
+
+  try {
+    const res = await fetch(`/api/doctors/${doctorId}/schedule`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-user-id": doctorId || "",
+        "x-user-role": "lekarz",
+      },
+    });
+
+    if (!res.ok) throw new Error("Nie udało się pobrać grafiku");
+    return await res.json();
+  } catch (error) {
+    console.error("Błąd ładowania grafiku:", error);
+    return []; // fallback
+  }
 }
 
 // Komórka kalendarza z dyżurem (bez godziny pod datą)
@@ -80,7 +107,11 @@ function DutyCalendar({
   const start = startOfMonth(month);
   const end = endOfMonth(month);
   const days: Date[] = [];
-  for (let d = start; d <= end; d = addMonths(d, 0), d.setDate(d.getDate() + 1)) {
+  for (
+    let d = start;
+    d <= end;
+    d = addMonths(d, 0), d.setDate(d.getDate() + 1)
+  ) {
     days.push(new Date(d));
   }
 
@@ -91,13 +122,17 @@ function DutyCalendar({
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-        <Button onClick={() => setMonth(addMonths(month, -1))}>Poprzedni</Button>
+        <Button onClick={() => setMonth(addMonths(month, -1))}>
+          Poprzedni
+        </Button>
         <Typography variant="h6">
           {format(month, "MMMM yyyy", { locale: pl })}
         </Typography>
         <Button onClick={() => setMonth(addMonths(month, 1))}>Następny</Button>
       </Box>
-      <Box sx={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 1 }}>
+      <Box
+        sx={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 1 }}
+      >
         {["Pn", "Wt", "Śr", "Cz", "Pt", "Sb", "Nd"].map((d) => (
           <Typography key={d} align="center" fontWeight={600}>
             {d}
@@ -138,30 +173,100 @@ function DutyInfoDialog({
   const [loading, setLoading] = useState(false);
   const [info, setInfo] = useState<any>(null);
 
+  // React.useEffect(() => {
+  //   if (open && date) {
+  //     setLoading(true);
+  //     setInfo(null);
+  //     // Zasymulowany fetch do backendu
+  //     setTimeout(() => {
+  //       // Mockowane dane na podstawie daty
+  //       const dateStr = format(date, "yyyy-MM-dd");
+  //       if (duty) {
+  //         setInfo({
+  //           dzisiejszeWizyty: Math.floor(Math.random() * 6) + 1,
+  //           grafik: duty === "1. zmiana" ? "08:00-16:00" : "15:00-23:00",
+  //           type: duty,
+  //         });
+  //       } else {
+  //         setInfo(null);
+  //       }
+  //       setLoading(false);
+  //     }, 800);
+  //   }
+  // }, [open, date, duty]);
+
   React.useEffect(() => {
     if (open && date) {
       setLoading(true);
       setInfo(null);
-      // Zasymulowany fetch do backendu
-      setTimeout(() => {
-        // Mockowane dane na podstawie daty
-        const dateStr = format(date, "yyyy-MM-dd");
-        if (duty) {
+
+      const doctorId = localStorage.getItem("id");
+      if (!doctorId) return;
+      const dateStr = format(date, "yyyy-MM-dd");
+
+      const fetchData = async () => {
+        try {
+          // 1. Pobierz grafik (godziny)
+          const dutyRes = await fetch(
+            `/api/doctors/${doctorId}/schedule/${dateStr}`,
+            {
+              method: "GET",
+              headers: {
+                "x-user-id": doctorId,
+                "x-user-role": "lekarz",
+              },
+            }
+          );
+
+          let grafik = "Brak";
+          let type = "Brak dyżuru";
+
+          if (dutyRes.ok) {
+            const { type: range } = await dutyRes.json(); // np. "06:00-14:00"
+            grafik = range;
+
+            // Rozpoznaj typ zmiany po godzinie
+            if (range === "06:00-14:00") {
+              type = "Ranna";
+            } else if (range === "14:00-22:00") {
+              type = "Dzienna";
+            } else if (range === "22:00-06:00") {
+              type = "Nocna";
+            } else {
+              type = "Brak zmiany";
+            }
+          }
+
+          // 2. Pobierz wizyty danego dnia
+          const visitRes = await fetch(
+            `/api/appointments/doctor/${doctorId}/day/${dateStr}`,
+            {
+              method: "GET",
+              headers: {
+                "x-user-id": doctorId,
+                "x-user-role": "lekarz",
+              },
+            }
+          );
+
+          const visits = visitRes.ok ? await visitRes.json() : [];
+
+          // 3. Ustaw dane do info boxa
           setInfo({
-            dzisiejszeWizyty: Math.floor(Math.random() * 6) + 1,
-            grafik: duty === "1. zmiana" ? "08:00-16:00" : "15:00-23:00",
-            pacjenci: Math.floor(Math.random() * 20) + 5,
-            historia: Math.floor(Math.random() * 30) + 10,
-            badania: Math.floor(Math.random() * 10) + 1,
-            type: duty,
+            dzisiejszeWizyty: visits.count,
+            grafik: grafik ? grafik : "-", // np. "06:00-14:00"
+            type, // np. "Ranna"
           });
-        } else {
-          setInfo(null);
+        } catch (err) {
+          console.error("Błąd ładowania danych dziennych:", err);
+        } finally {
+          setLoading(false);
         }
-        setLoading(false);
-      }, 800);
+      };
+
+      fetchData();
     }
-  }, [open, date, duty]);
+  }, [open, date]);
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -184,15 +289,6 @@ function DutyInfoDialog({
             </Typography>
             <Typography>
               Dzisiejsze wizyty: <b>{info.dzisiejszeWizyty}</b>
-            </Typography>
-            <Typography>
-              Pacjenci: <b>{info.pacjenci}</b>
-            </Typography>
-            <Typography>
-              Historia leczenia: <b>{info.historia}</b>
-            </Typography>
-            <Typography>
-              Zaplanowane badania: <b>{info.badania}</b>
             </Typography>
           </>
         ) : (

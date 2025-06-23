@@ -155,10 +155,14 @@ exports.getPatientAppointments = async (req, res) => {
 
 // aktualizacja dokumentów wizyty
 exports.updateDocuments = async (req, res) => {
-  const { id } = req.params;
+  const { appointmentId } = req.params;
   const { recepta = "", skierowanie = "" } = req.body;
+
   try {
-    await db.updateAppointmentDocuments(id, { recepta, skierowanie });
+    await db.updateAppointmentDocuments(appointmentId, {
+      recepta,
+      skierowanie,
+    });
     res.status(200).json({ recepta, skierowanie });
   } catch (err) {
     console.error("Błąd przy aktualizacji dokumentów wizyty:", err);
@@ -170,7 +174,6 @@ exports.updateDocuments = async (req, res) => {
 
 // aktualizacja notatek wizyty
 exports.updateNotes = async (req, res) => {
-
   const { appointmentId } = req.params;
   const { objawy = "", diagnoza = "" } = req.body;
 

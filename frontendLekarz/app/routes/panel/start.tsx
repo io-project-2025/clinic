@@ -10,14 +10,66 @@ import {
 } from "@mui/material";
 
 // Mockowane pobieranie danych do skrótów
+// export async function clientLoader() {
+//   return {
+//     dzisiejszeWizyty: 4,
+//     grafik: "08:00-16:00",
+//     pacjenci: 12,
+//     badania: 5,
+//   };
+// }
+
 export async function clientLoader() {
-  return {
-    dzisiejszeWizyty: 4,
-    grafik: "08:00-16:00",
-    pacjenci: 12,
-    historia: 27,
-    badania: 5,
-  };
+  const doctorId = localStorage.getItem("id");
+
+  if (!doctorId) {
+    throw new Error("Brak ID lekarza w localStorage");
+  }
+
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+      "x-user-id": doctorId,
+      "x-user-role": "lekarz",
+    };
+
+    const [appointmentsRes, requestsRes, patientsRes, scheduleRes] =
+      await Promise.all([
+        fetch(`/api/appointments/doctor/${doctorId}/today`, { headers }),
+        fetch(`/api/appointments/doctor/${doctorId}/requests`, { headers }),
+        fetch(`/api/doctors/${doctorId}/patients`, { headers }),
+        fetch(`/api/doctors/${doctorId}/schedule/today`, { headers }),
+      ]);
+
+    if (
+      !appointmentsRes.ok ||
+      !requestsRes.ok ||
+      !patientsRes.ok ||
+      !scheduleRes.ok
+    ) {
+      throw new Error("Błąd pobierania danych dashboardu");
+    }
+
+    const appointments = await appointmentsRes.json();
+    const requests = await requestsRes.json();
+    const patients = await patientsRes.json();
+    const schedule = await scheduleRes.json();
+
+    return {
+      dzisiejszeWizyty: appointments.length,
+      grafik: schedule.grafik,
+      pacjenci: patients.length,
+      badania: requests.length,
+    };
+  } catch (err) {
+    console.error("Błąd clientLoader:", err);
+    return {
+      dzisiejszeWizyty: 0,
+      grafik: "Brak danych",
+      pacjenci: 0,
+      badania: 0,
+    };
+  }
 }
 
 // Komponent pojedynczego skrótu

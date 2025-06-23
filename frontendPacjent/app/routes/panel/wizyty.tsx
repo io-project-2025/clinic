@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLoaderData } from "react-router";
 import {
   Box,
@@ -13,6 +13,10 @@ import {
   Rating,
   Alert,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 
@@ -30,6 +34,7 @@ export async function clientLoader() {
     });
     if (!res.ok) throw new Error("Błąd pobierania wizyt");
     const data = await res.json();
+    console.log("Pobrane wizyty:", JSON.stringify(data, null, 2));
     return { visits: data, error: null };
   } catch (err) {
     return { visits: [], error: "Nie udało się pobrać wizyt." };
@@ -38,11 +43,11 @@ export async function clientLoader() {
 
 type Appointment = {
   wizyta_id: number;
-  data: string;
-  godzina: string;
-  lekarz_id: number;
   pacjent_id: number;
-  rodzaj_wizyty_id: number;
+  lekarz_id: number;
+  data: string; // ISO string
+  godzina: string; // "HH:mm:ss"
+  ocena: number | null;
   rodzaj_wizyty_opis: string;
 };
 
@@ -71,25 +76,97 @@ function formatHour(hourStr: string) {
   return hourStr;
 }
 
+const randomNotes = [
+  "Pacjent zgłosił się z bólem głowy.",
+  "Zalecana kontrola za 2 tygodnie.",
+  "Brak niepokojących objawów.",
+  "Zalecenia: więcej ruchu, mniej stresu.",
+  "Pacjent przyjmuje leki zgodnie z zaleceniami.",
+];
+
+function getRandomNote() {
+  const idx = Math.floor(Math.random() * randomNotes.length);
+  return randomNotes[idx];
+}
+
 export default function Wizyty() {
   const { visits, error } = useLoaderData() as {
     visits: Appointment[];
     error: string | null;
   };
-  const [ratings, setRatings] = React.useState<{ [id: number]: number }>({});
+  const [ratings, setRatings] = useState(() =>
+    Object.fromEntries(
+      visits.map(a => [a.wizyta_id, a.ocena])
+    )
+  );
   const [submitted, setSubmitted] = React.useState<{ [id: number]: boolean }>({});
   const [alert, setAlert] = React.useState<string | null>(null);
+  const [noteOpen, setNoteOpen] = useState(false);
+  const [note, setNote] = useState("");
+  const [loadingNote, setLoadingNote] = useState(false);
 
   const handleRatingChange = (id: number, value: number | null) => {
     setRatings((prev) => ({ ...prev, [id]: value || 0 }));
   };
 
-  const handleSubmit = (id: number) => {
-    setSubmitted((prev) => ({ ...prev, [id]: true }));
-    setAlert("Dziękujemy za ocenę wizyty!");
-    setTimeout(() => setAlert(null), 2000);
-    // Tu możesz dodać fetch do backendu
+  const handleSubmit = async (id: number) => {
+    try {
+      const response = await fetch(`/api/appointments/${id}/rate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": localStorage.getItem("id") || "",
+          "x-user-role": "pacjent",
+        },
+        body: JSON.stringify({
+          ocena: ratings[id],
+        }),
+      });
+
+      if (response.ok) {
+        setSubmitted((prev) => ({ ...prev, [id]: true }));
+        setAlert("Dziękujemy za ocenę wizyty!");
+        setTimeout(() => setAlert(null), 2000);
+      } else {
+        const err = await response.json();
+        setAlert(err.error || "Błąd podczas zapisywania oceny.");
+        setTimeout(() => setAlert(null), 2000);
+      }
+    } catch (e) {
+      setAlert("Błąd połączenia z serwerem.");
+      setTimeout(() => setAlert(null), 2000);
+    }
   };
+
+  const handleListItemClick = async (e: React.MouseEvent, visitId: number) => {
+    // Nie otwieraj modala jeśli kliknięto w Rating lub Button
+    if (
+      e.currentTarget.querySelector(".MuiRating-root")?.contains(e.target as Node) ||
+      e.currentTarget.querySelector(".confirm-btn")?.contains(e.target as Node)
+    ) {
+      return;
+    }
+    setLoadingNote(true);
+    setNoteOpen(true);
+    try {
+      const res = await fetch(`/api/appointments/${visitId}/note`, { // to jest endpoint niezaimplementowany w backendzie
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": localStorage.getItem("id") || "",
+          "x-user-role": localStorage.getItem("role") || "pacjent",
+        },
+      });
+      if (!res.ok) throw new Error("Błąd pobierania notatki");
+      const data = await res.json();
+      setNote(data.note || "Brak notatki od lekarza.");
+    } catch (err) {
+      setNote("Nie udało się pobrać notatki od lekarza.");
+    }
+    setLoadingNote(false);
+  };
+
+  const handleClose = () => setNoteOpen(false);
 
   return (
     <Box sx={{ width: "100%", maxWidth: 700, mx: "auto", mt: 4 }}>
@@ -110,6 +187,8 @@ export default function Wizyty() {
               <React.Fragment key={visit.wizyta_id}>
                 <ListItem
                   alignItems="flex-start"
+                  button
+                  onClick={(e) => handleListItemClick(e, visit.wizyta_id)}
                   secondaryAction={
                     <Stack direction="row" spacing={1} alignItems="center">
                       <Rating
@@ -120,6 +199,7 @@ export default function Wizyty() {
                         emptyIcon={<StarIcon fontSize="inherit" />}
                       />
                       <Button
+                        className="confirm-btn"
                         variant="contained"
                         size="small"
                         disabled={submitted[visit.wizyta_id] || !ratings[visit.wizyta_id]}
@@ -147,6 +227,21 @@ export default function Wizyty() {
           </List>
         )}
       </Paper>
+      <Dialog open={noteOpen} onClose={handleClose}>
+        <DialogTitle>Notatka od lekarza</DialogTitle>
+        <DialogContent>
+          {loadingNote ? (
+            <Box sx={{ display: "flex", justifyContent: "center", my: 2 }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Typography>{note}</Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">Zamknij</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

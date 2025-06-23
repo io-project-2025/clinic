@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLoaderData } from "react-router";
 import {
   Box,
   Button,
@@ -10,14 +11,46 @@ import {
   Stack,
 } from "@mui/material";
 
-// Przykładowa lista doktorów (możesz pobierać z API)
-const doctors = [
-  { id: 1, name: "dr Anna Kowalska" },
-  { id: 2, name: "dr Jan Nowak" },
-  { id: 3, name: "dr Ewa Zielińska" },
-];
+export async function clientLoader() {
+  try {
+    const res = await fetch("/api/doctors", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-user-id": localStorage.getItem("id") || "",
+        "x-user-role": localStorage.getItem("role") || "pacjent",
+      },
+    });
+
+    if (!res.ok) throw new Error("Nie udało się pobrać listy lekarzy");
+
+    const data = await res.json();
+
+    // Mapowanie do prostszego formatu
+    const doctors = data.map((doc: any) => ({
+      id: doc.lekarz_id,
+      name: `dr ${doc.imie} ${doc.nazwisko}`,
+    }));
+
+    return { doctors, error: null };
+  } catch (err) {
+    return { doctors: [], error: "Wystąpił błąd podczas pobierania lekarzy" };
+  }
+}
+
+// zwracane jest (SELECT) lekarz_id, imie, nazwisko, email, oddzial_id
+// jest endpoint do pobierania lekarzy
+// /api/doctors/:patientId/lab-results
+
+// jest też endpoint wiadomosci /api/messages'  (wysyłanie jednej (POST) oraz (GET) pobieranie wszystkich poprzednich)
+// dane zwracane są w dokumentacji i model/DatabaseService.js
+
 
 export default function Kontakt() {
+  const data = useLoaderData() as { doctors: Array<{ id: number; name: string }>; error: string | null };
+  const doctors = data.doctors;
+  const err = data.error;
+
   const [doctor, setDoctor] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");

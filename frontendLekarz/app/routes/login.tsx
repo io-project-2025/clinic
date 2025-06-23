@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Container, TextField, Typography, Paper, Alert } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  TextField,
+  Typography,
+  Paper,
+  Alert,
+} from "@mui/material";
 import { useNavigate } from "react-router";
 
 export default function Login() {
@@ -24,40 +32,38 @@ export default function Login() {
     e.preventDefault();
     setError("");
 
-    // try {
-    //   const res = await fetch("/api/auth/login", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(form),
-    //   });
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({...form, rola: "lekarz"})
+      });
 
-    //   if (!res.ok) {
-    //     const data = await res.json();
-    //     setError(data?.error || "Błędny email lub hasło. Spróbuj ponownie.");
-    //     return;
-    //   }
-
-      
-
-    //   const data = await res.json();
-      const data = {
-        user: {
-          id: 1,
-          imie: "Jan",
-          nazwisko: "Kowalski",
-          email: "jan.kowalski@gmail.com"
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data?.error || "Błędny email lub hasło. Spróbuj ponownie.");
+        return;
       }
-    }
 
+      //   const data = await res.json();
+      // const data = {
+      //   user: {
+      //     id: 1,
+      //     imie: "Jan",
+      //     nazwisko: "Kowalski",
+      //     email: "jan.kowalski@gmail.com",
+      //   },
+      // };
+      const data = await res.json();
       localStorage.setItem("id", String(data.user.id));
       localStorage.setItem("firstName", String(data.user.imie));
       localStorage.setItem("lastName", String(data.user.nazwisko));
       localStorage.setItem("email", String(data.user.email));
 
       navigate("/panel");
-    // } catch (err) {
-    //   setError("Błąd połączenia z serwerem.");
-    // }
+    } catch (err) {
+      setError("Błąd połączenia z serwerem.");
+    }
   };
 
   return (
@@ -92,12 +98,7 @@ export default function Login() {
               {error}
             </Alert>
           )}
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3 }}
-          >
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3 }}>
             Zaloguj się
           </Button>
         </Box>

@@ -1,5 +1,5 @@
-const { Pool } = require('pg');
-require('dotenv').config();
+const { Pool } = require("pg");
+require("dotenv").config();
 
 const pool = new Pool({
   user: process.env.DB_USER,
@@ -7,21 +7,19 @@ const pool = new Pool({
   database: process.env.DB_NAME,
   password: process.env.DB_PASS,
   port: 5432,
-  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+  ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false,
   max: 10,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
 });
 
-// Set the search_path for all queries
-pool.on('connect', (client) => {
-  client.query('SET search_path TO clinic;')
-    .then(() => {
-      console.log('Search path set to clinic');
-    })
-    .catch((err) => {
-      console.error('Error setting search_path:', err.stack);
-    });
+
+pool.on("connect", (client) => {
+  client
+    .query("SET search_path TO clinic;")
+    .catch((err) => console.error("Błąd ustawiania search_path:", err.stack));
 });
 
+
 module.exports = pool;
+

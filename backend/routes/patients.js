@@ -7,7 +7,7 @@ const { authorizeRole } = require('../middleware/authMiddleware');
 
 // Pobierz szczegóły konkretnego pacjenta
 router.get('/:patientId', 
-  authorizeRole(['pacjent', 'lekarz']), 
+  authorizeRole(['pacjent', 'lekarz']),
   patientsController.getPatientDetails
 );
 

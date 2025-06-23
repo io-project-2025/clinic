@@ -1,9 +1,25 @@
 import * as React from "react";
 import { useLoaderData } from "react-router";
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  Paper, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions,
-  TextField, Stack, Chip, Box, IconButton, Input
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Stack,
+  Chip,
+  Box,
+  IconButton,
+  Input,
 } from "@mui/material";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 
@@ -16,16 +32,27 @@ type Visit = {
   notes?: string;
 };
 
-// Mockowany clientLoader
-export async function  clientLoader() {
-  const visits: Visit[] = [
-    { id: "1", patientName: "Jan Kowalski", time: "09:00", reason: "Kontrola", notes: "" },
-    { id: "2", patientName: "Anna Nowak", time: "10:00", reason: "Ból głowy", notes: "" },
-    { id: "3", patientName: "Piotr Wiśniewski", time: "11:30", reason: "Badania okresowe", notes: "Pacjent w dobrym stanie." },
-    { id: "4", patientName: "Maria Wójcik", time: "13:00", reason: "Szczepienie", notes: "" },
-    { id: "5", patientName: "Tomasz Kaczmarek", time: "14:30", reason: "Konsultacja", notes: "" },
-  ];
-  return { visits };
+export async function clientLoader() {
+  const doctorId = localStorage.getItem("id");
+
+  try {
+    const res = await fetch(`/api/appointments/doctor/${doctorId}/today`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-user-id": doctorId || "",
+        "x-user-role": "lekarz",
+      },
+    });
+
+    if (!res.ok) throw new Error("Nie udało się pobrać wizyt");
+
+    const visits = await res.json();
+    return { visits };
+  } catch (error) {
+    console.error("Błąd podczas ładowania wizyt:", error);
+    return { visits: [] }; // fallback
+  }
 }
 
 // Komponent Chip statusu wizyty
@@ -55,11 +82,7 @@ function VisitRow({
         <VisitStatusChip notes={visit.notes} />
       </TableCell>
       <TableCell>
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={() => onEdit(visit)}
-        >
+        <Button variant="outlined" size="small" onClick={() => onEdit(visit)}>
           Edytuj
         </Button>
       </TableCell>
@@ -101,7 +124,7 @@ function EditVisitDialog({
             multiline
             minRows={3}
             value={notes}
-            onChange={e => onNotesChange(e.target.value)}
+            onChange={(e) => onNotesChange(e.target.value)}
             fullWidth
           />
           <Box>
@@ -114,7 +137,11 @@ function EditVisitDialog({
                   id="upload-file"
                   type="file"
                   sx={{ display: "none" }}
-                  onChange={e => onFileChange(e.target.files?.[0] || null)}
+                  onChange={(e) =>
+                    onFileChange(
+                      (e.target as HTMLInputElement).files?.[0] || null
+                    )
+                  }
                 />
                 <IconButton component="span">
                   <AttachFileIcon />
@@ -162,33 +189,113 @@ export default function DzisiejszeWizyty() {
     console.log("Edycja wizyty ID:", visit.id);
   };
 
-  // Zapisz zmiany (mock)
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!selectedVisit) return;
-    const updatedVisits = visits.map(v =>
-      v.id === selectedVisit.id
-        ? { ...v, notes }
-        : v
-    );
-    setVisits(updatedVisits);
-    setSelectedVisit(null);
-    setNotes("");
-    setFile(null);
+    const doctorId = localStorage.getItem("id");
+    try {
+      const response = await fetch(
+        `/api/appointments/${selectedVisit.id}/notes`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user-id": doctorId || "",
+            "x-user-role": "lekarz",
+          },
+          body: JSON.stringify({ diagnoza: notes }), // tylko diagnoza – można dodać objawy
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Nie udało się zapisać notatek");
+      }
+
+      try {
+        const response = await fetch(
+          `/api/appointments/${selectedVisit.id}/done`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "x-user-id": doctorId || "",
+              "x-user-role": "lekarz",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Nie udało się zmienić statusu wizyty");
+        }
+      } catch (error) {
+        console.error("Błąd podczas zmiany statusu wizyty", error);
+      }
+
+      // Zaktualizuj lokalny stan (dla UI)
+      const updatedVisits = visits.map((v) =>
+        v.id === selectedVisit.id ? { ...v, notes } : v
+      );
+
+      setVisits(updatedVisits);
+      setSelectedVisit(null);
+      setNotes("");
+      setFile(null);
+    } catch (error) {
+      console.error("Błąd podczas zapisu notatek:", error);
+    }
   };
 
-  // Usuń notatki (mock)
-  const handleDeleteNotes = () => {
+  const handleDeleteNotes = async () => {
     if (!selectedVisit) return;
-    // Mock "usuwania" na backendzie
-    console.log("Usuwanie notatek dla wizyty ID:", selectedVisit.id);
-    const updatedVisits = visits.map(v =>
-      v.id === selectedVisit.id
-        ? { ...v, notes: "" }
-        : v
-    );
-    setVisits(updatedVisits);
-    setNotes("");
-    // Nie zamykamy modala, żeby użytkownik widział, że input jest pusty
+    const doctorId = localStorage.getItem("id");
+    try {
+      const response = await fetch(
+        `/api/appointments/${selectedVisit.id}/notes`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user-id": doctorId || "",
+            "x-user-role": "lekarz",
+          },
+          body: JSON.stringify({ diagnoza: "" }), // "usuwamy" notatkę poprzez wyczyszczenie pola
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Nie udało się usunąć notatki");
+      }
+
+      try {
+        const response = await fetch(
+          `/api/appointments/${selectedVisit.id}/accept`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "x-user-id": doctorId || "",
+              "x-user-role": "lekarz",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Nie udało się zmienić statusu wizyty");
+        }
+      } catch (error) {
+        console.error("Błąd podczas zmiany statusu wizyty", error);
+      }
+
+      // Aktualizujemy frontendowy stan
+      const updatedVisits = visits.map((v) =>
+        v.id === selectedVisit.id ? { ...v, notes: "" } : v
+      );
+
+      setVisits(updatedVisits);
+      setNotes("");
+      // modal nie jest zamykany – użytkownik widzi pusty input
+    } catch (error) {
+      console.error("Błąd podczas usuwania notatki:", error);
+    }
   };
 
   return (

@@ -61,33 +61,51 @@ export async function clientLoader({ request }: LoaderFunctionArgs) {
     date: string;
     shift: string;
   }[] = [];
-
+  let employeesData = [];
   try {
-    const res = await fetch("/api/admins/doctors/shifts", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "x-user-id": "1",
-        "x-user-role": "admin",
-      },
-    });
-    if (!res.ok) throw new Error("Nie udało się pobrać danych dyżurów");
-    shiftsData = await res.json();
+    const [res1, res2] = await Promise.all([
+      fetch("/api/doctors", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json", // fixed here
+          "x-user-id": "1",
+          "x-user-role": "admin",
+        },
+      }),
+      fetch("/api/admins/doctors/shifts", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": "1",
+          "x-user-role": "admin",
+        },
+      }),
+    ]);
+
+    if (!res1.ok) throw new Error("Nie udało się pobrać lekarzy");
+    if (!res2.ok) throw new Error("Nie udało się pobrać danych dyżurów");
+
+    [employeesData, shiftsData] = await Promise.all([res1.json(), res2.json()]);
   } catch (err) {
-    console.error("Błąd ładowania danych dyżurów:", err);
+    console.error("Błąd ładowania danych dyżurów lub lekarzy:", err);
   }
 
+  const employees = employeesData.map((emp: any) => ({
+    id: emp.lekarz_id,
+    name: `${emp.imie} ${emp.nazwisko}`,
+  }));
+  // console.log(employeesData);
   // Unikalni pracownicy
-  const uniqueDoctorsMap = new Map<number, Employee>();
-  shiftsData.forEach((d) => {
-    if (!uniqueDoctorsMap.has(d.doctor_id)) {
-      uniqueDoctorsMap.set(d.doctor_id, {
-        id: d.doctor_id,
-        name: d.name,
-      });
-    }
-  });
-  const employees = Array.from(uniqueDoctorsMap.values());
+  // const uniqueDoctorsMap = new Map<number, Employee>();
+  // shiftsData.forEach((d) => {
+  //   if (!uniqueDoctorsMap.has(d.doctor_id)) {
+  //     uniqueDoctorsMap.set(d.doctor_id, {
+  //       id: d.doctor_id,
+  //       name: d.name,
+  //     });
+  //   }
+  // });
+  // const employees = Array.from(uniqueDoctorsMap.values());
 
   // Przypisania
   const assignments: Assignment = {};

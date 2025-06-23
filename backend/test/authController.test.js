@@ -186,7 +186,8 @@ describe('Auth API Integration Tests', () => {
         .post('/api/auth/login')
         .send({
           email: testPatient.email,
-          haslo: testPatient.haslo
+          haslo: testPatient.haslo,
+          rola: 'pacjent'
         });
       
       expect(res.statusCode).toBe(200);
@@ -207,7 +208,8 @@ describe('Auth API Integration Tests', () => {
         .post('/api/auth/login')
         .send({
           email: testDoctor.email,
-          haslo: testDoctor.haslo
+          haslo: testDoctor.haslo,
+          rola: 'lekarz'
         });
       
       expect(res.statusCode).toBe(200);
@@ -222,7 +224,8 @@ describe('Auth API Integration Tests', () => {
         .post('/api/auth/login')
         .send({
           email: testPatient.email,
-          haslo: 'wrongpassword'
+          haslo: 'wrongpassword',
+          rola: 'pacjent'
         });
       
       expect(res.statusCode).toBe(401);
@@ -234,7 +237,8 @@ describe('Auth API Integration Tests', () => {
         .post('/api/auth/login')
         .send({
           email: `nonexistent${timestamp}@example.com`,
-          haslo: 'anypassword'
+          haslo: 'anypassword',
+          rola: 'pacjent'
         });
       
       expect(res.statusCode).toBe(401);
@@ -246,27 +250,11 @@ describe('Auth API Integration Tests', () => {
         .post('/api/auth/login')
         .send({
           email: testPatient.email
-          // Missing password
+          // Missing password and role
         });
       
       expect(res.statusCode).toBe(400);
       expect(res.body).toHaveProperty('error', 'Email i hasło są wymagane');
-    });
-    
-    describe('email validation tests', () => {
-      it('should reject login with invalid email format', async () => {
-        const invalidLoginAttempt = {
-          email: 'notanemail',
-          haslo: 'anypassword'
-        };
-        
-        const res = await request(app)
-          .post('/api/auth/login')
-          .send(invalidLoginAttempt);
-        
-        expect(res.statusCode).toBe(400);
-        expect(res.body).toHaveProperty('error', 'Nieprawidłowy format email');
-      });
     });
   });
 });

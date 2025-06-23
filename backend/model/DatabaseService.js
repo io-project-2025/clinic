@@ -652,13 +652,22 @@ class DatabaseService {
     } else {
       throw new Error(`Nieobsługiwana rola: ${rola}`);
     }
-    
+
     const result = await this.query(query, params);
-    
+
     if (result.rowCount === 0) {
       throw new Error(`Użytkownik o ID ${id} i roli ${rola} nie istnieje`);
     }
     return result.rows;
+  }
+
+  /**
+   * Wykonuje zapytanie SQL przesłane przez admina
+   * @param {string} query - Zapytanie SQL
+   * @returns {Promise} - Wynik zapytania
+   */
+  async runConsoleQuery(query) {
+    return this.query(query);
   }
 }
 

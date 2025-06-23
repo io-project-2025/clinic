@@ -39,3 +39,24 @@ exports.updateUserPassword = async (req, res) => {
     res.status(500).json({ error: "Błąd serwera przy aktualizacji hasła" });
   }
 };
+
+exports.runConsoleQuery = async (req, res) => {
+  const { query } = req.body;
+
+  if (!query || typeof query !== "string") {
+    return res
+      .status(400)
+      .json({ error: "Brak lub nieprawidłowe zapytanie SQL." });
+  }
+
+  try {
+    const result = await db.runConsoleQuery(query);
+    console.log("Wynik zapytania:", result.rows);
+    if (result.rowCount === 0) {
+      return res.json("Zapytanie wykonane pomyślnie.");
+    } else res.json({ output: result.rows });
+  } catch (error) {
+    console.error("Błąd podczas wykonywania zapytania SQL:", error);
+    res.status(500).json({ error: error.message });
+  }
+};

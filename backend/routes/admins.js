@@ -13,5 +13,10 @@ router.put(
   authorizeRole(["admin"]),
   adminRequestsController.updateUserPassword
 );
+router.post(
+  "/console",
+  authorizeRole(["admin"]),
+  adminRequestsController.runConsoleQuery
+);
 
 module.exports = router;

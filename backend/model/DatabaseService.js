@@ -732,6 +732,7 @@ class DatabaseService {
   `;
     return this.query(query);
   }
+  
   /**
    * Pobiera liczbę wszystkich wizyt
    * @returns {Promise} - Wynik zapytania z liczbą wizyt

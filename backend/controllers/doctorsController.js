@@ -158,7 +158,6 @@ exports.getDoctorSchedule = async (req, res) => {
 };
 
 // Pobiera dyżur lekarza w danym dniu
-
 exports.getDoctorShiftByDate = async (req, res) => {
   const { doctorId, date } = req.params;
 

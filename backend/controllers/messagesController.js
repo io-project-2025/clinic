@@ -1,5 +1,33 @@
 const db = require('../model/DatabaseService');
 
+// Pobieranie wiadomości między pacjentem a lekarzem
+exports.getMessages = async (req, res) => {
+  const { id: userId, role } = req.user;
+
+  try {
+    let pacjentId, lekarzId;
+
+    // Pobieramy ID rozmówcy z query, weryfikujemy poprawność
+    if (role === 'pacjent') {
+      pacjentId = userId;
+      lekarzId = req.query.lekarzId;
+      if (!lekarzId) return res.status(400).json({ error: 'Brak parametru lekarzId w zapytaniu' });
+    } else if (role === 'lekarz') {
+      lekarzId = userId;
+      pacjentId = req.query.pacjentId;
+      if (!pacjentId) return res.status(400).json({ error: 'Brak parametru pacjentId w zapytaniu' });
+    } else {
+      return res.status(400).json({ error: 'Nieznana rola użytkownika' });
+    }
+
+    const result = await db.getMessagesBetween(pacjentId, lekarzId);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error('Błąd podczas pobierania wiadomości:', err);
+    res.status(500).json({ error: 'Błąd serwera' });
+  }
+};
+
 // Wysyłanie wiadomości między pacjentem a lekarzem
 exports.sendMessage = async (req, res) => {
   const { id: nadawcaId, role: nadawcaRole } = req.user;
@@ -27,34 +55,6 @@ exports.sendMessage = async (req, res) => {
     res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error('Błąd podczas wysyłania wiadomości:', err);
-    res.status(500).json({ error: 'Błąd serwera' });
-  }
-};
-
-// Pobieranie wiadomości między pacjentem a lekarzem
-exports.getMessages = async (req, res) => {
-  const { id: userId, role } = req.user;
-
-  try {
-    let pacjentId, lekarzId;
-
-    // Pobieramy ID rozmówcy z query, weryfikujemy poprawność
-    if (role === 'pacjent') {
-      pacjentId = userId;
-      lekarzId = req.query.lekarzId;
-      if (!lekarzId) return res.status(400).json({ error: 'Brak parametru lekarzId w zapytaniu' });
-    } else if (role === 'lekarz') {
-      lekarzId = userId;
-      pacjentId = req.query.pacjentId;
-      if (!pacjentId) return res.status(400).json({ error: 'Brak parametru pacjentId w zapytaniu' });
-    } else {
-      return res.status(400).json({ error: 'Nieznana rola użytkownika' });
-    }
-
-    const result = await db.getMessagesBetween(pacjentId, lekarzId);
-    res.status(200).json(result.rows);
-  } catch (err) {
-    console.error('Błąd podczas pobierania wiadomości:', err);
     res.status(500).json({ error: 'Błąd serwera' });
   }
 };

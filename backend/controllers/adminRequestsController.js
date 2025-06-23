@@ -60,3 +60,55 @@ exports.runConsoleQuery = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.getVisitAnalyticsDashboard = async (req, res) => {
+  const dayTranslation = {
+    Monday: "Poniedziałek",
+    Tuesday: "Wtorek",
+    Wednesday: "Środa",
+    Thursday: "Czwartek",
+    Friday: "Piątek",
+    Saturday: "Sobota",
+    Sunday: "Niedziela",
+  };
+  try {
+    const [
+      totalVisitsResult,
+      visitsByTypeResult,
+      visitsByDoctorResult,
+      visitsByDayResult,
+    ] = await Promise.all([
+      db.getAllVisitsCount(),
+      db.getVisitsCountByVisitType(),
+      db.getVisitsCountByVisitDoctor(),
+      db.getVisitsCountByDay(),
+    ]);
+
+    const totalVisits = parseInt(totalVisitsResult.rows[0].count, 10);
+
+    const mostCommonVisits = visitsByTypeResult.rows.map((row) => ({
+      type: row.type,
+      count: parseInt(row.count, 10),
+    }));
+
+    const topDoctors = visitsByDoctorResult.rows.map((row) => ({
+      name: row.name,
+      visits: parseInt(row.visits, 10),
+    }));
+
+    const busiestDays = visitsByDayResult.rows.map((row) => ({
+      day: dayTranslation[row.day.trim()] || row.day.trim(),
+      visits: parseInt(row.visits, 10),
+    }));
+
+    res.json({
+      totalVisits,
+      mostCommonVisits,
+      topDoctors,
+      busiestDays,
+    });
+  } catch (err) {
+    console.error("Błąd przy generowaniu analityki wizyt:", err);
+    res.status(500).json({ error: "Wystąpił błąd serwera" });
+  }
+};

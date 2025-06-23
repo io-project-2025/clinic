@@ -18,29 +18,57 @@ import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 
 // Mockowane dane statystyczne
+// export async function clientLoader({ request }: LoaderFunctionArgs) {
+//   return {
+//     totalVisits: 1240,
+//     mostCommonVisits: [
+//       { type: "Konsultacja internistyczna", count: 420 },
+//       { type: "Badanie kontrolne", count: 310 },
+//       { type: "Szczepienie", count: 180 },
+//       { type: "Porada telefoniczna", count: 120 },
+//       { type: "Wizyta domowa", count: 80 },
+//     ],
+//     topDoctors: [
+//       { name: "dr Anna Nowak", visits: 210 },
+//       { name: "dr Jan Kowalski", visits: 185 },
+//       { name: "dr Maria Wiśniewska", visits: 160 },
+//     ],
+//     busiestDays: [
+//       { day: "Poniedziałek", visits: 260 },
+//       { day: "Wtorek", visits: 230 },
+//       { day: "Środa", visits: 210 },
+//       { day: "Czwartek", visits: 180 },
+//       { day: "Piątek", visits: 170 },
+//     ],
+//   };
+// }
+
 export async function clientLoader({ request }: LoaderFunctionArgs) {
-  return {
-    totalVisits: 1240,
-    mostCommonVisits: [
-      { type: "Konsultacja internistyczna", count: 420 },
-      { type: "Badanie kontrolne", count: 310 },
-      { type: "Szczepienie", count: 180 },
-      { type: "Porada telefoniczna", count: 120 },
-      { type: "Wizyta domowa", count: 80 },
-    ],
-    topDoctors: [
-      { name: "dr Anna Nowak", visits: 210 },
-      { name: "dr Jan Kowalski", visits: 185 },
-      { name: "dr Maria Wiśniewska", visits: 160 },
-    ],
-    busiestDays: [
-      { day: "Poniedziałek", visits: 260 },
-      { day: "Wtorek", visits: 230 },
-      { day: "Środa", visits: 210 },
-      { day: "Czwartek", visits: 180 },
-      { day: "Piątek", visits: 170 },
-    ],
-  };
+  try {
+    const res = await fetch("/api/admins/visits/analytics", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-user-id": "1",
+        "x-user-role": "admin",
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error(`Błąd pobierania danych (${res.status})`);
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error("Błąd clientLoader:", err);
+    return {
+      totalVisits: 0,
+      mostCommonVisits: [],
+      topDoctors: [],
+      busiestDays: [],
+      error: "Nie udało się pobrać danych z serwera",
+    };
+  }
 }
 
 // Komponent statystyki ogólnej
@@ -92,7 +120,10 @@ function RankingList({
 }) {
   return (
     <Paper elevation={2} sx={{ p: 2, minWidth: 260 }}>
-      <Typography variant="subtitle1" sx={{ mb: 1, display: "flex", alignItems: "center", gap: 1 }}>
+      <Typography
+        variant="subtitle1"
+        sx={{ mb: 1, display: "flex", alignItems: "center", gap: 1 }}
+      >
         {icon}
         {title}
       </Typography>
@@ -113,9 +144,8 @@ function RankingList({
 
 // Komponent główny
 export default function StatsPage() {
-  const { totalVisits, mostCommonVisits, topDoctors, busiestDays } = useLoaderData() as Awaited<
-    ReturnType<typeof clientLoader>
-  >;
+  const { totalVisits, mostCommonVisits, topDoctors, busiestDays } =
+    useLoaderData() as Awaited<ReturnType<typeof clientLoader>>;
 
   return (
     <Box sx={{ maxWidth: 1100, mx: "auto", mt: 4, p: 2 }}>
@@ -123,7 +153,9 @@ export default function StatsPage() {
         Statystyki szpitalne
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        Jako administrator masz dostęp do kluczowych statystyk działalności placówki. Analizuj trendy, najczęstsze wizyty oraz ranking lekarzy, aby lepiej zarządzać kliniką.
+        Jako administrator masz dostęp do kluczowych statystyk działalności
+        placówki. Analizuj trendy, najczęstsze wizyty oraz ranking lekarzy, aby
+        lepiej zarządzać kliniką.
       </Typography>
       <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid item>
@@ -177,5 +209,6 @@ export default function StatsPage() {
           />
         </Grid>
       </Grid>
-    </Box>) 
+    </Box>
+  );
 }

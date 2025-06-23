@@ -19,4 +19,9 @@ router.post(
   adminRequestsController.runConsoleQuery
 );
 
+router.get(
+  "/visits/analytics",
+  authorizeRole(["admin"]),
+  adminRequestsController.getVisitAnalyticsDashboard
+);
 module.exports = router;

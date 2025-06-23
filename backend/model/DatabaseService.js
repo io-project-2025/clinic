@@ -669,6 +669,64 @@ class DatabaseService {
   async runConsoleQuery(query) {
     return this.query(query);
   }
+
+  /**
+   * Pobiera liczbę wizyt w danym dniu
+   * @returns {Promise} - Wynik zapytania z liczbą wizyt
+   */
+  async getVisitsCountByDay() {
+    const query = `
+    SELECT TRIM(TO_CHAR(data, 'Day')) as day, count(wizyta_id) AS visits from wizyty group by day ORDER BY visits DESC;
+  `;
+    return this.query(query);
+  }
+
+  /**
+   * Pobiera liczbę wizyt według typu wizyty
+   * @returns {Promise} - Wynik zapytania z liczbą wizyt
+   */
+  async getVisitsCountByVisitType() {
+    const query = `
+    SELECT 
+      rw.opis AS type,
+      COUNT(w.wizyta_id) AS count
+    FROM wizyty w
+    JOIN rodzaje_wizyt rw ON w.rodzaj_wizyty_id = rw.rodzaj_wizyty_id
+    GROUP BY rw.opis
+    ORDER BY count DESC
+    LIMIT 5;
+  `;
+    return this.query(query);
+  }
+
+  /**
+   * Pobiera liczbę wizyt według lekarza
+   * @returns {Promise} - Wynik zapytania z liczbą wizyt
+   * */
+  async getVisitsCountByVisitDoctor() {
+    const query = `
+    SELECT 
+      CONCAT(l.imie, ' ', l.nazwisko) AS name,
+      COUNT(w.wizyta_id) AS visits
+    FROM wizyty w
+    JOIN lekarze l ON w.lekarz_id = l.lekarz_id
+    GROUP BY l.lekarz_id, l.imie, l.nazwisko
+    ORDER BY visits DESC
+    LIMIT 5;
+  `;
+    return this.query(query);
+  }
+  /**
+   * Pobiera liczbę wszystkich wizyt
+   * @returns {Promise} - Wynik zapytania z liczbą wizyt
+   */
+  async getAllVisitsCount() {
+    const query = `
+    select count(*) from wizyty ;
+  `;
+    return this.query(query);
+  }
+
 }
 
 module.exports = new DatabaseService();

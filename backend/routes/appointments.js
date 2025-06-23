@@ -3,18 +3,11 @@ const router = express.Router();
 const appointmentController = require("../controllers/appointmentController");
 const { authorizeRole } = require("../middleware/authMiddleware");
 
-// Pobierz wszystkie wizyty
+// Pobierz dzisiejsze wizyty lekarza
 router.get(
-  "/patient/:patientId",
-  authorizeRole(["pacjent"]),
-  appointmentController.getPatientAppointments
-);
-
-// Stwórz nową wizytę - domyślny status to 'zaplanowana'
-router.post(
-  "/",
-  authorizeRole(["pacjent", "lekarz"]),
-  appointmentController.createAppointment
+  "/doctor/:doctorId/today",
+  authorizeRole(["lekarz"]),
+  appointmentController.getDoctorTodaysAppointments
 );
 
 // Anulowanie wizyty
@@ -31,18 +24,25 @@ router.put(
   appointmentController.markAppointmentDone
 );
 
-// Oznaczenie wizyty jako zaakceptowana
-router.put(
-  "/:appointmentId/accept",
-  authorizeRole(["lekarz"]),
-  appointmentController.markAppointmentAccepted
-);
-
 // Oznaczenie wizyty jako nieobecność pacjenta
 router.put(
   "/:appointmentId/no-show",
   authorizeRole(["lekarz"]),
   appointmentController.markNoShow
+);
+
+// Stwórz nową wizytę - domyślny status to 'zaplanowana'
+router.post(
+  "/",
+  authorizeRole(["pacjent", "lekarz"]),
+  appointmentController.createAppointment
+);
+
+// Pobierz wszystkie wizyty
+router.get(
+  "/patient/:patientId",
+  authorizeRole(["pacjent"]),
+  appointmentController.getPatientAppointments
 );
 
 // Zaktualizuj dokumenty wizyty
@@ -66,11 +66,11 @@ router.post(
   appointmentController.rateAppointment
 );
 
-// Pobierz dzisiejsze wizyty lekarza
-router.get(
-  "/doctor/:doctorId/today",
+// Oznaczenie wizyty jako zaakceptowana
+router.put(
+  "/:appointmentId/accept",
   authorizeRole(["lekarz"]),
-  appointmentController.getDoctorTodaysAppointments
+  appointmentController.markAppointmentAccepted
 );
 
 //Pobierz zapytanie o wizytę do lekarza
@@ -87,6 +87,7 @@ router.get(
   appointmentController.getAppointmentsCountByDate
 );
 
+// Pobierz notatki wizyty
 router.get(
   "/:visitId/note",
   authorizeRole(["lekarz", "pacjent"]),

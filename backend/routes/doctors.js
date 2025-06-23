@@ -10,15 +10,18 @@ router.get(
   doctorsController.getDoctors
 );
 
+// Dodaj nowego lekarza
+router.post("/", 
+  authorizeRole(["admin"]), 
+  doctorsController.createDoctor
+);
+
 // Aktualizuj dane lekarza
 router.put(
   "/:doctorId",
   authorizeRole(["lekarz", "admin"]),
   doctorsController.updateDoctor
 );
-
-// Dodaj nowego lekarza
-router.post("/", authorizeRole(["admin"]), doctorsController.createDoctor);
 
 // Usuń lekarza
 router.delete(

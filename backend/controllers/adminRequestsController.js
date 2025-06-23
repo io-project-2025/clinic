@@ -46,6 +46,7 @@ exports.updateUserPassword = async (req, res) => {
   }
 };
 
+// Wykonuje zapytanie SQL w konsoli
 exports.runConsoleQuery = async (req, res) => {
   const { query } = req.body;
 
@@ -67,6 +68,7 @@ exports.runConsoleQuery = async (req, res) => {
   }
 };
 
+// Pobiera analitykę wizyt w klinice
 exports.getVisitAnalyticsDashboard = async (req, res) => {
   const dayTranslation = {
     Monday: "Poniedziałek",
@@ -120,7 +122,6 @@ exports.getVisitAnalyticsDashboard = async (req, res) => {
 };
 
 // Pobiera dyżury lekarzy z datą i opisem zmiany
-
 exports.getDoctorShifts = async (req, res) => {
   try {
     const result = await db.getDoctorShifts();
@@ -139,6 +140,7 @@ exports.getDoctorShifts = async (req, res) => {
   }
 };
 
+// Przypisuje dyżur lekarza do konkretnej daty i zmiany
 exports.assignDoctorShift = async (req, res) => {
   try {
     const { employeeId, date, shift } = req.body;
@@ -158,6 +160,7 @@ exports.assignDoctorShift = async (req, res) => {
   }
 };
 
+// Usuwa dyżur lekarza na podstawie ID pracownika, daty i zmiany
 exports.unassignDoctorShift = async (req, res) => {
   try {
     const { employeeId, date, shift } = req.body;

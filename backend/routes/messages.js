@@ -3,7 +3,7 @@ const router = express.Router();
 const messagesController = require('../controllers/messagesController');
 const { authorizeRole } = require('../middleware/authMiddleware');
 
-// Pobieranie wiadomości między pacjentem a lekarzem
+// Pobieranie wiadomości między pacjentem a lekarzem 
 router.get('/', 
     authorizeRole(['pacjent', 'lekarz']), 
     messagesController.getMessages

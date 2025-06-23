@@ -606,6 +606,60 @@ class DatabaseService {
     console.log(await this.query(query, [doctorId]));
     return await this.query(query, [doctorId]);
   }
+
+  // ==================== ADMINISTRATORZY ====================
+
+  /**
+   * Pobiera wszystkich użytkowników (pacjentów i lekarzy)
+   * @returns {Promise} - Lista użytkowników
+   */
+  async getAllUsers() {
+    const query = `
+    SELECT pacjent_id AS id, email, 'user' AS role FROM pacjenci
+    UNION
+    SELECT lekarz_id AS id, email, 'doctor' AS role FROM lekarze;
+  `;
+    return this.query(query);
+  }
+
+  /**
+   * Aktualizuje hasło użytkownika (lekarz lub pacjent)
+   * @param {number} id - ID użytkownika
+   * @param {'lekarz'|'pacjent'} rola - Rola użytkownika
+   * @param {string} noweHaslo - Nowe hasło
+   * @returns {Promise} - Zaktualizowany użytkownik
+   */
+  async updateUserPassword(id, rola, noweHaslo) {
+    let query;
+    let params;
+
+    if (rola === "doctor") {
+      query = `
+      UPDATE lekarze
+      SET haslo = $1
+      WHERE lekarz_id = $2
+      RETURNING lekarz_id AS id, email, 'lekarz' AS rola;
+    `;
+      params = [noweHaslo, id];
+    } else if (rola === "user") {
+      query = `
+      UPDATE pacjenci
+      SET haslo = $1
+      WHERE pacjent_id = $2
+      RETURNING pacjent_id AS id, email, 'pacjent' AS rola;
+    `;
+      params = [noweHaslo, id];
+    } else {
+      throw new Error(`Nieobsługiwana rola: ${rola}`);
+    }
+    
+    const result = await this.query(query, params);
+    
+    if (result.rowCount === 0) {
+      throw new Error(`Użytkownik o ID ${id} i roli ${rola} nie istnieje`);
+    }
+    return result.rows;
+  }
 }
 
 module.exports = new DatabaseService();

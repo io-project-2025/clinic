@@ -727,6 +727,130 @@ class DatabaseService {
     return this.query(query);
   }
 
+  async getDoctorShifts() {
+    const query = `
+    SELECT 
+      l.lekarz_id as doctor_id,
+      CONCAT(l.imie, ' ', l.nazwisko) AS name,
+      d.data as date,
+      z.opis AS shift
+    FROM lekarze_dyzury ld
+    JOIN lekarze l ON ld.lekarz_id = l.lekarz_id
+    JOIN dyzury d ON ld.dyzur_id = d.dyzur_id
+    JOIN zmiany z ON d.zmiana_id = z.zmiana_id
+    ORDER BY d.data;
+  `;
+    return this.query(query);
+  }
+
+  /**
+   * Przypisuje lekarzowi dyżur na dany dzień i zmianę
+   * Tworzy wpis w `dyzury` i `lekarze_dyzury` w jednej transakcji
+   * @param {number} doctorId
+   * @param {string} date - YYYY-MM-DD
+   * @param {string} shift - opis zmiany ("Ranna", "Dzienna", ...)
+   * @returns {Promise}
+   */
+  async assignDoctorShift(doctorId, date, shift) {
+    const client = await this.pool.connect();
+
+    try {
+      await client.query("BEGIN");
+
+      // 1. Pobierz ID zmiany
+      const shiftRes = await client.query(
+        "SELECT zmiana_id FROM zmiany WHERE opis = $1",
+        [shift]
+      );
+      if (shiftRes.rowCount === 0) {
+        throw new Error("Nie znaleziono zmiany o podanym opisie.");
+      }
+      const zmianaId = shiftRes.rows[0].zmiana_id;
+
+      // 2. Wstaw nowy dyżur lub sprawdź, czy istnieje
+      const dyzurRes = await client.query(
+        "INSERT INTO dyzury (data, zmiana_id) VALUES ($1, $2) ON CONFLICT (data, zmiana_id) DO UPDATE SET zmiana_id = EXCLUDED.zmiana_id RETURNING dyzur_id;",
+        [date, zmianaId]
+      );
+      const dyzurId = dyzurRes.rows[0].dyzur_id;
+
+      // 3. Wstaw do lekarze_dyzury
+      await client.query(
+        "INSERT INTO lekarze_dyzury (lekarz_id, dyzur_id) VALUES ($1, $2) ON CONFLICT DO NOTHING;",
+        [doctorId, dyzurId]
+      );
+
+      await client.query("COMMIT");
+      return { success: true };
+    } catch (error) {
+      await client.query("ROLLBACK");
+      console.error("Błąd przypisywania dyżuru:", error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  /**
+   * Usuwa przypisanie lekarza do dyżuru na dany dzień i zmianę
+   * Jeśli żaden lekarz nie jest przypisany do dyżuru, usuwa cały dyżur
+   * @param {number} doctorId - ID lekarza
+   * @param {string} date - Data dyżuru w formacie YYYY-MM-DD
+   * @param {string} shift - Opis zmiany (np. "Ranna", "Dzienna")
+   * @returns {Promise}
+   */
+  async unassignDoctorShift(doctorId, date, shift) {
+    const client = await this.pool.connect();
+    try {
+      await client.query("BEGIN");
+
+      // Pobierz ID zmiany
+      const zmianaResult = await client.query(
+        "SELECT zmiana_id FROM zmiany WHERE opis = $1",
+        [shift]
+      );
+      if (zmianaResult.rowCount === 0) {
+        throw new Error("Nie znaleziono zmiany o podanym opisie");
+      }
+      const zmianaId = zmianaResult.rows[0].zmiana_id;
+
+      // Pobierz dyżur o danej dacie i zmianie
+      const dyzurResult = await client.query(
+        "SELECT dyzur_id FROM dyzury WHERE data = $1 AND zmiana_id = $2",
+        [date, zmianaId]
+      );
+      if (dyzurResult.rowCount === 0) {
+        // Dyżur nie istnieje — nic do usunięcia
+        await client.query("ROLLBACK");
+        return;
+      }
+
+      const dyzurId = dyzurResult.rows[0].dyzur_id;
+
+      // Usuń przypisanie lekarza
+      await client.query(
+        "DELETE FROM lekarze_dyzury WHERE dyzur_id = $1 AND lekarz_id = $2",
+        [dyzurId, doctorId]
+      );
+
+      // Jeśli żaden lekarz nie został przypisany — usuń cały dyżur
+      const check = await client.query(
+        "SELECT COUNT(*) FROM lekarze_dyzury WHERE dyzur_id = $1",
+        [dyzurId]
+      );
+      if (parseInt(check.rows[0].count) === 0) {
+        await client.query("DELETE FROM dyzury WHERE dyzur_id = $1", [dyzurId]);
+      }
+
+      await client.query("COMMIT");
+    } catch (error) {
+      await client.query("ROLLBACK");
+      console.error("Błąd unassignDoctorShift:", error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
 }
 
 module.exports = new DatabaseService();

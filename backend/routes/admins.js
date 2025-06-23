@@ -24,4 +24,23 @@ router.get(
   authorizeRole(["admin"]),
   adminRequestsController.getVisitAnalyticsDashboard
 );
+
+router.get(
+  "/doctors/shifts",
+  authorizeRole(["admin"]),
+  adminRequestsController.getDoctorShifts
+);
+
+router.post(
+  "/shifts/assign",
+  authorizeRole(["admin"]),
+  adminRequestsController.assignDoctorShift
+);
+
+router.post(
+  "/shifts/unassign",
+  authorizeRole(["admin"]),
+  adminRequestsController.unassignDoctorShift
+);
+
 module.exports = router;

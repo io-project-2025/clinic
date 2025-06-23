@@ -1,5 +1,11 @@
 const db = require("../model/DatabaseService");
 
+const dayjs = require("dayjs");
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 // Pobiera wszystkich użytkowników z bazy danych
 exports.getUsers = async (req, res) => {
   try {
@@ -110,5 +116,61 @@ exports.getVisitAnalyticsDashboard = async (req, res) => {
   } catch (err) {
     console.error("Błąd przy generowaniu analityki wizyt:", err);
     res.status(500).json({ error: "Wystąpił błąd serwera" });
+  }
+};
+
+// Pobiera dyżury lekarzy z datą i opisem zmiany
+
+exports.getDoctorShifts = async (req, res) => {
+  try {
+    const result = await db.getDoctorShifts();
+
+    const mapped = result.rows.map(({ doctor_id, name, date, shift }) => ({
+      doctor_id,
+      name,
+      date: dayjs.utc(date).tz("Europe/Warsaw").format("YYYY-MM-DD"),
+      shift,
+    }));
+
+    res.status(200).json(mapped);
+  } catch (error) {
+    console.error("Błąd podczas pobierania dyżurów lekarzy:", error);
+    res.status(500).json({ error: "Błąd serwera podczas pobierania dyżurów" });
+  }
+};
+
+exports.assignDoctorShift = async (req, res) => {
+  try {
+    const { employeeId, date, shift } = req.body;
+
+    if (!employeeId || !date || !shift) {
+      return res.status(400).json({ error: "Brakuje wymaganych pól." });
+    }
+
+    await db.assignDoctorShift(employeeId, date, shift);
+
+    res.status(200).json({ message: "Dyżur przypisany pomyślnie." });
+  } catch (error) {
+    console.error("Błąd przypisywania dyżuru:", error);
+    res
+      .status(500)
+      .json({ error: "Błąd serwera podczas przypisywania dyżuru." });
+  }
+};
+
+exports.unassignDoctorShift = async (req, res) => {
+  try {
+    const { employeeId, date, shift } = req.body;
+
+    if (!employeeId || !date || !shift) {
+      return res.status(400).json({ error: "Brakuje wymaganych danych." });
+    }
+
+    await db.unassignDoctorShift(employeeId, date, shift);
+
+    res.status(200).json({ message: "Dyżur usunięty pomyślnie." });
+  } catch (error) {
+    console.error("Błąd usuwania dyżuru:", error);
+    res.status(500).json({ error: "Błąd serwera podczas usuwania dyżuru." });
   }
 };

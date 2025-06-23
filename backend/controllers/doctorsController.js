@@ -141,7 +141,6 @@ exports.getDoctorSchedule = async (req, res) => {
   const { doctorId } = req.params;
   try {
     const result = await db.getDoctorSchedule(doctorId);
-    console.log(result.rows);
     const mapped = result.rows.map(({ date, shift }) => ({
       date: dayjs.utc(date).tz("Europe/Warsaw").format("YYYY-MM-DD"), // Pobiera tylko datę bez czasu
       type:
@@ -151,7 +150,6 @@ exports.getDoctorSchedule = async (req, res) => {
           ? "14:00-22:00"
           : "Nieznana",
     }));
-    console.log(mapped);
     res.status(200).json(mapped);
   } catch (error) {
     console.error("Błąd pobierania wszystkich dyżurów lekarza:", error);

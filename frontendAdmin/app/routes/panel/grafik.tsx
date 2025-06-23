@@ -19,11 +19,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 // Typy
 type Employee = { id: number; name: string };
-type ShiftType = "I zmiana" | "II zmiana";
+type ShiftType = "Ranna" | "Dzienna";
 type Assignment = {
   [date: string]: {
-    "I zmiana": { employees: Employee[] };
-    "II zmiana": { employees: Employee[] };
+    Ranna: { employees: Employee[] };
+    Dzienna: { employees: Employee[] };
   };
 };
 
@@ -34,23 +34,77 @@ const days = Array.from({ length: 7 }).map((_, i) => {
 });
 
 // Loader pobierający pracowników i przypisania
-export async function clientLoader({ request }: LoaderFunctionArgs) {
-  // Mock pracowników
-  const employees: Employee[] = [
-    { id: 1, name: "Anna Nowak" },
-    { id: 2, name: "Jan Kowalski" },
-    { id: 3, name: "Maria Wiśniewska" },
-  ];
+// export async function clientLoader({ request }: LoaderFunctionArgs) {
+//   // Mock pracowników
+//   const employees: Employee[] = [
+//     { id: 1, name: "Anna Nowak" },
+//     { id: 2, name: "Jan Kowalski" },
+//     { id: 3, name: "Maria Wiśniewska" },
+//   ];
 
-  // Mock przypisań (np. Anna Nowak na I zmianę pierwszego dnia)
+//   // Mock przypisań (np. Anna Nowak na I zmianę pierwszego dnia)
+//   const assignments: Assignment = {};
+//   days.forEach((date, idx) => {
+//     assignments[date] = {
+//       "I zmiana": { employees: idx === 0 ? [employees[0]] : [] },
+//       "II zmiana": { employees: idx === 1 ? [employees[1]] : [] },
+//     };
+//   });
+
+//   return { employees, assignments, days };
+// }
+
+export async function clientLoader({ request }: LoaderFunctionArgs) {
+  let shiftsData: {
+    doctor_id: number;
+    name: string;
+    date: string;
+    shift: string;
+  }[] = [];
+
+  try {
+    const res = await fetch("/api/admins/doctors/shifts", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-user-id": "1",
+        "x-user-role": "admin",
+      },
+    });
+    if (!res.ok) throw new Error("Nie udało się pobrać danych dyżurów");
+    shiftsData = await res.json();
+  } catch (err) {
+    console.error("Błąd ładowania danych dyżurów:", err);
+  }
+
+  // Unikalni pracownicy
+  const uniqueDoctorsMap = new Map<number, Employee>();
+  shiftsData.forEach((d) => {
+    if (!uniqueDoctorsMap.has(d.doctor_id)) {
+      uniqueDoctorsMap.set(d.doctor_id, {
+        id: d.doctor_id,
+        name: d.name,
+      });
+    }
+  });
+  const employees = Array.from(uniqueDoctorsMap.values());
+
+  // Przypisania
   const assignments: Assignment = {};
-  days.forEach((date, idx) => {
+  days.forEach((date) => {
     assignments[date] = {
-      "I zmiana": { employees: idx === 0 ? [employees[0]] : [] },
-      "II zmiana": { employees: idx === 1 ? [employees[1]] : [] },
+      Ranna: { employees: [] },
+      Dzienna: { employees: [] },
     };
   });
+  for (const entry of shiftsData) {
+    const { date, shift, doctor_id, name } = entry;
 
+    if (!days.includes(date)) continue; // tylko przyszły tydzień
+    const emp = { id: doctor_id, name };
+    if (shift === "Ranna") assignments[date].Ranna.employees.push(emp);
+    else if (shift === "Dzienna") assignments[date].Dzienna.employees.push(emp);
+  }
   return { employees, assignments, days };
 }
 
@@ -111,7 +165,11 @@ function Calendar({
   days: string[];
   assignments: Assignment;
   onDropEmployee: (date: string, shift: ShiftType, employee: Employee) => void;
-  onRemoveAssignment: (date: string, shift: ShiftType, employeeId: number) => void;
+  onRemoveAssignment: (
+    date: string,
+    shift: ShiftType,
+    employeeId: number
+  ) => void;
 }) {
   return (
     <CalendarPaper elevation={3}>
@@ -135,7 +193,7 @@ function Calendar({
                 {date}
               </Typography>
               <Divider sx={{ mb: 1 }} />
-              {(["I zmiana", "II zmiana"] as ShiftType[]).map((shift) => (
+              {(["Ranna", "Dzienna"] as ShiftType[]).map((shift) => (
                 <ShiftSlot
                   key={shift}
                   date={date}
@@ -164,7 +222,11 @@ function ShiftSlot({
   shift: ShiftType;
   assignments: Employee[];
   onDropEmployee: (date: string, shift: ShiftType, employee: Employee) => void;
-  onRemoveAssignment: (date: string, shift: ShiftType, employeeId: number) => void;
+  onRemoveAssignment: (
+    date: string,
+    shift: ShiftType,
+    employeeId: number
+  ) => void;
 }) {
   const DRAG_EMPLOYEE = "DRAG_EMPLOYEE";
 
@@ -174,9 +236,13 @@ function ShiftSlot({
     if (data) {
       const employee = JSON.parse(data);
       // Wywołanie backendu - dodanie dyżuru
-      await fetch("/api/shifts/assign", {
+      await fetch("/api/admins/shifts/assign", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": "1",
+          "x-user-role": "admin",
+        },
         body: JSON.stringify({ date, shift, employeeId: employee.id }),
       });
       onDropEmployee(date, shift, employee);
@@ -189,9 +255,13 @@ function ShiftSlot({
 
   const handleRemove = async (employeeId: number) => {
     // Wywołanie backendu - usunięcie dyżuru
-    await fetch("/api/shifts/unassign", {
+    await fetch("/api/admins/shifts/unassign", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-user-id": "1",
+        "x-user-role": "admin",
+      },
       body: JSON.stringify({ date, shift, employeeId }),
     });
     onRemoveAssignment(date, shift, employeeId);
@@ -260,7 +330,11 @@ function ShiftSlot({
 }
 
 export default function SchedulePage() {
-  const { employees, assignments: initialAssignments, days } = useLoaderData() as {
+  const {
+    employees,
+    assignments: initialAssignments,
+    days,
+  } = useLoaderData() as {
     employees: Employee[];
     assignments: Assignment;
     days: string[];
@@ -268,16 +342,23 @@ export default function SchedulePage() {
 
   const DRAG_EMPLOYEE = "DRAG_EMPLOYEE";
 
-  const [assignments, setAssignments] = React.useState<Assignment>(initialAssignments);
+  const [assignments, setAssignments] =
+    React.useState<Assignment>(initialAssignments);
 
   const handleDragStart = (e: React.DragEvent, employee: Employee) => {
     e.dataTransfer.setData(DRAG_EMPLOYEE, JSON.stringify(employee));
   };
 
-  const handleDropEmployee = (date: string, shift: ShiftType, employee: Employee) => {
+  const handleDropEmployee = (
+    date: string,
+    shift: ShiftType,
+    employee: Employee
+  ) => {
     setAssignments((prev) => {
       // Dodaj tylko jeśli nie ma już tego pracownika na tej zmianie
-      const alreadyAssigned = prev[date][shift].employees.some((e) => e.id === employee.id);
+      const alreadyAssigned = prev[date][shift].employees.some(
+        (e) => e.id === employee.id
+      );
       if (alreadyAssigned) return prev;
       return {
         ...prev,
@@ -289,13 +370,19 @@ export default function SchedulePage() {
     });
   };
 
-  const handleRemoveAssignment = (date: string, shift: ShiftType, employeeId: number) => {
+  const handleRemoveAssignment = (
+    date: string,
+    shift: ShiftType,
+    employeeId: number
+  ) => {
     setAssignments((prev) => ({
       ...prev,
       [date]: {
         ...prev[date],
         [shift]: {
-          employees: prev[date][shift].employees.filter((e) => e.id !== employeeId),
+          employees: prev[date][shift].employees.filter(
+            (e) => e.id !== employeeId
+          ),
         },
       },
     }));

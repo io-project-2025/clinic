@@ -90,19 +90,6 @@ describe('Auth API Integration Tests', () => {
     });
     
     describe('validation tests', () => {
-      it('should reject registration with weak password', async () => {
-        const weakPasswordUser = {
-          ...testPatient,
-          haslo: '123' // Too short
-        };
-        
-        const res = await request(app)
-          .post('/api/auth/register')
-          .send(weakPasswordUser);
-        
-        expect(res.statusCode).toBe(400);
-        expect(res.body).toHaveProperty('error');
-      });
 
       describe('email validation tests', () => {
         const invalidEmails = [

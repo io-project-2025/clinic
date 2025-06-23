@@ -34,7 +34,11 @@ export async function clientLoader() {
     if (!res.ok) throw new Error("Błąd pobierania badań");
 
     const data = await res.json();
-    return data;
+    const formatted = data.map((doc: any) => ({
+      ...doc,
+      date: doc.date ? doc.date.split("T")[0] : "",
+    }));
+    return formatted;
   } catch (err) {
     // Zwróć pustą tablicę w razie błędu
     return [];

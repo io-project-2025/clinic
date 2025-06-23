@@ -187,7 +187,7 @@ describe('Doctors API Integration Tests', () => {
 
       expect(res.statusCode).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
-      const patientExists = res.body.some(p => p.pacjent_id === testPatientId);
+      const patientExists = res.body.some(p => p.id === testPatientId);
       expect(patientExists).toBe(true);
     });
   });

@@ -224,7 +224,7 @@ function SuccessSnackbar({
       anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
     >
       <Alert severity="success" sx={{ width: "100%" }}>
-        Hasło zostało zmienione (mock)!
+        Hasło zostało zmienione!
       </Alert>
     </Snackbar>
   );

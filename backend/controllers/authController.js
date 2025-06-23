@@ -1,10 +1,21 @@
 const db = require('../model/DatabaseService');
 
+// Funkcja walidacji emaila
+const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+};
+
 // Rejestracja pacjenta (plain text password)
 exports.registerPatient = async (req, res) => {
     const { imie, nazwisko, email, haslo } = req.body;
     if (!imie || !nazwisko || !email || !haslo) {
       return res.status(400).json({ error: 'Wszystkie pola są wymagane' });
+    }
+
+    // Sprawdź format emaila
+    if (!validateEmail(email)) {
+      return res.status(400).json({ error: 'Nieprawidłowy format email' });
     }
   
     try {
@@ -35,6 +46,8 @@ exports.registerPatient = async (req, res) => {
 
 // Logowanie (pacjent lub lekarz, plain text password)
 exports.login = async (req, res) => {
+
+
   const { email, haslo, rola } = req.body;
 
   if (!email || !haslo || !rola) {
@@ -46,6 +59,7 @@ exports.login = async (req, res) => {
       const result = await db.getPatientByEmail(email);
       if (result.rows.length === 0) {
         return res.status(401).json({ error: 'Nieprawidłowy email lub hasło' });
+
       }
 
       const user = result.rows[0];

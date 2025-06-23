@@ -13,6 +13,7 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000,
 });
 
+
 pool.on("connect", (client) => {
   client
     .query("SET search_path TO clinic;")
@@ -21,3 +22,4 @@ pool.on("connect", (client) => {
 
 
 module.exports = pool;
+

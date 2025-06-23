@@ -84,7 +84,7 @@ exports.markAppointmentAccepted = async (req, res) => {
 
 // Ustaw status na 'nieobecność pacjenta'
 exports.markNoShow = async (req, res) => {
-  const id = req.params.id;
+  const id = req.params.appointmentId;
 
   try {
     const appointmentResult = await db.getAppointmentById(id);
@@ -157,7 +157,6 @@ exports.getPatientAppointments = async (req, res) => {
 exports.updateDocuments = async (req, res) => {
   const { id } = req.params;
   const { recepta = "", skierowanie = "" } = req.body;
-
   try {
     await db.updateAppointmentDocuments(id, { recepta, skierowanie });
     res.status(200).json({ recepta, skierowanie });
@@ -171,8 +170,10 @@ exports.updateDocuments = async (req, res) => {
 
 // aktualizacja notatek wizyty
 exports.updateNotes = async (req, res) => {
+
   const { appointmentId } = req.params;
   const { objawy = "", diagnoza = "" } = req.body;
+
   try {
     await db.updateAppointmentNotes(appointmentId, { objawy, diagnoza });
     res.status(200).json({ objawy, diagnoza });

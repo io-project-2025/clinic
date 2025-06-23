@@ -23,14 +23,15 @@ describe('Auth API Integration Tests', () => {
   // Track IDs for cleanup
   let testPatientId;
   let testDoctorId;
+  const testPatientIds = [];
   
   // Clean up test data after tests
   afterAll(async () => {
     try {
       // Delete test patient if created
-      if (testPatientId) {
-        await db.pool.query('DELETE FROM pacjenci WHERE pacjent_id = $1', [testPatientId]);
-        console.log(`Test patient ${testPatientId} removed`);
+      if (testPatientIds.length > 0) {
+        await db.pool.query('DELETE FROM pacjenci WHERE pacjent_id = ANY($1::int[])', [testPatientIds]);
+        console.log(`Test patients ${testPatientIds.join(', ')} removed`);
       }
       
       // Delete test doctor if created
@@ -63,6 +64,7 @@ describe('Auth API Integration Tests', () => {
       
       // Save ID for cleanup and later tests
       testPatientId = res.body.patient.pacjent_id;
+      testPatientIds.push(testPatientId);
     });
     
     it('should reject registration with missing fields', async () => {
@@ -139,6 +141,7 @@ describe('Auth API Integration Tests', () => {
             
             expect(res.statusCode).toBe(201);
             expect(res.body).toHaveProperty('message', 'Pacjent zarejestrowany');
+            testPatientIds.push(res.body.patient.pacjent_id);
           });
         });
       });
@@ -164,7 +167,7 @@ describe('Auth API Integration Tests', () => {
     
     it('should login successfully as patient', async () => {
       // Skip if patient registration failed
-      if (!testPatientId) {
+      if (testPatientIds.length === 0) {
         console.log('Skipping test - no test patient created');
         return;
       }
@@ -180,7 +183,7 @@ describe('Auth API Integration Tests', () => {
       expect(res.statusCode).toBe(200);
       expect(res.body).toHaveProperty('role', 'pacjent');
       expect(res.body).toHaveProperty('user');
-      expect(res.body.user).toHaveProperty('id', testPatientId);
+      expect(res.body.user).toHaveProperty('id', testPatientIds[0]);
       expect(res.body.user).toHaveProperty('email', testPatient.email);
     });
     

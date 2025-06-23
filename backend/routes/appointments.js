@@ -87,4 +87,10 @@ router.get(
   appointmentController.getAppointmentsCountByDate
 );
 
+router.get(
+  "/:visitId/note",
+  authorizeRole(["lekarz", "pacjent"]),
+  appointmentController.getAppointmentNote
+);
+
 module.exports = router;

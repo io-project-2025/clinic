@@ -1,5 +1,11 @@
 const db = require("../model/DatabaseService");
 
+const dayjs = require("dayjs");
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 // Pobiera dzisiejsze wizyty lekarza
 exports.getDoctorTodaysAppointments = async (req, res) => {
   const doctorId = parseInt(req.params.doctorId);
@@ -104,7 +110,7 @@ exports.createAppointment = async (req, res) => {
     data,
     godzina,
     lekarz_id,
-    rodzaj_wizyty_id,
+    rodzaj_wizyty_id = 3, // domyślny rodzaj wizyty
     tytul,
     objawy,
     diagnoza = "",
@@ -134,10 +140,16 @@ exports.getPatientAppointments = async (req, res) => {
 
   try {
     const result = await db.getAppointmentsByPatient(patientId);
-    res.status(200).json(result.rows);
-  } catch (err) {
-    console.error("Błąd przy pobieraniu wizyt:", err);
-    res.status(500).json({ error: "Błąd serwera przy pobieraniu wizyt" });
+
+    const mapped = result.rows.map((row) => ({
+      ...row,
+      data: dayjs.utc(row.data).tz("Europe/Warsaw").format("YYYY-MM-DD"),
+    }));
+
+    res.status(200).json(mapped);
+  } catch (error) {
+    console.error("Błąd podczas pobierania wizyt pacjenta:", error);
+    res.status(500).json({ error: "Błąd serwera podczas pobierania wizyt." });
   }
 };
 
@@ -215,5 +227,23 @@ exports.getAppointmentsCountByDate = async (req, res) => {
     res
       .status(500)
       .json({ error: "Błąd serwera podczas pobierania liczby wizyt." });
+  }
+};
+
+// Pobranie notatek wizyty
+exports.getAppointmentNote = async (req, res) => {
+  try {
+    const { visitId } = req.params;
+    const result = await db.getAppointmentNote(visitId);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Wizyta nie została znaleziona" });
+    }
+
+    const note = result.rows[0].notatki_wizyty || {};
+    res.status(200).json(note);
+  } catch (error) {
+    console.error("Błąd podczas pobierania notatek wizyty:", error);
+    res.status(500).json({ error: "Błąd serwera podczas pobierania notatek" });
   }
 };

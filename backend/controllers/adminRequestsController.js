@@ -58,7 +58,7 @@ exports.runConsoleQuery = async (req, res) => {
   try {
     const result = await db.runConsoleQuery(query);
     console.log("Wynik zapytania:", result.rows);
-    if (result.rowCount === 0) {
+    if (result.rows.length == 0 ) {
       return res.json("Zapytanie wykonane pomyślnie.");
     } else res.json({ output: result.rows });
   } catch (error) {

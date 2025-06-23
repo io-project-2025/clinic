@@ -143,7 +143,11 @@ export default function SqlConsolePage() {
         body: JSON.stringify({ query: prompt }),
       });
       const data = await res.json();
-      setOutput(data.output ?? JSON.stringify(data, null, 2));
+      let result = data.output;
+      if (typeof result === "object") {
+        result = JSON.stringify(result, null, 2);
+      }
+      setOutput(result ?? JSON.stringify(data, null, 2));
     } catch (e: any) {
       setOutput("Błąd: " + (e?.message || "Nieznany błąd"));
     }

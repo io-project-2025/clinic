@@ -420,6 +420,7 @@ class DatabaseService {
 
     const dokumenty_wizyty = { recepta: "", skierowanie: "" };
 
+    const notatki_wizyty = { objawy: objawy, diagnoza: diagnoza };
     const query = `
       INSERT INTO wizyty 
         (pacjent_id, data, godzina, lekarz_id, rodzaj_wizyty_id,  tytul, dokumenty_wizyty, notatki_wizyty)

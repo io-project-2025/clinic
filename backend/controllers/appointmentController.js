@@ -104,7 +104,7 @@ exports.createAppointment = async (req, res) => {
     data,
     godzina,
     lekarz_id,
-    rodzaj_wizyty_id,
+    rodzaj_wizyty_id = 3, // domyślny rodzaj wizyty
     tytul,
     objawy,
     diagnoza = "",

@@ -44,11 +44,25 @@ export async function clientLoader() {
 }
 
 const availableHours = [
-  "08:00", "09:00", "10:00", "11:00", "12:00",
-  "13:00", "14:00", "15:00", "16:00", "17:00"
+  "08:00",
+  "09:00",
+  "10:00",
+  "11:00",
+  "12:00",
+  "13:00",
+  "14:00",
+  "15:00",
+  "16:00",
+  "17:00",
 ];
 
-function CalendarSection({ date, setDate }: { date: Date | null; setDate: (date: Date | null) => void }) {
+function CalendarSection({
+  date,
+  setDate,
+}: {
+  date: Date | null;
+  setDate: (date: Date | null) => void;
+}) {
   return (
     <Grid
       display="flex"
@@ -111,21 +125,23 @@ function InputsSection({
           select
           label="Godzina wizyty"
           value={hour}
-          onChange={e => setHour(e.target.value)}
+          onChange={(e) => setHour(e.target.value)}
           disabled={loading}
         >
-          {availableHours.map(h => (
-            <MenuItem key={h} value={h}>{h}</MenuItem>
+          {availableHours.map((h) => (
+            <MenuItem key={h} value={h}>
+              {h}
+            </MenuItem>
           ))}
         </TextField>
         <TextField
           select
           label="Lekarz"
           value={doctor}
-          onChange={e => setDoctor(e.target.value)}
+          onChange={(e) => setDoctor(e.target.value)}
           disabled={loading}
         >
-          {doctors.map(doc => (
+          {doctors.map((doc) => (
             <MenuItem key={doc.id} value={doc.id}>
               {doc.name}
             </MenuItem>
@@ -134,13 +150,13 @@ function InputsSection({
         <TextField
           label="Tytuł wizyty"
           value={title}
-          onChange={e => setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value)}
           disabled={loading}
         />
         <TextField
           label="Opis dolegliwości"
           value={desc}
-          onChange={e => setDesc(e.target.value)}
+          onChange={(e) => setDesc(e.target.value)}
           multiline
           minRows={2}
           disabled={loading}
@@ -149,14 +165,19 @@ function InputsSection({
           Umów wizytę
         </Button>
         {error && <Alert severity="error">{error}</Alert>}
-        {sent && <Alert severity="success">Przychodnia została poinformowana!</Alert>}
+        {sent && (
+          <Alert severity="success">Przychodnia została poinformowana!</Alert>
+        )}
       </Stack>
     </Grid>
   );
 }
 
 export default function UmowWizyte() {
-  const { doctors, error: loaderError } = useLoaderData() as { doctors: { id: number; name: string }[]; error: string | null };
+  const { doctors, error: loaderError } = useLoaderData() as {
+    doctors: { id: number; name: string }[];
+    error: string | null;
+  };
   const [date, setDate] = useState<Date | null>(null);
   const [hour, setHour] = useState("");
   const [doctor, setDoctor] = useState("");
@@ -178,7 +199,8 @@ export default function UmowWizyte() {
 
     setLoading(true);
     try {
-      const res = await fetch("/api/appointments", { // brak endpointu lub konflikt z instniejącym (wtedy tu zmienić)
+      const res = await fetch("/api/appointments", {
+        // brak endpointu lub konflikt z instniejącym (wtedy tu zmienić)
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -186,11 +208,12 @@ export default function UmowWizyte() {
           "x-user-role": localStorage.getItem("role") || "pacjent",
         },
         body: JSON.stringify({
-          date: date.toISOString().split("T")[0],
-          hour,
-          doctorId: doctor,
-          title,
-          description: desc,
+          data: date.toISOString().split("T")[0],
+          godzina: hour,
+          lekarz_id: doctor,
+          tytul: title,
+          objawy: desc,
+          pacjent_id: localStorage.getItem("id") || "",
         }),
       });
 

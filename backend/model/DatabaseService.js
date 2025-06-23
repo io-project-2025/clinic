@@ -348,6 +348,21 @@ class DatabaseService {
   // ==================== WIZYTY ====================
 
   /**
+   * Pobiera notatki wizyty
+   * @param {number} visitId - ID wizyty
+   *  * @returns {Promise} - Notatki wizyty
+   *
+   * */
+  async getAppointmentNote(visitId) {
+    const query = `
+    SELECT notatki_wizyty
+    FROM wizyty
+    WHERE wizyta_id = $1
+  `;
+    return this.query(query, [visitId]);
+  }
+
+  /**
    * Pobiera wizytę po ID
    * @param {number} appointmentId - ID wizyty
    * @returns {Promise}

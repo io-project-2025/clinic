@@ -16,7 +16,6 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
-import SqlConsolePage from "./konsola";
 
 // Typy
 type Employee = { id: number; name: string };

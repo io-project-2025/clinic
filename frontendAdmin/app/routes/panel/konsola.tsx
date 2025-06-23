@@ -130,11 +130,16 @@ export default function SqlConsolePage() {
   const handleSubmit = async () => {
     if (!prompt.trim()) return;
     setLoading(true);
+    const adminID = "1";
     try {
       // Wysyłka do backendu (mock: /api/console)
-      const res = await fetch("/api/console", {
+      const res = await fetch("/api/admins/console", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": adminID || "",
+          "x-user-role": "admin",
+        },
         body: JSON.stringify({ query: prompt }),
       });
       const data = await res.json();
@@ -156,7 +161,11 @@ export default function SqlConsolePage() {
         onSubmit={handleSubmit}
         loading={loading}
       />
-      <OutputDialog open={dialogOpen} output={output} onClose={handleCloseDialog} />
+      <OutputDialog
+        open={dialogOpen}
+        output={output}
+        onClose={handleCloseDialog}
+      />
     </Box>
   );
 }

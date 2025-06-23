@@ -606,6 +606,251 @@ class DatabaseService {
     console.log(await this.query(query, [doctorId]));
     return await this.query(query, [doctorId]);
   }
+
+  // ==================== ADMINISTRATORZY ====================
+
+  /**
+   * Pobiera wszystkich użytkowników (pacjentów i lekarzy)
+   * @returns {Promise} - Lista użytkowników
+   */
+  async getAllUsers() {
+    const query = `
+    SELECT pacjent_id AS id, email, 'user' AS role FROM pacjenci
+    UNION
+    SELECT lekarz_id AS id, email, 'doctor' AS role FROM lekarze;
+  `;
+    return this.query(query);
+  }
+
+  /**
+   * Aktualizuje hasło użytkownika (lekarz lub pacjent)
+   * @param {number} id - ID użytkownika
+   * @param {'lekarz'|'pacjent'} rola - Rola użytkownika
+   * @param {string} noweHaslo - Nowe hasło
+   * @returns {Promise} - Zaktualizowany użytkownik
+   */
+  async updateUserPassword(id, rola, noweHaslo) {
+    let query;
+    let params;
+
+    if (rola === "doctor") {
+      query = `
+      UPDATE lekarze
+      SET haslo = $1
+      WHERE lekarz_id = $2
+      RETURNING lekarz_id AS id, email, 'lekarz' AS rola;
+    `;
+      params = [noweHaslo, id];
+    } else if (rola === "user") {
+      query = `
+      UPDATE pacjenci
+      SET haslo = $1
+      WHERE pacjent_id = $2
+      RETURNING pacjent_id AS id, email, 'pacjent' AS rola;
+    `;
+      params = [noweHaslo, id];
+    } else {
+      throw new Error(`Nieobsługiwana rola: ${rola}`);
+    }
+
+    const result = await this.query(query, params);
+
+    if (result.rowCount === 0) {
+      throw new Error(`Użytkownik o ID ${id} i roli ${rola} nie istnieje`);
+    }
+    return result.rows;
+  }
+
+  /**
+   * Wykonuje zapytanie SQL przesłane przez admina
+   * @param {string} query - Zapytanie SQL
+   * @returns {Promise} - Wynik zapytania
+   */
+  async runConsoleQuery(query) {
+    return this.query(query);
+  }
+
+  /**
+   * Pobiera liczbę wizyt w danym dniu
+   * @returns {Promise} - Wynik zapytania z liczbą wizyt
+   */
+  async getVisitsCountByDay() {
+    const query = `
+    SELECT TRIM(TO_CHAR(data, 'Day')) as day, count(wizyta_id) AS visits from wizyty group by day ORDER BY visits DESC;
+  `;
+    return this.query(query);
+  }
+
+  /**
+   * Pobiera liczbę wizyt według typu wizyty
+   * @returns {Promise} - Wynik zapytania z liczbą wizyt
+   */
+  async getVisitsCountByVisitType() {
+    const query = `
+    SELECT 
+      rw.opis AS type,
+      COUNT(w.wizyta_id) AS count
+    FROM wizyty w
+    JOIN rodzaje_wizyt rw ON w.rodzaj_wizyty_id = rw.rodzaj_wizyty_id
+    GROUP BY rw.opis
+    ORDER BY count DESC
+    LIMIT 5;
+  `;
+    return this.query(query);
+  }
+
+  /**
+   * Pobiera liczbę wizyt według lekarza
+   * @returns {Promise} - Wynik zapytania z liczbą wizyt
+   * */
+  async getVisitsCountByVisitDoctor() {
+    const query = `
+    SELECT 
+      CONCAT(l.imie, ' ', l.nazwisko) AS name,
+      COUNT(w.wizyta_id) AS visits
+    FROM wizyty w
+    JOIN lekarze l ON w.lekarz_id = l.lekarz_id
+    GROUP BY l.lekarz_id, l.imie, l.nazwisko
+    ORDER BY visits DESC
+    LIMIT 5;
+  `;
+    return this.query(query);
+  }
+  /**
+   * Pobiera liczbę wszystkich wizyt
+   * @returns {Promise} - Wynik zapytania z liczbą wizyt
+   */
+  async getAllVisitsCount() {
+    const query = `
+    select count(*) from wizyty ;
+  `;
+    return this.query(query);
+  }
+
+  async getDoctorShifts() {
+    const query = `
+    SELECT 
+      l.lekarz_id as doctor_id,
+      CONCAT(l.imie, ' ', l.nazwisko) AS name,
+      d.data as date,
+      z.opis AS shift
+    FROM lekarze_dyzury ld
+    JOIN lekarze l ON ld.lekarz_id = l.lekarz_id
+    JOIN dyzury d ON ld.dyzur_id = d.dyzur_id
+    JOIN zmiany z ON d.zmiana_id = z.zmiana_id
+    ORDER BY d.data;
+  `;
+    return this.query(query);
+  }
+
+  /**
+   * Przypisuje lekarzowi dyżur na dany dzień i zmianę
+   * Tworzy wpis w `dyzury` i `lekarze_dyzury` w jednej transakcji
+   * @param {number} doctorId
+   * @param {string} date - YYYY-MM-DD
+   * @param {string} shift - opis zmiany ("Ranna", "Dzienna", ...)
+   * @returns {Promise}
+   */
+  async assignDoctorShift(doctorId, date, shift) {
+    const client = await this.pool.connect();
+
+    try {
+      await client.query("BEGIN");
+
+      // 1. Pobierz ID zmiany
+      const shiftRes = await client.query(
+        "SELECT zmiana_id FROM zmiany WHERE opis = $1",
+        [shift]
+      );
+      if (shiftRes.rowCount === 0) {
+        throw new Error("Nie znaleziono zmiany o podanym opisie.");
+      }
+      const zmianaId = shiftRes.rows[0].zmiana_id;
+
+      // 2. Wstaw nowy dyżur lub sprawdź, czy istnieje
+      const dyzurRes = await client.query(
+        "INSERT INTO dyzury (data, zmiana_id) VALUES ($1, $2) ON CONFLICT (data, zmiana_id) DO UPDATE SET zmiana_id = EXCLUDED.zmiana_id RETURNING dyzur_id;",
+        [date, zmianaId]
+      );
+      const dyzurId = dyzurRes.rows[0].dyzur_id;
+
+      // 3. Wstaw do lekarze_dyzury
+      await client.query(
+        "INSERT INTO lekarze_dyzury (lekarz_id, dyzur_id) VALUES ($1, $2) ON CONFLICT DO NOTHING;",
+        [doctorId, dyzurId]
+      );
+
+      await client.query("COMMIT");
+      return { success: true };
+    } catch (error) {
+      await client.query("ROLLBACK");
+      console.error("Błąd przypisywania dyżuru:", error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  /**
+   * Usuwa przypisanie lekarza do dyżuru na dany dzień i zmianę
+   * Jeśli żaden lekarz nie jest przypisany do dyżuru, usuwa cały dyżur
+   * @param {number} doctorId - ID lekarza
+   * @param {string} date - Data dyżuru w formacie YYYY-MM-DD
+   * @param {string} shift - Opis zmiany (np. "Ranna", "Dzienna")
+   * @returns {Promise}
+   */
+  async unassignDoctorShift(doctorId, date, shift) {
+    const client = await this.pool.connect();
+    try {
+      await client.query("BEGIN");
+
+      // Pobierz ID zmiany
+      const zmianaResult = await client.query(
+        "SELECT zmiana_id FROM zmiany WHERE opis = $1",
+        [shift]
+      );
+      if (zmianaResult.rowCount === 0) {
+        throw new Error("Nie znaleziono zmiany o podanym opisie");
+      }
+      const zmianaId = zmianaResult.rows[0].zmiana_id;
+
+      // Pobierz dyżur o danej dacie i zmianie
+      const dyzurResult = await client.query(
+        "SELECT dyzur_id FROM dyzury WHERE data = $1 AND zmiana_id = $2",
+        [date, zmianaId]
+      );
+      if (dyzurResult.rowCount === 0) {
+        // Dyżur nie istnieje — nic do usunięcia
+        await client.query("ROLLBACK");
+        return;
+      }
+
+      const dyzurId = dyzurResult.rows[0].dyzur_id;
+
+      // Usuń przypisanie lekarza
+      await client.query(
+        "DELETE FROM lekarze_dyzury WHERE dyzur_id = $1 AND lekarz_id = $2",
+        [dyzurId, doctorId]
+      );
+
+      // Jeśli żaden lekarz nie został przypisany — usuń cały dyżur
+      const check = await client.query(
+        "SELECT COUNT(*) FROM lekarze_dyzury WHERE dyzur_id = $1",
+        [dyzurId]
+      );
+      if (parseInt(check.rows[0].count) === 0) {
+        await client.query("DELETE FROM dyzury WHERE dyzur_id = $1", [dyzurId]);
+      }
+
+      await client.query("COMMIT");
+    } catch (error) {
+      await client.query("ROLLBACK");
+      console.error("Błąd unassignDoctorShift:", error);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
 }
 
 module.exports = new DatabaseService();

@@ -25,12 +25,38 @@ import {
   Alert,
 } from "@mui/material";
 
+// export async function clientLoader({ request }: LoaderFunctionArgs) {
+//   const users = [
+//     { id: 2, email: "user@clinic.com", role: "user" },
+//     { id: 3, email: "doctor@clinic.com", role: "doctor" },
+//   ];
+//   return { users };
+// }
+
 export async function clientLoader({ request }: LoaderFunctionArgs) {
-  const users = [
-    { id: 2, email: "user@clinic.com", role: "user" },
-    { id: 3, email: "doctor@clinic.com", role: "doctor" },
-  ];
-  return { users };
+  try {
+    const adminID = "1";
+
+    const response = await fetch("/api/admins/users", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-user-id": adminID || "",
+        "x-user-role": "admin",
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Błąd pobierania użytkowników: ${response.status}`);
+      return { users: [] };
+    }
+
+    const users = await response.json();
+    return { users };
+  } catch (error) {
+    console.error("Błąd połączenia z API:", error);
+    return { users: [] };
+  }
 }
 
 type User = {
@@ -98,16 +124,23 @@ function UsersTable({
               backgroundColor: "rgba(0,0,0,0.1)",
             }}
           >
-            <TableCell sx={{ fontWeight: "bold", color: "#b71c1c" }}>Email</TableCell>
-            <TableCell sx={{ fontWeight: "bold", color: "#b71c1c" }}>Rola</TableCell>
-            <TableCell align="right" sx={{ fontWeight: "bold", color: "#b71c1c" }}>
+            <TableCell sx={{ fontWeight: "bold", color: "#b71c1c" }}>
+              Email
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold", color: "#b71c1c" }}>
+              Rola
+            </TableCell>
+            <TableCell
+              align="right"
+              sx={{ fontWeight: "bold", color: "#b71c1c" }}
+            >
               Akcje
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {users.map((user: User) => (
-            <TableRow key={user.id}>
+            <TableRow key={user.id + user.role}>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.role}</TableCell>
               <TableCell align="right">
@@ -168,11 +201,7 @@ function ChangePasswordDialog({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Anuluj</Button>
-        <Button
-          onClick={onSubmit}
-          variant="contained"
-          disabled={!newPassword}
-        >
+        <Button onClick={onSubmit} variant="contained" disabled={!newPassword}>
           Zmień
         </Button>
       </DialogActions>
@@ -231,11 +260,41 @@ export default function UsersList() {
     setNewPassword("");
   };
 
+  // const handlePasswordChange = async () => {
+  //   // Mock wysyłki do backendu
+  //   await new Promise((resolve) => setTimeout(resolve, 500));
+  //   setOpenModal(false);
+  //   setSnackbarOpen(true);
+  // };
   const handlePasswordChange = async () => {
-    // Mock wysyłki do backendu
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    setOpenModal(false);
-    setSnackbarOpen(true);
+    if (!selectedUser || !newPassword) {
+      return;
+    }
+    const adminID = "1";
+    try {
+      const response = await fetch(
+        `/api/admins/users/${selectedUser.role}/${selectedUser.id}/password`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user-id": adminID || "",
+            "x-user-role": "admin",
+          },
+          body: JSON.stringify({ password: newPassword }),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Błąd zmiany hasła");
+      }
+
+      setOpenModal(false);
+      setSnackbarOpen(true);
+    } catch (error) {
+      console.error("Błąd:", error);
+    }
   };
 
   return (
@@ -259,7 +318,10 @@ export default function UsersList() {
         onClose={handleCloseModal}
         onSubmit={handlePasswordChange}
       />
-      <SuccessSnackbar open={snackbarOpen} onClose={() => setSnackbarOpen(false)} />
+      <SuccessSnackbar
+        open={snackbarOpen}
+        onClose={() => setSnackbarOpen(false)}
+      />
     </Box>
   );
 }

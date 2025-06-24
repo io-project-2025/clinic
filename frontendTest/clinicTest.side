@@ -1,0 +1,3605 @@
+{
+  "id": "67c592a2-e5ac-422c-92b3-21e52c991ad1",
+  "version": "2.0",
+  "name": "clinicTest",
+  "url": "http://localhost:5173/",
+  "tests": [{
+    "id": "f97c92df-a9fd-494b-8e0f-57dca834ca8b",
+    "name": "lekarz_correctLoginCorrectPassword",
+    "commands": [{
+      "id": "acd7f10a-02a3-449a-b237-b9d7103fb9dc",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5173/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "b3a00da3-5c8a-466f-a166-444b6959ee6c",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "950x861",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "dc8230b1-4b8a-44e8-8a23-a305f6bdadeb",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R3aj5»",
+      "targets": [
+        ["id=«R3aj5»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABR3aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R3aj5»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "piotr.kowalski@clinic.pl"
+    }, {
+      "id": "bab4136a-6de7-409d-9e6c-95059d74abdb",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R5aj5»",
+      "targets": [
+        ["id=«R5aj5»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABR5aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R5aj5»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "tajnehaslo"
+    }, {
+      "id": "3da79a28-7756-4490-b81b-d56c9b8f2db2",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c5f2116a-25d4-495a-a20c-5a902dd71b85",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiTypography-button",
+      "targets": [
+        ["css=.MuiTypography-button", "css:finder"],
+        ["xpath=//span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "848870ba-c153-46e5-9306-3ad31cec1b82",
+      "comment": "",
+      "command": "waitForElementVisible",
+      "target": "css=.MuiTypography-root",
+      "targets": [
+        ["css=.MuiTypography-root", "css:finder"],
+        ["xpath=//h5", "xpath:position"],
+        ["xpath=//h5[contains(.,'Logowanie')]", "xpath:innerText"]
+      ],
+      "value": "5"
+    }, {
+      "id": "12563027-ba6a-4f38-aa76-d7dbce845f1c",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "f542872b-6043-468d-8a45-18d6929ddaa5",
+    "name": "lekarz_incorrectLoginCorrectPassword",
+    "commands": [{
+      "id": "e22ca35a-e23e-4377-a02c-0a3e62b39059",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5173/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "d6f0ff3e-5151-4c6c-82e2-cf27e7b158ab",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "950x861",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "b24bc3c2-4185-495e-b390-7d5c13ac6605",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R3aj5»",
+      "targets": [
+        ["id=«R3aj5»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABR3aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R3aj5»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "incorrect_login"
+    }, {
+      "id": "7499ba87-a43c-4f6c-9b53-adf30dd007e0",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R5aj5»",
+      "targets": [
+        ["id=«R5aj5»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABR5aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R5aj5»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "tajnehaslo"
+    }, {
+      "id": "f9a116fc-6c0e-4317-8c84-dbbd3e88b4d2",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "be474127-b202-4705-923e-6f303141a613",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[3]/div[2]", "xpath:position"]
+      ],
+      "value": "Nieprawidłowy email lub hasło"
+    }, {
+      "id": "80246ccc-042b-4924-a3b7-6c4244191f80",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "076c7165-0897-4d63-93a1-50a4894556a6",
+    "name": "lekarz_correctLoginIncorrectPassword",
+    "commands": [{
+      "id": "794ea0b6-8014-483d-912e-a3c61f82bdbf",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5173/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "cfd8e4c8-0717-450e-85fb-87c332bfad69",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "950x861",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "4b19acdf-1564-458f-be78-7e190dbaf352",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R3aj5»",
+      "targets": [
+        ["id=«R3aj5»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABR3aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R3aj5»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "piotr.kowalski@clinic.pl"
+    }, {
+      "id": "f05e621f-e279-429e-a696-43e60b1c79c0",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R5aj5»",
+      "targets": [
+        ["id=«R5aj5»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABR5aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R5aj5»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "incorrect_password"
+    }, {
+      "id": "c72a1b7f-9f27-4dd7-85f1-96a4d27843b3",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "f35445d3-b1b6-4e67-8e3f-e10aefbb4b45",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[3]/div[2]", "xpath:position"]
+      ],
+      "value": "Nieprawidłowy email lub hasło"
+    }, {
+      "id": "9212f76c-ad88-43c2-b8da-c0efb05fd2eb",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "40dbcf7b-cf47-4577-85ff-3bc452da63b6",
+    "name": "lekarz_todayAppointmentsFromMainPage",
+    "commands": [{
+      "id": "1da536f4-2f68-46f6-bdf9-1642ac3af9dd",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5173/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "9659337c-79d9-4f75-b8e0-e2e50417f889",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "950x861",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "499a7b97-b033-4b67-804f-ea5d21cc353c",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R3aj5»",
+      "targets": [
+        ["id=«R3aj5»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABR3aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R3aj5»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "piotr.kowalski@clinic.pl"
+    }, {
+      "id": "16650956-7b7f-4a49-8b5d-be1c9a199eb7",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R5aj5»",
+      "targets": [
+        ["id=«R5aj5»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABR5aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R5aj5»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "tajnehaslo"
+    }, {
+      "id": "27e5782d-c9cc-4b69-a483-7351a8861394",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "fe1838e3-1e92-429e-8f01-7c175cc5ca24",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiGrid-root:nth-child(1) .MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiGrid-root:nth-child(1) .MuiButtonBase-root", "css:finder"],
+        ["xpath=(//button[@type='button'])[3]", "xpath:attributes"],
+        ["xpath=//div/div/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "61c9f4a2-1e5e-4651-a2a0-a662734c85da",
+      "comment": "",
+      "command": "waitForElementVisible",
+      "target": "css=.MuiTypography-h4",
+      "targets": [],
+      "value": "5"
+    }, {
+      "id": "bdddae65-c770-437e-a390-f2d229400be2",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiTypography-h4",
+      "targets": [
+        ["css=.MuiTypography-h4", "css:finder"],
+        ["xpath=//h1", "xpath:position"],
+        ["xpath=//h1[contains(.,'Dzisiejsze wizyty')]", "xpath:innerText"]
+      ],
+      "value": "Dzisiejsze wizyty"
+    }, {
+      "id": "22a2a91d-f005-467b-8811-48b11f416a46",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiTypography-button",
+      "targets": [
+        ["css=.MuiTypography-button", "css:finder"],
+        ["xpath=//span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "e6c2f129-d47a-4f21-a934-2d33b87b49a7",
+      "comment": "",
+      "command": "waitForElementVisible",
+      "target": "css=.MuiTypography-root",
+      "targets": [
+        ["css=.MuiTypography-root", "css:finder"],
+        ["xpath=//h5", "xpath:position"],
+        ["xpath=//h5[contains(.,'Logowanie')]", "xpath:innerText"]
+      ],
+      "value": "2"
+    }, {
+      "id": "f6b831c8-18e2-456d-b0b0-46c64f01e5af",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "e9743761-1120-4585-81ae-34cabaaa1052",
+    "name": "lekarz_patientsFromMainPage",
+    "commands": [{
+      "id": "a8560578-aa70-4792-b321-8f5b380468b6",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5173/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "0c625db6-e67e-406f-8f37-32518a06e73d",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "950x861",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "ea5f0b06-7b99-452a-8900-4c8653371154",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R3aj5»",
+      "targets": [
+        ["id=«R3aj5»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABR3aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R3aj5»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "piotr.kowalski@clinic.pl"
+    }, {
+      "id": "7c4130ef-ab1c-458b-98e2-10a2dac35b4d",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R5aj5»",
+      "targets": [
+        ["id=«R5aj5»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABR5aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R5aj5»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "tajnehaslo"
+    }, {
+      "id": "9b47437d-0b74-468a-8066-1e12b294caaa",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d172f786-cd2c-4355-b73b-bacbe005e875",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiGrid-root:nth-child(3) .MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiGrid-root:nth-child(3) .MuiButtonBase-root", "css:finder"],
+        ["xpath=(//button[@type='button'])[5]", "xpath:attributes"],
+        ["xpath=//div[3]/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "36ad4ba5-b896-4fd4-94d5-9777cbf669c7",
+      "comment": "",
+      "command": "waitForElementVisible",
+      "target": "css=.MuiTypography-h4",
+      "targets": [],
+      "value": "5"
+    }, {
+      "id": "679a6716-4f8e-4caa-b9ed-833957a8aab4",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiTypography-h4",
+      "targets": [
+        ["css=.MuiTypography-h4", "css:finder"],
+        ["xpath=//h1", "xpath:position"],
+        ["xpath=//h1[contains(.,'Lista pacjentów')]", "xpath:innerText"]
+      ],
+      "value": "Lista pacjentów"
+    }, {
+      "id": "a7cc58e4-e4c9-4a2c-a326-dca682b8f1b2",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiTypography-button",
+      "targets": [
+        ["css=.MuiTypography-button", "css:finder"],
+        ["xpath=//span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "16a9c795-ff90-485b-b00f-de81a3a7f965",
+      "comment": "",
+      "command": "waitForElementVisible",
+      "target": "css=.MuiTypography-root",
+      "targets": [
+        ["css=.MuiTypography-root", "css:finder"],
+        ["xpath=//h5", "xpath:position"],
+        ["xpath=//h5[contains(.,'Logowanie')]", "xpath:innerText"]
+      ],
+      "value": "5"
+    }, {
+      "id": "fe32a203-3cd8-43ea-8202-a711ac75eb82",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "734214ad-89e3-4481-8876-08305b2c5840",
+    "name": "lekarz_scheduleFromMainPage",
+    "commands": [{
+      "id": "69b999e6-b850-4824-b7af-ea965fcc1eff",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5173/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "e43ff55b-225c-449e-af20-336079463d8a",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "950x861",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "0fb79a7d-a31c-44d9-98cb-b54a0d92cb64",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R3aj5»",
+      "targets": [
+        ["id=«R3aj5»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABR3aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R3aj5»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "piotr.kowalski@clinic.pl"
+    }, {
+      "id": "8c31654a-e436-489a-ab5b-f5b3e6dd1c73",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R5aj5»",
+      "targets": [
+        ["id=«R5aj5»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABR5aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R5aj5»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "tajnehaslo"
+    }, {
+      "id": "bbddd093-356f-43df-af7a-5535f5abd8aa",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "7b6122b0-b67a-4c2b-b07a-05e330423e55",
+      "comment": "",
+      "command": "waitForElementVisible",
+      "target": "css=.MuiTypography-h4",
+      "targets": [
+        ["css=.MuiTypography-h4", "css:finder"],
+        ["xpath=//h4", "xpath:position"],
+        ["xpath=//h4[contains(.,'Panel główny lekarza')]", "xpath:innerText"]
+      ],
+      "value": "100"
+    }, {
+      "id": "a15460f7-e878-4dcd-af96-1d6c78ac8f60",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiGrid-root:nth-child(2) > .MuiPaper-root > .MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiGrid-root:nth-child(2) > .MuiPaper-root > .MuiButtonBase-root", "css:finder"],
+        ["xpath=(//button[@type='button'])[4]", "xpath:attributes"],
+        ["xpath=//div[2]/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "fe992c71-e81e-47a9-ad80-d5d076682e48",
+      "comment": "",
+      "command": "waitForElementVisible",
+      "target": "css=.MuiTypography-h5",
+      "targets": [
+        ["css=.MuiTypography-h5", "css:finder"],
+        ["xpath=//h5", "xpath:position"],
+        ["xpath=//h5[contains(.,'Grafik dyżurów')]", "xpath:innerText"]
+      ],
+      "value": "10"
+    }, {
+      "id": "9a8251a6-15b1-46fd-9957-0b97174ea3ad",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiTypography-h5",
+      "targets": [
+        ["css=.MuiTypography-h5", "css:finder"],
+        ["xpath=//h5", "xpath:position"],
+        ["xpath=//h5[contains(.,'Grafik dyżurów')]", "xpath:innerText"]
+      ],
+      "value": "Grafik dyżurów"
+    }, {
+      "id": "43d2be02-e1e7-4fe5-8897-dd93b93ae882",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiTypography-button",
+      "targets": [
+        ["css=.MuiTypography-button", "css:finder"],
+        ["xpath=//span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "a3cc05f5-ba4e-43c3-9556-35250b6751f2",
+      "comment": "",
+      "command": "waitForElementVisible",
+      "target": "css=.MuiTypography-root",
+      "targets": [
+        ["css=.MuiTypography-root", "css:finder"],
+        ["xpath=//h5", "xpath:position"],
+        ["xpath=//h5[contains(.,'Logowanie')]", "xpath:innerText"]
+      ],
+      "value": "10"
+    }, {
+      "id": "a7052998-fb7c-4c55-8404-e91310766e6f",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "4e4ae3a3-52da-4536-ba40-0f9432c1046b",
+    "name": "lekarz_appointmentsRequestsFromMainPage",
+    "commands": [{
+      "id": "660c6698-bbb3-4fc9-ae95-be964cb6cc29",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5173/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5783d71b-5144-4f0a-8bfa-d8fc6fd2333d",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "950x861",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "74e09d88-a746-4795-a01f-d767cf90f5b5",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R3aj5»",
+      "targets": [
+        ["id=«R3aj5»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABR3aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R3aj5»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "piotr.kowalski@clinic.pl"
+    }, {
+      "id": "a0057fe9-f77d-4b62-a0e6-14d1bf93f99f",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R5aj5»",
+      "targets": [
+        ["id=«R5aj5»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABR5aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R5aj5»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "tajnehaslo"
+    }, {
+      "id": "25dd7bba-c8a4-493b-a667-b9f6a7af9adf",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "3f1bc5f4-e92f-4cdd-845f-8fced9ff2740",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiGrid-root:nth-child(4) .MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiGrid-root:nth-child(4) .MuiButtonBase-root", "css:finder"],
+        ["xpath=(//button[@type='button'])[6]", "xpath:attributes"],
+        ["xpath=//div[4]/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "fde68c8c-ad07-451d-942e-4e76a7b00d3c",
+      "comment": "",
+      "command": "waitForElementVisible",
+      "target": "css=.MuiTypography-h4",
+      "targets": [],
+      "value": "5"
+    }, {
+      "id": "837eb436-4c8c-4a38-a4f7-c138b2be6643",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiTypography-h4",
+      "targets": [
+        ["css=.MuiTypography-h4", "css:finder"],
+        ["xpath=//h1", "xpath:position"],
+        ["xpath=//h1[contains(.,'Nowe prośby o wizyty')]", "xpath:innerText"]
+      ],
+      "value": "Nowe prośby o wizyty"
+    }, {
+      "id": "d0cb25b2-a1ba-4cde-aaf0-44653f663e59",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiTypography-button",
+      "targets": [
+        ["css=.MuiTypography-button", "css:finder"],
+        ["xpath=//span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "94577241-28b1-42bb-b6fa-52e774543b74",
+      "comment": "",
+      "command": "waitForElementVisible",
+      "target": "css=.MuiTypography-root",
+      "targets": [
+        ["css=.MuiTypography-root", "css:finder"],
+        ["xpath=//h5", "xpath:position"],
+        ["xpath=//h5[contains(.,'Logowanie')]", "xpath:innerText"]
+      ],
+      "value": "2"
+    }, {
+      "id": "725d0974-820e-45f5-946a-c7a329ca57a2",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "e2aa1a3a-26d2-4829-9a95-c04a8519bffc",
+    "name": "lekarz_VacationAllFieldsRequiered",
+    "commands": [{
+      "id": "a4e18131-0cfc-4818-aab2-b6f5348d9468",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5173/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "f2555e16-3967-41c5-a7db-cb890d030c5c",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "950x861",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "7049ee94-25cc-408e-8fac-40fc9f03b5ef",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R3aj5»",
+      "targets": [
+        ["id=«R3aj5»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABR3aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R3aj5»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "piotr.kowalski@clinic.pl"
+    }, {
+      "id": "6419c73f-ced5-4108-ba4e-5e408ed0b248",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R5aj5»",
+      "targets": [
+        ["id=«R5aj5»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABR5aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R5aj5»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "tajnehaslo"
+    }, {
+      "id": "b83a9ecd-ebe9-4b01-8dd7-c3c7882dfd7b",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "e784b275-ac73-4f8d-8876-8c4af79c2460",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiListItem-root:nth-child(4) .MuiTypography-root",
+      "targets": [
+        ["css=.MuiListItem-root:nth-child(4) .MuiTypography-root", "css:finder"],
+        ["xpath=//li[4]/div/div[2]/span", "xpath:position"],
+        ["xpath=//span[contains(.,'Zaplanuj urlop')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "278ca87f-7935-430d-aaa7-6e1a3e4a420b",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiFormControl-root:nth-child(1) .MuiSvgIcon-root",
+      "targets": [
+        ["css=.MuiFormControl-root:nth-child(1) .MuiSvgIcon-root", "css:finder"]
+      ],
+      "value": ""
+    }, {
+      "id": "7b99e57a-85ce-41b6-a364-1f23687c42ee",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiPickersCalendarHeader-switchViewIcon",
+      "targets": [
+        ["css=.MuiPickersCalendarHeader-switchViewIcon", "css:finder"]
+      ],
+      "value": ""
+    }, {
+      "id": "366b9f4e-e336-4344-aaab-f3b9965aa031",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiYearCalendar-button:nth-child(127)",
+      "targets": [
+        ["css=.MuiYearCalendar-button:nth-child(127)", "css:finder"],
+        ["xpath=(//button[@type='button'])[134]", "xpath:attributes"],
+        ["xpath=//button[127]", "xpath:position"],
+        ["xpath=//button[contains(.,'2026')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "b335e8d0-244e-4c5d-b3af-c029dc12b1b3",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Mui-selected:nth-child(2)",
+      "targets": [
+        ["css=.Mui-selected:nth-child(2)", "css:finder"],
+        ["xpath=(//button[@type='button'])[30]", "xpath:attributes"],
+        ["xpath=//div[4]/button[2]", "xpath:position"],
+        ["xpath=//button[contains(.,'23')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "cf23ac28-3f7a-47bd-af5e-eb70f3917cd0",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiFormControl-root:nth-child(2) path",
+      "targets": [
+        ["css=.MuiFormControl-root:nth-child(2) path", "css:finder"]
+      ],
+      "value": ""
+    }, {
+      "id": "8c479218-3090-4656-80d3-c131a632f104",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiDayCalendar-weekContainer:nth-child(5) > .MuiButtonBase-root:nth-child(2)",
+      "targets": [
+        ["css=.MuiDayCalendar-weekContainer:nth-child(5) > .MuiButtonBase-root:nth-child(2)", "css:finder"],
+        ["xpath=(//button[@type='button'])[37]", "xpath:attributes"],
+        ["xpath=//div[5]/button[2]", "xpath:position"],
+        ["xpath=//button[contains(.,'30')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "915c8d15-510d-41b5-8203-ccd119bdff6f",
+      "comment": "",
+      "command": "storeAttribute",
+      "target": "css=button[type='submit']@disabled",
+      "targets": [],
+      "value": "isDisabled"
+    }, {
+      "id": "d29d7e33-dbfc-455b-8d77-b543d67c302c",
+      "comment": "",
+      "command": "echo",
+      "target": "${isDisabled}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "a04d788b-ae0d-41b6-96ce-71f2cdf8b9cc",
+      "comment": "",
+      "command": "assert",
+      "target": "isDisabled",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "48a53457-b9b8-43fc-a73c-4cb729756347",
+      "comment": "",
+      "command": "type",
+      "target": "id=«rf»",
+      "targets": [
+        ["id=«rf»", "id"],
+        ["css=#\\ABrf\\BB", "css:finder"],
+        ["xpath=//textarea[@id='«rf»']", "xpath:attributes"],
+        ["xpath=//textarea", "xpath:position"]
+      ],
+      "value": "example"
+    }, {
+      "id": "a032b0c5-dabb-48b3-ad8c-5f3b7b8c4a34",
+      "comment": "",
+      "command": "click",
+      "target": "css=.css-1u1p5a3",
+      "targets": [
+        ["css=.css-1u1p5a3", "css:finder"],
+        ["xpath=//main", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "362ea116-0988-4c77-9d2b-f51c40d6f449",
+      "comment": "",
+      "command": "storeAttribute",
+      "target": "css=button[type='submit']@disabled",
+      "targets": [],
+      "value": "isDisabled"
+    }, {
+      "id": "2bc72ff1-f92c-45bd-bcba-26b3569c0e4a",
+      "comment": "",
+      "command": "echo",
+      "target": "${isDisabled}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "a01b3292-63f6-43b5-a9b0-3d99a618f13d",
+      "comment": "",
+      "command": "assert",
+      "target": "isDisabled",
+      "targets": [],
+      "value": "null"
+    }, {
+      "id": "784873bc-f319-43ab-a949-976b43a0f9cc",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiTypography-button",
+      "targets": [
+        ["css=.MuiTypography-button", "css:finder"],
+        ["xpath=//span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "73cec9f5-bab1-4e91-9adb-0ff506b4a907",
+      "comment": "",
+      "command": "waitForElementVisible",
+      "target": "css=.MuiTypography-root",
+      "targets": [
+        ["css=.MuiTypography-root", "css:finder"],
+        ["xpath=//h5", "xpath:position"],
+        ["xpath=//h5[contains(.,'Logowanie')]", "xpath:innerText"]
+      ],
+      "value": "2"
+    }, {
+      "id": "dc51637f-31a8-4509-ae74-92309266bdf3",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "6c5eca56-0d70-45b4-8636-609ec77215ce",
+    "name": "lekarz_loginAndPasswordRequired",
+    "commands": [{
+      "id": "2d3986e5-b122-4146-8b18-cf7186ce3b48",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5173/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "ab4073ef-bce0-446a-b5be-efbf8a7f6098",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "950x861",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "a164b7dd-c3df-42c7-a959-6593fd60a525",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "cc0d2539-4058-4a89-b17c-548ba4087965",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiPaper-elevation0",
+      "targets": [
+        ["css=.MuiPaper-elevation0", "css:finder"],
+        ["xpath=//div[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "38f956a9-071d-4d11-a5af-66ba9932471e",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[3]/div[2]", "xpath:position"]
+      ],
+      "value": "Email i hasło są wymagane"
+    }, {
+      "id": "9e548c9b-9f55-4098-8b30-c19261e66f47",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R3aj5»",
+      "targets": [
+        ["id=«R3aj5»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABR3aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R3aj5»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "example"
+    }, {
+      "id": "d7036431-b870-4da6-b9c9-06ab0ca604d8",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "6806275d-132f-466d-ba60-66081d6d0759",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiPaper-elevation0",
+      "targets": [
+        ["css=.MuiPaper-elevation0", "css:finder"],
+        ["xpath=//div[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "fa9680bf-b530-4be9-a49c-eb428b86bf24",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiPaper-elevation0",
+      "targets": [
+        ["css=.MuiPaper-elevation0", "css:finder"],
+        ["xpath=//div[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "18c78709-2294-4ea1-a0b7-868f90fa0a74",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[3]/div[2]", "xpath:position"]
+      ],
+      "value": "Email i hasło są wymagane"
+    }, {
+      "id": "cc7cede7-9383-4f87-81e0-1b72b9604ece",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R3aj5»",
+      "targets": [
+        ["id=«R3aj5»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABR3aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R3aj5»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "6e5770db-37dd-4724-a6ac-1cbab104a075",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "4bf3cfda-83b0-459e-98da-04e959556bab",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R5aj5»",
+      "targets": [
+        ["id=«R5aj5»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABR5aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R5aj5»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "example"
+    }, {
+      "id": "e93c9971-3d05-4605-92fa-7a49b5942572",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "2c4f0d5f-0e33-4cff-aa79-662900c58d1c",
+      "comment": "",
+      "command": "mouseOut",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "beea936b-c80e-4f1d-8971-a7db62b5380a",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiContainer-root",
+      "targets": [
+        ["css=.MuiContainer-root", "css:finder"],
+        ["xpath=//div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "6ed2d088-89d0-44cd-af4d-0414e6194e7c",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[3]/div[2]", "xpath:position"]
+      ],
+      "value": "Email i hasło są wymagane"
+    }, {
+      "id": "037441b2-07f6-49ff-a7ba-b359577ef764",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "9fb620e0-3259-4008-bb00-551ff6b2e4c9",
+    "name": "pacjent_correctLoginCorrectPassword",
+    "commands": [{
+      "id": "8704caa4-d446-4781-8c30-2e79b6038d63",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5174/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "28428327-5943-42ac-9c0f-70def838e781",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root:nth-child(2)",
+      "targets": [
+        ["css=.MuiButtonBase-root:nth-child(2)", "css:finder"],
+        ["xpath=//a[contains(text(),'Zaloguj się')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/login')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "a4e3a097-06e8-47ec-8a73-cfa5e0169fa3",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r0»",
+      "targets": [
+        ["id=«r0»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABr0\\BB", "css:finder"],
+        ["xpath=//input[@id='«r0»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "jan.kowalski@gmail.com"
+    }, {
+      "id": "43dc2ce0-9c60-4f13-8519-ee6b7224adad",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r1»",
+      "targets": [
+        ["id=«r1»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABr1\\BB", "css:finder"],
+        ["xpath=//input[@id='«r1»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "1234"
+    }, {
+      "id": "7806f180-9d96-459f-bff8-2c21d0066d0c",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "bec3b078-e589-44b4-b8ab-89cbd125d776",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiTypography-subtitle1",
+      "targets": [
+        ["css=.MuiTypography-subtitle1", "css:finder"],
+        ["xpath=//h6", "xpath:position"],
+        ["xpath=//h6[contains(.,'Jan Kowalski')]", "xpath:innerText"]
+      ],
+      "value": "Jan Kowalski"
+    }, {
+      "id": "148d7d2a-4991-4380-97f1-58e4ac6b3036",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiTypography-button",
+      "targets": [
+        ["css=.MuiTypography-button", "css:finder"],
+        ["xpath=//span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5d5591a7-2a4a-4c91-89f9-293aacb8b848",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "cda99391-e6bc-4591-92a2-0f3186ea332d",
+    "name": "pacjent_loginAndPasswordRequired",
+    "commands": [{
+      "id": "0311eeb9-4a98-413b-b774-07b491b1fc15",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5174/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "f57728f9-2315-4e76-a594-b7911bb3927a",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "950x861",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "c4bd12d2-a309-4c67-acfc-29484a6d0dac",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root:nth-child(2)",
+      "targets": [
+        ["css=.MuiButtonBase-root:nth-child(2)", "css:finder"],
+        ["xpath=//a[contains(text(),'Zaloguj się')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/login')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "103451c9-32fe-455f-9877-b120e5bbf145",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c163a2e8-b758-4a2a-9670-652eac4fe927",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiPaper-elevation0",
+      "targets": [
+        ["css=.MuiPaper-elevation0", "css:finder"],
+        ["xpath=//div[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "ca2dac4e-ede8-4fd9-a282-5547f3db51cc",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r0»",
+      "targets": [
+        ["id=«r0»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABr0\\BB", "css:finder"],
+        ["xpath=//input[@id='«r0»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "example"
+    }, {
+      "id": "97cd2d1a-d87c-40f0-be30-d984baf2a75d",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "be4914d6-94df-4691-8eb1-191de9e782e2",
+      "comment": "",
+      "command": "mouseOut",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "bd71ad94-ad93-4d5e-86bf-c144d718cf4f",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiPaper-elevation0",
+      "targets": [
+        ["css=.MuiPaper-elevation0", "css:finder"],
+        ["xpath=//div[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "97166a91-1fb2-4e75-bb48-84051e4ba907",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[3]/div[2]", "xpath:position"]
+      ],
+      "value": "Email i hasło są wymagane"
+    }, {
+      "id": "e92bd78a-2136-47e6-aed6-0bfc33c0b94e",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r0»",
+      "targets": [
+        ["id=«r0»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABr0\\BB", "css:finder"],
+        ["xpath=//input[@id='«r0»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "dbc8315e-3d62-4bd6-becb-99d127f7d3c9",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r1»",
+      "targets": [
+        ["id=«r1»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABr1\\BB", "css:finder"],
+        ["xpath=//input[@id='«r1»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "example"
+    }, {
+      "id": "6e133470-89d4-4fe5-a5fa-3759ba766287",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "1c7bf5c5-ca25-4d5c-9224-eaee72bc1722",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiPaper-elevation0",
+      "targets": [
+        ["css=.MuiPaper-elevation0", "css:finder"],
+        ["xpath=//div[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "39564b6e-ffc0-46df-bb80-0643d02535cc",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[3]/div[2]", "xpath:position"]
+      ],
+      "value": "Email i hasło są wymagane"
+    }, {
+      "id": "b9abc1f8-1cec-4a7f-a74b-1a6e75463df8",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "0ad184c4-dfcc-4c2c-88a5-0b9409e55aad",
+    "name": "pacjent_incorrectLoginCorrectPassword",
+    "commands": [{
+      "id": "fbfa0160-87ac-4065-bde7-8c9f9a21d537",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5174/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "6a0a9605-f895-4fd3-bd08-66add19f851e",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root:nth-child(2)",
+      "targets": [
+        ["css=.MuiButtonBase-root:nth-child(2)", "css:finder"],
+        ["xpath=//a[contains(text(),'Zaloguj się')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/login')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "eb1c3c1a-8948-4401-aa39-739e786b1b00",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r0»",
+      "targets": [
+        ["id=«r0»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABr0\\BB", "css:finder"],
+        ["xpath=//input[@id='«r0»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "incorrect_email"
+    }, {
+      "id": "494a7865-d5ce-47e8-8ce7-b29cda3e5961",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r1»",
+      "targets": [
+        ["id=«r1»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABr1\\BB", "css:finder"],
+        ["xpath=//input[@id='«r1»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "1234"
+    }, {
+      "id": "d858d27b-6838-476b-9d3b-c4a97bc1154e",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "b8ce0007-8fda-4904-b10c-c0c073ec424b",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[3]/div[2]", "xpath:position"]
+      ],
+      "value": "Nieprawidłowy email lub hasło"
+    }, {
+      "id": "b0b7ca09-6beb-4d9e-a9de-c4e08a6a9b97",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "112181ea-096d-47ae-8a5a-8a1bff1fbd7b",
+    "name": "pacjent_correctLoginIncorrectPassword",
+    "commands": [{
+      "id": "9c37aade-b1c2-480f-98de-c137e9636175",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5174/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "601c69bb-c8b9-4eff-96f1-ec1f45334fb4",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root:nth-child(2)",
+      "targets": [
+        ["css=.MuiButtonBase-root:nth-child(2)", "css:finder"],
+        ["xpath=//a[contains(text(),'Zaloguj się')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/login')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "9f1ad606-53d4-45fe-ac6f-469590637ace",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r0»",
+      "targets": [
+        ["id=«r0»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABr0\\BB", "css:finder"],
+        ["xpath=//input[@id='«r0»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "jan.kowalski@gmail.com"
+    }, {
+      "id": "8c61b704-b3d9-4386-b28c-365a56391645",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r1»",
+      "targets": [
+        ["id=«r1»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABr1\\BB", "css:finder"],
+        ["xpath=//input[@id='«r1»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "incorrect_password"
+    }, {
+      "id": "2c272fd5-84f0-4b13-bc5c-574e12ab0077",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "2bfd0b9a-1fc0-449a-bac2-2ef9767a7b65",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[3]/div[2]", "xpath:position"]
+      ],
+      "value": "Nieprawidłowy email lub hasło"
+    }, {
+      "id": "3c1f0499-cec4-4e9d-8230-dca9cea687b7",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "3fc793fb-f14d-43a2-90be-bf0bde2584b5",
+    "name": "pacjent_registerAllFieldsRequired",
+    "commands": [{
+      "id": "b812fd9c-80ec-4e79-9624-627384da0b9b",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5174/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "74c93352-36de-478f-a204-94645aa80d76",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "950x861",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5169abd1-c642-4e2c-a117-ee5b361a142d",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root:nth-child(3)",
+      "targets": [
+        ["css=.MuiButtonBase-root:nth-child(3)", "css:finder"],
+        ["xpath=//a[contains(text(),'Zarejestruj się')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/register')]", "xpath:href"],
+        ["xpath=//a[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "77d5e5da-31e6-4965-a571-a2627c441761",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "1b8541e7-afb1-4e68-a890-63a6fc8ee6b6",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[6]/div[2]", "xpath:position"]
+      ],
+      "value": "Wszystkie pola muszą być wypełnione!"
+    }, {
+      "id": "3e2069b4-4141-449a-ba43-6ade6e2b12c1",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r0»",
+      "targets": [
+        ["id=«r0»", "id"],
+        ["name=firstName", "name"],
+        ["css=#\\ABr0\\BB", "css:finder"],
+        ["xpath=//input[@id='«r0»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "example"
+    }, {
+      "id": "464d7c96-a39f-4cb5-bd68-ef993d26c551",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "1a5866a0-3ef6-4706-96f4-9b1ad54f57c1",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[6]/div[2]", "xpath:position"]
+      ],
+      "value": "Wszystkie pola muszą być wypełnione!"
+    }, {
+      "id": "7c525044-8878-484b-a8bb-2bc30f7da605",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r1»",
+      "targets": [
+        ["id=«r1»", "id"],
+        ["name=lastName", "name"],
+        ["css=#\\ABr1\\BB", "css:finder"],
+        ["xpath=//input[@id='«r1»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "example"
+    }, {
+      "id": "317f47a2-b645-4923-81aa-52b82aed706e",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "e6085259-5c9e-4025-8bdd-3b17c03ae479",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[6]/div[2]", "xpath:position"]
+      ],
+      "value": "Wszystkie pola muszą być wypełnione!"
+    }, {
+      "id": "17c6534b-b545-41fa-a80f-c9c069264efd",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r2»",
+      "targets": [
+        ["id=«r2»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABr2\\BB", "css:finder"],
+        ["xpath=//input[@id='«r2»']", "xpath:attributes"],
+        ["xpath=//div[3]/div/input", "xpath:position"]
+      ],
+      "value": "example"
+    }, {
+      "id": "32c1613e-557e-4776-8eee-5432ddc4a1d2",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "4ce75e29-1b50-450f-bc93-1912f8743f09",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[6]/div[2]", "xpath:position"]
+      ],
+      "value": "Wszystkie pola muszą być wypełnione!"
+    }, {
+      "id": "a37750c4-eed4-44ed-a338-ea7ffcaa52e4",
+      "comment": "",
+      "command": "click",
+      "target": "id=«r3»",
+      "targets": [
+        ["id=«r3»", "id"],
+        ["name=password", "name"],
+        ["css=#\\ABr3\\BB", "css:finder"],
+        ["xpath=//input[@id='«r3»']", "xpath:attributes"],
+        ["xpath=//div[4]/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "51362d14-1e5f-482d-864a-74248f224ee6",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r3»",
+      "targets": [
+        ["id=«r3»", "id"],
+        ["name=password", "name"],
+        ["css=#\\ABr3\\BB", "css:finder"],
+        ["xpath=//input[@id='«r3»']", "xpath:attributes"],
+        ["xpath=//div[4]/div/input", "xpath:position"]
+      ],
+      "value": "example"
+    }, {
+      "id": "48470232-137d-4da9-a85f-409da3ddb6bc",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "4a54b200-be50-4dcc-8c44-d613d3e1512c",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[6]/div[2]", "xpath:position"]
+      ],
+      "value": "Wszystkie pola muszą być wypełnione!"
+    }, {
+      "id": "259dda99-2f9c-4137-80ea-b05cf6239d87",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "604ae16a-82b8-41a5-8437-6dbe1242717e",
+    "name": "pacjent_newAppointmentAllFieldsRequired",
+    "commands": [{
+      "id": "7345d759-7076-45bf-8392-1a6c3bdcf723",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5174/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "c31ab4b1-9371-4527-b6bf-a9debe717778",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1400x861",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "6cf23944-fe51-4d66-bb0a-c5adaab6ec62",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.MuiButtonBase-root:nth-child(2)",
+      "targets": [
+        ["css=.MuiButtonBase-root:nth-child(2)", "css:finder"],
+        ["xpath=//a[contains(text(),'Zaloguj się')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/login')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "e4d5e24d-c2e3-4c8d-9e33-c6dc89c6be38",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root:nth-child(2)",
+      "targets": [
+        ["css=.MuiButtonBase-root:nth-child(2)", "css:finder"],
+        ["xpath=//a[contains(text(),'Zaloguj się')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/login')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "43d5ee84-6af7-4bf0-ba00-7ff129832581",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r0»",
+      "targets": [
+        ["id=«r0»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABr0\\BB", "css:finder"],
+        ["xpath=//input[@id='«r0»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "jan.kowalski@gmail.com"
+    }, {
+      "id": "b4c91c79-daa5-4c2c-8c13-8f6d264fdac1",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r1»",
+      "targets": [
+        ["id=«r1»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABr1\\BB", "css:finder"],
+        ["xpath=//input[@id='«r1»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "1234"
+    }, {
+      "id": "731fb843-23c6-49da-9c20-0b2508eb6539",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-contained",
+      "targets": [
+        ["css=.MuiButton-contained", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//div[2]/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d928c827-f0ef-4295-8059-fc50d9b3e105",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiListItem-root:nth-child(1) .MuiTypography-root",
+      "targets": [
+        ["css=.MuiListItem-root:nth-child(1) .MuiTypography-root", "css:finder"],
+        ["xpath=//div[2]/span", "xpath:position"],
+        ["xpath=//span[contains(.,'Umów wizytę')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "5a01cbab-29e9-4db1-acba-650129aef656",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-contained",
+      "targets": [
+        ["css=.MuiButton-contained", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//div[2]/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "9c4d6ec7-fb60-45d1-8456-955fb3109a27",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[5]/div[2]", "xpath:position"]
+      ],
+      "value": "Wszystkie pola są wymagane!"
+    }, {
+      "id": "0333e527-5676-4b68-adca-99dc59683de9",
+      "comment": "",
+      "command": "click",
+      "target": "id=«rd»",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5a7c4247-0864-4260-bde8-07932b8730f1",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiMenuItem-root:nth-child(1)",
+      "targets": [
+        ["css=.MuiMenuItem-root:nth-child(1)", "css:finder"],
+        ["xpath=//ul[@id='«re»']/li", "xpath:idRelative"],
+        ["xpath=//div[3]/ul/li", "xpath:position"],
+        ["xpath=//li[contains(.,'08:00')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "739ffc35-45af-4aa9-bfcf-55537a13bbae",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[5]/div[2]", "xpath:position"]
+      ],
+      "value": "Wszystkie pola są wymagane!"
+    }, {
+      "id": "8503dcda-6544-4f5d-8c44-ca64957bf1e1",
+      "comment": "",
+      "command": "click",
+      "target": "id=«rf»",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "0b91c904-fae7-4632-bf80-5d51b03a82af",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiMenuItem-root:nth-child(6)",
+      "targets": [
+        ["css=.MuiMenuItem-root:nth-child(6)", "css:finder"],
+        ["xpath=//ul[@id='«rg»']/li[6]", "xpath:idRelative"],
+        ["xpath=//li[6]", "xpath:position"],
+        ["xpath=//li[contains(.,'dr Piotr Kowalski')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "2706bc5d-392c-4c68-9893-6a55a5d872de",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-contained",
+      "targets": [
+        ["css=.MuiButton-contained", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//div[2]/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "4e0685da-2903-4bfe-a4a8-bda3e1026555",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[5]/div[2]", "xpath:position"]
+      ],
+      "value": "Wszystkie pola są wymagane!"
+    }, {
+      "id": "4202491b-3143-49d3-bbab-575fc9ea05a7",
+      "comment": "",
+      "command": "click",
+      "target": "id=«rh»",
+      "targets": [
+        ["id=«rh»", "id"],
+        ["css=#\\ABrh\\BB", "css:finder"],
+        ["xpath=//input[@id='«rh»']", "xpath:attributes"],
+        ["xpath=//div[3]/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "2f1e1c42-278e-4402-b94e-d3d81f9fe7b6",
+      "comment": "",
+      "command": "type",
+      "target": "id=«rh»",
+      "targets": [
+        ["id=«rh»", "id"],
+        ["css=#\\ABrh\\BB", "css:finder"],
+        ["xpath=//input[@id='«rh»']", "xpath:attributes"],
+        ["xpath=//div[3]/div/input", "xpath:position"]
+      ],
+      "value": "example"
+    }, {
+      "id": "87f8eb74-3842-429f-add6-5331bc3112e8",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-contained",
+      "targets": [
+        ["css=.MuiButton-contained", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//div[2]/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "2e0d8e03-6687-4c0a-b8c7-b7583cf3a224",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[5]/div[2]", "xpath:position"]
+      ],
+      "value": "Wszystkie pola są wymagane!"
+    }, {
+      "id": "799bef4c-93db-4002-8000-cabd93111b81",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiInputBase-multiline",
+      "targets": [
+        ["css=.MuiInputBase-multiline", "css:finder"],
+        ["xpath=//div[4]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "13992f30-bc19-44c6-8287-d92173416b71",
+      "comment": "",
+      "command": "type",
+      "target": "id=«ri»",
+      "targets": [
+        ["id=«ri»", "id"],
+        ["css=#\\ABri\\BB", "css:finder"],
+        ["xpath=//textarea[@id='«ri»']", "xpath:attributes"],
+        ["xpath=//textarea", "xpath:position"]
+      ],
+      "value": "example"
+    }, {
+      "id": "5f5a182d-ab3a-45c9-95a9-4b6d5e71fd68",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-contained",
+      "targets": [
+        ["css=.MuiButton-contained", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//div[2]/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "cc96ed6b-7813-4391-88fe-1264d3574cb8",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[5]/div[2]", "xpath:position"]
+      ],
+      "value": "Wszystkie pola są wymagane!"
+    }, {
+      "id": "580dedba-736e-48ea-a23b-cfaa32f78fb8",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiTypography-button",
+      "targets": [
+        ["css=.MuiTypography-button", "css:finder"],
+        ["xpath=//span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "efc32cf7-c717-4252-aaec-438b84048717",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "43263708-75be-465a-80c8-6a4a53e23552",
+    "name": "pacjent_DisplayingVisitDetails",
+    "commands": [{
+      "id": "14e6ff02-6bcd-45db-b68d-cc187057a855",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5174/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "a9943fdb-13a6-446a-9aa8-37a34aa5f9e3",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1400x861",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "1f001ba6-45f5-483a-8650-a422fad356ab",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root:nth-child(2)",
+      "targets": [
+        ["css=.MuiButtonBase-root:nth-child(2)", "css:finder"],
+        ["xpath=//a[contains(text(),'Zaloguj się')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/login')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "6980ec7e-5387-4d2b-85de-e07c7239d05c",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r0»",
+      "targets": [
+        ["id=«r0»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABr0\\BB", "css:finder"],
+        ["xpath=//input[@id='«r0»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "jan.kowalski@gmail.com"
+    }, {
+      "id": "d9596189-b416-48a4-a479-5f39b650f077",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r1»",
+      "targets": [
+        ["id=«r1»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABr1\\BB", "css:finder"],
+        ["xpath=//input[@id='«r1»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "1234"
+    }, {
+      "id": "e3d355b2-a702-4e87-9792-6385b439a4ce",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-contained",
+      "targets": [
+        ["css=.MuiButton-contained", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//div[2]/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "519cf281-e537-4aae-92f3-e04ff24f600a",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiListItem-root:nth-child(2) .MuiTypography-root",
+      "targets": [
+        ["css=.MuiListItem-root:nth-child(2) .MuiTypography-root", "css:finder"],
+        ["xpath=//li[2]/div/div[2]/span", "xpath:position"],
+        ["xpath=//span[contains(.,'Twoje Wizyty')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "712c8079-acf4-47d2-bbb7-c046b0fa0eba",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiListItem-root:nth-child(1) > .MuiListItemText-root > .MuiTypography-body1",
+      "targets": [
+        ["css=.MuiListItem-root:nth-child(1) > .MuiListItemText-root > .MuiTypography-body1", "css:finder"],
+        ["xpath=//main/div/div/ul/li/div/span", "xpath:position"],
+        ["xpath=//span[contains(.,'Data: 2027-06-01 — Godzina: 15:00')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "49e83462-41ac-479f-ba61-88dd44ae2c28",
+      "comment": "",
+      "command": "assertText",
+      "target": "id=«r6a»",
+      "targets": [
+        ["id=«r6a»", "id"],
+        ["css=#\\ABr6a\\BB", "css:finder"],
+        ["xpath=//h2[@id='«r6a»']", "xpath:attributes"],
+        ["xpath=//h2", "xpath:position"],
+        ["xpath=//h2[contains(.,'Notatka od lekarza')]", "xpath:innerText"]
+      ],
+      "value": "Notatka od lekarza"
+    }, {
+      "id": "007463d2-c7e2-4188-bd4c-eaa34df3a873",
+      "comment": "",
+      "command": "assertElementPresent",
+      "target": "css=.MuiButton-text",
+      "targets": [
+        ["css=.MuiButton-text", "css:finder"],
+        ["xpath=(//button[@type='button'])[31]", "xpath:attributes"],
+        ["xpath=//div[3]/div/div[2]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8c86dcfd-12b8-4fa1-83f6-838176b20f49",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-text",
+      "targets": [
+        ["css=.MuiButton-text", "css:finder"],
+        ["xpath=(//button[@type='button'])[31]", "xpath:attributes"],
+        ["xpath=//div[3]/div/div[2]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "b273128e-7ffa-4ec0-931c-df4d2405d148",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiTypography-button",
+      "targets": [
+        ["css=.MuiTypography-button", "css:finder"],
+        ["xpath=//span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "a01c5f84-cb55-4ecb-98dc-fdf05e634193",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "7427b6f4-4801-4d3e-9a7e-5416e72b1d95",
+    "name": "pacjent_DisplayingDiagnosisDetails",
+    "commands": [{
+      "id": "10a7a4f6-2027-40ab-b5be-8243e37bcc2c",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5174/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "9fcfd758-3d94-4153-b9b3-b74480c1f159",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1400x861",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "3f023fc0-4296-4fe0-b679-e3006df1fa49",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root:nth-child(2)",
+      "targets": [
+        ["css=.MuiButtonBase-root:nth-child(2)", "css:finder"],
+        ["xpath=//a[contains(text(),'Zaloguj się')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/login')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "7aee57e3-85da-4b11-ba2e-9ae922c3ae91",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r0»",
+      "targets": [
+        ["id=«r0»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABr0\\BB", "css:finder"],
+        ["xpath=//input[@id='«r0»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "jan.kowalski@gmail.com"
+    }, {
+      "id": "53cdfdc2-2c98-4a04-b7cb-4f0575ee4372",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r1»",
+      "targets": [
+        ["id=«r1»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABr1\\BB", "css:finder"],
+        ["xpath=//input[@id='«r1»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "1234"
+    }, {
+      "id": "61d32689-f787-43e2-8c0b-5c5901d260e6",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-contained",
+      "targets": [
+        ["css=.MuiButton-contained", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//div[2]/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "02bb5572-f788-4bac-8fbe-70e795a1e577",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiListItem-root:nth-child(3) .MuiTypography-root",
+      "targets": [
+        ["css=.MuiListItem-root:nth-child(3) .MuiTypography-root", "css:finder"],
+        ["xpath=//li[3]/div/div[2]/span", "xpath:position"],
+        ["xpath=//span[contains(.,'Twoje Badania')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "fad95cbd-828d-461d-af48-3790e44756a3",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiListItem-root:nth-child(1) > .MuiListItemText-root > .MuiTypography-body1",
+      "targets": [
+        ["css=.MuiListItem-root:nth-child(1) > .MuiListItemText-root > .MuiTypography-body1", "css:finder"],
+        ["xpath=//button/div/span", "xpath:position"],
+        ["xpath=//span[contains(.,'Badanie poziomu glukozy (2025-06-18)')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "dca7add6-2833-478a-bb1f-c56e3c260606",
+      "comment": "",
+      "command": "assertText",
+      "target": "id=«r6»",
+      "targets": [
+        ["id=«r6»", "id"],
+        ["css=#\\ABr6\\BB", "css:finder"],
+        ["xpath=//h2[@id='«r6»']", "xpath:attributes"],
+        ["xpath=//h2", "xpath:position"],
+        ["xpath=//h2[contains(.,'Wyniki badania')]", "xpath:innerText"]
+      ],
+      "value": "Wyniki badania"
+    }, {
+      "id": "dc815a3a-e44f-4e7c-bd08-373a94839b48",
+      "comment": "",
+      "command": "assertElementPresent",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=(//button[@type='button'])[3]", "xpath:attributes"],
+        ["xpath=//div[3]/div/div[2]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5eec53ad-4e26-4b53-bb21-87df9bcfac9d",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=(//button[@type='button'])[3]", "xpath:attributes"],
+        ["xpath=//div[3]/div/div[2]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5cc34da3-c877-47ae-a8eb-17a678cb8507",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiTypography-button",
+      "targets": [
+        ["css=.MuiTypography-button", "css:finder"],
+        ["xpath=//span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "80605710-d46d-4a16-8931-c1216e992ab4",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "afea1c54-2aaa-4ca4-ba28-04793241d6d7",
+    "name": "pacjent_DisplayingDocumentListAndDownloadButton",
+    "commands": [{
+      "id": "658bc1bd-9b63-43ed-9752-71f37fec3829",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5174/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "3eb513eb-8276-4b3f-a90c-b8ce2a44683c",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1400x861",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "813e71cb-02f7-4668-9c84-409d7047b72a",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root:nth-child(2)",
+      "targets": [
+        ["css=.MuiButtonBase-root:nth-child(2)", "css:finder"],
+        ["xpath=//a[contains(text(),'Zaloguj się')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/login')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "29eab75e-f38e-4ec7-81f7-3cc167860348",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r0»",
+      "targets": [
+        ["id=«r0»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABr0\\BB", "css:finder"],
+        ["xpath=//input[@id='«r0»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "jan.kowalski@gmail.com"
+    }, {
+      "id": "66f13e89-e6b9-4e3a-bb72-2125922d58b1",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r1»",
+      "targets": [
+        ["id=«r1»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABr1\\BB", "css:finder"],
+        ["xpath=//input[@id='«r1»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "1234"
+    }, {
+      "id": "7d0dd350-69ce-4f41-b0a9-3d1e259d5847",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-contained",
+      "targets": [
+        ["css=.MuiButton-contained", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//div[2]/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "58ae3ed2-d7c1-4d16-9b2c-f7cdc55c4eb4",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiListItem-root:nth-child(4) .MuiTypography-root",
+      "targets": [
+        ["css=.MuiListItem-root:nth-child(4) .MuiTypography-root", "css:finder"],
+        ["xpath=//li[4]/div/div[2]/span", "xpath:position"],
+        ["xpath=//span[contains(.,'Twoje Dokumenty')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "2ad5023d-520e-40b0-a9dc-9b25343e7882",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiTypography-h5",
+      "targets": [
+        ["css=.MuiTypography-h5", "css:finder"],
+        ["xpath=//h5", "xpath:position"],
+        ["xpath=//h5[contains(.,'Twoje dokumenty')]", "xpath:innerText"]
+      ],
+      "value": "Twoje dokumenty"
+    }, {
+      "id": "60564c3b-bfe8-44b7-8040-40edbd9970a7",
+      "comment": "",
+      "command": "assertElementPresent",
+      "target": "css=.MuiListItem-root:nth-child(1) > .MuiListItemSecondaryAction-root > .MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiListItem-root:nth-child(1) > .MuiListItemSecondaryAction-root > .MuiButtonBase-root", "css:finder"],
+        ["xpath=(//button[@type='button'])[3]", "xpath:attributes"],
+        ["xpath=//li/div[2]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "713695ec-98c7-40de-a592-b50e0e5297b2",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiTypography-button",
+      "targets": [
+        ["css=.MuiTypography-button", "css:finder"],
+        ["xpath=//span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "cdfb0dfb-d38d-418e-9323-1cf2de93a950",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "29cbbb3b-2179-4d67-b342-a778352d8a5c",
+    "name": "pacjent_SendingMessagesAllFieldsRequired",
+    "commands": [{
+      "id": "023b602b-3d69-4f46-aa28-cccf72b0ab98",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5174/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "8e07d0af-5326-4248-8d31-cbc5b393a2e0",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1400x861",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "a0ff7211-a229-4005-add2-78b0d0515f2e",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root:nth-child(2)",
+      "targets": [
+        ["css=.MuiButtonBase-root:nth-child(2)", "css:finder"],
+        ["xpath=//a[contains(text(),'Zaloguj się')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/login')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "a87e227e-6e08-466a-aa0c-8724b40c78c3",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r0»",
+      "targets": [
+        ["id=«r0»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABr0\\BB", "css:finder"],
+        ["xpath=//input[@id='«r0»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "jan.kowalski@gmail.com"
+    }, {
+      "id": "8fdd8fe4-2e1a-4453-9264-1a512b567206",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r1»",
+      "targets": [
+        ["id=«r1»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABr1\\BB", "css:finder"],
+        ["xpath=//input[@id='«r1»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "1234"
+    }, {
+      "id": "f73edc77-77aa-498e-b243-eff851f0b667",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-contained",
+      "targets": [
+        ["css=.MuiButton-contained", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//div[2]/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "2a3e91e2-140b-4108-aadf-bb1739538e47",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiListItem-root:nth-child(5) .MuiTypography-root",
+      "targets": [
+        ["css=.MuiListItem-root:nth-child(5) .MuiTypography-root", "css:finder"],
+        ["xpath=//li[5]/div/div[2]/span", "xpath:position"],
+        ["xpath=//span[contains(.,'Kontakt z doktorem')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "c7e617cf-645a-48b3-85ab-2a439a020c2f",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//form/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8b6ac00c-abdc-4200-b0e9-0a225dabc4c1",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[4]/div[2]", "xpath:position"]
+      ],
+      "value": "Wszystkie pola są wymagane!"
+    }, {
+      "id": "a9ee179b-74b2-4a7d-a039-fac0b455f369",
+      "comment": "",
+      "command": "click",
+      "target": "id=«r6»",
+      "targets": [
+        ["css=body", "css:finder"],
+        ["xpath=//body", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "1956c845-1d62-41b9-a8b3-ea5bc1fcb622",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root:nth-child(6)",
+      "targets": [
+        ["css=.MuiButtonBase-root:nth-child(6)", "css:finder"],
+        ["xpath=//ul[@id='«r7»']/li[6]", "xpath:idRelative"],
+        ["xpath=//li[6]", "xpath:position"],
+        ["xpath=//li[contains(.,'dr Piotr Kowalski')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "01c0ac7f-1754-445d-9ad0-4c0fe025fd3f",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//form/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "1f9324e4-fe81-4391-977a-cbaa670dab28",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[4]/div[2]", "xpath:position"]
+      ],
+      "value": "Wszystkie pola są wymagane!"
+    }, {
+      "id": "465c3dad-cfe6-4229-9f34-b68ab5a8a823",
+      "comment": "",
+      "command": "click",
+      "target": "id=«r8»",
+      "targets": [
+        ["id=«r8»", "id"],
+        ["css=#\\ABr8\\BB", "css:finder"],
+        ["xpath=//input[@id='«r8»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "2ed782a0-65d0-48ba-af4d-515d67b6a85b",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r8»",
+      "targets": [
+        ["id=«r8»", "id"],
+        ["css=#\\ABr8\\BB", "css:finder"],
+        ["xpath=//input[@id='«r8»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "example"
+    }, {
+      "id": "6cb38d56-1790-43f9-a11c-817d2f946034",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//form/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "fc3aac57-84ac-4f0a-87d5-3b656608d75e",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiAlert-message",
+      "targets": [
+        ["css=.MuiAlert-message", "css:finder"],
+        ["xpath=//div[4]/div[2]", "xpath:position"]
+      ],
+      "value": "Wszystkie pola są wymagane!"
+    }, {
+      "id": "cf4cdd41-46e6-49ff-9457-2fc836ba9819",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiTypography-button",
+      "targets": [
+        ["css=.MuiTypography-button", "css:finder"],
+        ["xpath=//span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "86729583-6c54-4158-ad78-4735afd0a080",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "c459f3e8-ca31-454b-a819-a02f02f3f95d",
+    "name": "admin_filteringRoleUser",
+    "commands": [{
+      "id": "9065c2b6-8881-4491-ad69-fe93d6116896",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5175/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "6684cf70-eac1-48ac-9cbf-143a65bae163",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='button']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c918a8e3-c3ff-4d01-af8a-35c2f2937e92",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiSelect-select",
+      "targets": [
+        ["css=.MuiSelect-select", "css:finder"],
+        ["xpath=//div/div/div/div/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "96be4610-2236-4f50-bf53-676a3498fd2b",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root:nth-child(2)",
+      "targets": [
+        ["css=.MuiButtonBase-root:nth-child(3)", "css:finder"],
+        ["xpath=//ul[@id='«r1»']/li[3]", "xpath:idRelative"],
+        ["xpath=//div[3]/ul/li[3]", "xpath:position"],
+        ["xpath=//li[contains(.,'user')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "7e03bd8b-635d-4696-879d-8b23b6c8cdae",
+      "comment": "",
+      "command": "waitForElementNotPresent",
+      "target": "css=.MuiButtonBase-root:nth-child(2)",
+      "targets": [],
+      "value": "30000"
+    }, {
+      "id": "f453f429-dcf8-46f1-a0bd-2842bd30f4c4",
+      "comment": "",
+      "command": "storeXpathCount",
+      "target": "xpath=//table/tbody/tr",
+      "targets": [],
+      "value": "rowCount"
+    }, {
+      "id": "615ee4b2-d045-4f1b-8731-f5aaeb3d42c1",
+      "comment": "",
+      "command": "echo",
+      "target": "${rowCount} rows",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "b838381d-8ff1-471b-85d8-df544cd62731",
+      "comment": "",
+      "command": "store",
+      "target": "1",
+      "targets": [],
+      "value": "i"
+    }, {
+      "id": "314468c3-6d8a-4296-8f23-47b9fe63bddb",
+      "comment": "",
+      "command": "while",
+      "target": "${i} <= ${rowCount}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "9f37ca61-ee69-4bcc-902e-35bd28621d9f",
+      "comment": "",
+      "command": "assertText",
+      "target": "xpath=//table/tbody/tr[${i}]/td[2]",
+      "targets": [],
+      "value": "user"
+    }, {
+      "id": "91af269c-00f4-4537-8818-d39770424806",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return Number(${i}) +1",
+      "targets": [],
+      "value": "i"
+    }, {
+      "id": "ebac7068-be18-4bbe-96a4-3cd16da03fd7",
+      "comment": "",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "47c31ae8-586f-498c-9ca1-0e1197e2d689",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "92e0f33a-3159-48fc-8242-649314adf08d",
+    "name": "admin_filteringRoleDoctor",
+    "commands": [{
+      "id": "5bc426f0-bc91-4195-9a1a-263ba579b835",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5175/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "b536a64b-6d6a-4a89-8d15-d70d877d38ca",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='button']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "17480067-1340-4731-870f-355afe242e64",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiSelect-select",
+      "targets": [
+        ["css=.MuiSelect-select", "css:finder"],
+        ["xpath=//div/div/div/div/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c6683faa-5472-47fa-96f0-7edf2e2e04b9",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root:nth-child(3)",
+      "targets": [
+        ["css=.MuiButtonBase-root:nth-child(3)", "css:finder"],
+        ["xpath=//ul[@id='«r1»']/li[3]", "xpath:idRelative"],
+        ["xpath=//div[3]/ul/li[3]", "xpath:position"],
+        ["xpath=//li[contains(.,'user')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "226c26cb-5498-4fea-b38e-56b82f47ebc4",
+      "comment": "",
+      "command": "waitForElementNotPresent",
+      "target": "css=.MuiButtonBase-root:nth-child(3)",
+      "targets": [],
+      "value": "30000"
+    }, {
+      "id": "7b907d52-8aaa-4966-8522-aed26c8dcdfc",
+      "comment": "",
+      "command": "storeXpathCount",
+      "target": "xpath=//table/tbody/tr",
+      "targets": [],
+      "value": "rowCount"
+    }, {
+      "id": "45b61ec8-063c-4c36-9668-1656a0b1f418",
+      "comment": "",
+      "command": "echo",
+      "target": "${rowCount} rows",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "21270f04-0920-4a4d-9d47-03d7413fa300",
+      "comment": "",
+      "command": "store",
+      "target": "1",
+      "targets": [],
+      "value": "i"
+    }, {
+      "id": "3a76b2fd-ea46-47ef-a2a9-4a3d43929ac7",
+      "comment": "",
+      "command": "while",
+      "target": "${i} <= ${rowCount}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "f5a341d3-3086-42ba-9bf2-f48f1ed0e4ef",
+      "comment": "",
+      "command": "assertText",
+      "target": "xpath=//table/tbody/tr[${i}]/td[2]",
+      "targets": [],
+      "value": "doctor"
+    }, {
+      "id": "d69a736a-4cd8-4dad-8ded-e9d91add108e",
+      "comment": "",
+      "command": "executeScript",
+      "target": "return Number(${i}) +1",
+      "targets": [],
+      "value": "i"
+    }, {
+      "id": "d8162779-2ea4-4046-a0cd-b712c6d624e5",
+      "comment": "",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "cfc8a6fb-4f54-492a-ad48-74b8dc2d7864",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "d7048d0a-9b48-4505-ac28-12b31ccdc2d4",
+    "name": "admin_changingPasswordNewPasswordRequired",
+    "commands": [{
+      "id": "37af6687-765a-44f7-a7cd-17126555e405",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5175/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "1e699fca-02c7-42bc-ac22-324417d42f71",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='button']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "94ab3bb6-921b-46ca-ae9a-36f2b7625caf",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiTableRow-root:nth-child(1) .MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiTableRow-root:nth-child(3) .MuiButtonBase-root", "css:finder"],
+        ["xpath=(//button[@type='button'])[3]", "xpath:attributes"],
+        ["xpath=//tr[3]/td[3]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "bf732857-13ac-42e3-85aa-92bd7ae79171",
+      "comment": "",
+      "command": "storeAttribute",
+      "target": "css=.MuiButton-contained@disabled",
+      "targets": [],
+      "value": "isDisabled"
+    }, {
+      "id": "1f021956-0598-4892-975a-88276805bc21",
+      "comment": "",
+      "command": "assert",
+      "target": "isDisabled",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "c966e505-bc85-483a-a793-f680502657a4",
+      "comment": "",
+      "command": "type",
+      "target": "xpath=//input[@type='password']",
+      "targets": [
+        ["id=«r10»", "id"],
+        ["css=#\\ABr10\\BB", "css:finder"],
+        ["xpath=//input[@id='«r10»']", "xpath:attributes"],
+        ["xpath=//div[3]/div/div/div/div/input", "xpath:position"]
+      ],
+      "value": "example"
+    }, {
+      "id": "be8c6a4a-d8a6-44e8-b09a-dd148d9ec183",
+      "comment": "",
+      "command": "storeAttribute",
+      "target": "css=.MuiButton-contained@disabled",
+      "targets": [],
+      "value": "isDisabled"
+    }, {
+      "id": "7dcbb9f0-1052-454f-85c7-7f3eaa60015a",
+      "comment": "",
+      "command": "assert",
+      "target": "isDisabled",
+      "targets": [],
+      "value": "null"
+    }, {
+      "id": "7ea483d4-0c81-4332-9eea-0f8c8eec0467",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.MuiButton-text",
+      "targets": [
+        ["css=.MuiButton-text", "css:finder"],
+        ["xpath=(//button[@type='button'])[29]", "xpath:attributes"],
+        ["xpath=//div[2]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8a2f154c-2c61-4fe6-920f-539d5cf005f5",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-text",
+      "targets": [
+        ["css=.MuiButton-text", "css:finder"],
+        ["xpath=(//button[@type='button'])[29]", "xpath:attributes"],
+        ["xpath=//div[2]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "6e6d032c-3ac7-4470-a56c-0f45ebd459e0",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "227fa6ef-0bc2-4fb9-b577-bd8b508f8d40",
+    "name": "admin_filteringEmail",
+    "commands": [{
+      "id": "95cc6091-35d5-40f8-96d9-1547ce86d1fe",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5175/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "e0f2d6e8-adb4-44ec-aae0-dc960a2726c7",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='button']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "1fe7ff63-6ee1-4f23-97dd-efcec11305b7",
+      "comment": "",
+      "command": "click",
+      "target": "id=«r2»",
+      "targets": [
+        ["id=«r2»", "id"],
+        ["css=#\\ABr2\\BB", "css:finder"],
+        ["xpath=//input[@id='«r2»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "4a9abae9-1110-481b-b519-34a4f3ba1205",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r2»",
+      "targets": [
+        ["id=«r2»", "id"],
+        ["css=#\\ABr2\\BB", "css:finder"],
+        ["xpath=//input[@id='«r2»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "piotr.kowalski@clinic.pl"
+    }, {
+      "id": "65358ccf-1c37-4c98-a909-a681424c60f1",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiTableCell-body:nth-child(1)",
+      "targets": [
+        ["css=.MuiTableCell-body:nth-child(1)", "css:finder"],
+        ["xpath=//td", "xpath:position"],
+        ["xpath=//td[contains(.,'piotr.kowalski@clinic.pl')]", "xpath:innerText"]
+      ],
+      "value": "piotr.kowalski@clinic.pl"
+    }, {
+      "id": "28bc7c15-6d10-49b4-8f13-59c5943aa94c",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "3600a8aa-1d43-425a-a5f1-8ddd65f80da8",
+    "name": "admin_assigningShifts",
+    "commands": [{
+      "id": "3887c3c7-2f4f-44ec-ba13-f41a87782d9d",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5175/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "f35449ba-fb6a-49b9-94ab-f26a1b6e43aa",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='button']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "0dd8a9e5-a8f2-467d-b1b1-b437d43cccc7",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiListItem-root:nth-child(2) .MuiTypography-root",
+      "targets": [
+        ["css=.MuiListItem-root:nth-child(2) .MuiTypography-root", "css:finder"],
+        ["xpath=//li[2]/div/div[2]/span", "xpath:position"],
+        ["xpath=//span[contains(.,'Grafik')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "b18211ca-cc3c-4922-9878-8e3d889f8acb",
+      "comment": "",
+      "command": "dragAndDropToObject",
+      "target": "css=.MuiListItem-padding:nth-child(1)",
+      "targets": [],
+      "value": "css=.MuiGrid-root:nth-child(1) .MuiBox-root:nth-child(3) > .MuiStack-root > .MuiTypography-root"
+    }, {
+      "id": "ee900c5c-c42d-49a8-9c2c-eeda526d2d25",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiGrid-root:nth-child(1) .MuiSvgIcon-root",
+      "targets": [
+        ["css=.MuiGrid-root:nth-child(1) path:nth-child(1)", "css:finder"]
+      ],
+      "value": ""
+    }, {
+      "id": "a0ee8298-15f2-4011-9bab-b0fbf4b9df73",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "bb17361c-2106-41b0-854b-68e32cc3b47b",
+    "name": "admin_ConsoleValidCommand",
+    "commands": [{
+      "id": "42ae40ed-ae3b-4ee0-a4db-8febfa9ca14c",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5175/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "36c2964e-98b7-4cd5-87cf-1e277eb6b53d",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='button']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "4d2d8b22-f303-4314-969c-fd7aa8430844",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiListItem-root:nth-child(3) .MuiTypography-root",
+      "targets": [
+        ["css=.MuiListItem-root:nth-child(3) .MuiTypography-root", "css:finder"],
+        ["xpath=//li[3]/div/div[2]/span", "xpath:position"],
+        ["xpath=//span[contains(.,'Konsola')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "9e057bbd-e138-43f7-9ffc-4a7eb929dd11",
+      "comment": "",
+      "command": "type",
+      "target": "xpath=//input[@type='text']",
+      "targets": [
+        ["id=«r16»", "id"],
+        ["css=#\\ABr16\\BB", "css:finder"],
+        ["xpath=//input[@id='«r16»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "select current_date;"
+    }, {
+      "id": "8b0816cd-4b64-48f6-a192-421250352397",
+      "comment": "",
+      "command": "sendKeys",
+      "target": "xpath=//input[@type='text']",
+      "targets": [
+        ["id=«r10»", "id"],
+        ["css=#\\ABr10\\BB", "css:finder"],
+        ["xpath=//input[@id='«r10»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "${KEY_ENTER}"
+    }, {
+      "id": "9b3735bb-f7e9-48c2-be2c-a93315a0867b",
+      "comment": "",
+      "command": "assertElementPresent",
+      "target": "xpath=//div[3]/div/div/div[contains(.,'current_date')]",
+      "targets": [
+        ["css=.MuiPaper-elevation1", "css:finder"],
+        ["xpath=//div[3]/div/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8a3fab28-3969-4fb4-95c9-daec2ae15716",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=//button[@type='button']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5c6dff13-a25e-4d9c-b2ea-f7bd72cead88",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "fb2d8042-2f4c-4926-bd5b-b396207ac508",
+    "name": "admin_ConsoleInvalidCommand",
+    "commands": [{
+      "id": "6cad1dd1-bc83-4369-9d0f-45fec7a81de3",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5175/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "929ba8ae-e440-4a73-871e-8738d29fcac9",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='button']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8cbe5826-e573-4c57-a7c8-15197100e203",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiListItem-root:nth-child(3) .MuiTypography-root",
+      "targets": [
+        ["css=.MuiListItem-root:nth-child(3) .MuiTypography-root", "css:finder"],
+        ["xpath=//li[3]/div/div[2]/span", "xpath:position"],
+        ["xpath=//span[contains(.,'Konsola')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "6ab70074-a804-4a76-b07a-8a558877e536",
+      "comment": "",
+      "command": "type",
+      "target": "xpath=//input[@type='text']",
+      "targets": [
+        ["id=«r10»", "id"],
+        ["css=#\\ABr10\\BB", "css:finder"],
+        ["xpath=//input[@id='«r10»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "example"
+    }, {
+      "id": "c5f79b87-3f2e-4460-bef4-f4f95fbfbff2",
+      "comment": "",
+      "command": "sendKeys",
+      "target": "xpath=//input[@type='text']",
+      "targets": [
+        ["id=«r10»", "id"],
+        ["css=#\\ABr10\\BB", "css:finder"],
+        ["xpath=//input[@id='«r10»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "${KEY_ENTER}"
+    }, {
+      "id": "351bb5c1-0ed8-4b47-bb3a-f1b654817380",
+      "comment": "",
+      "command": "assertElementPresent",
+      "target": "xpath=//div[3]/div/div/div[contains(.,'error')]",
+      "targets": [
+        ["css=.MuiPaper-elevation1", "css:finder"],
+        ["xpath=//div[3]/div/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "b9bb474d-6169-497e-9dc4-46e4386dc833",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=//button[@type='button']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "b5f7625d-1c62-44c9-a336-697f8403708b",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "6c823266-43a0-49a4-9519-d9c30a3ad55e",
+    "name": "lekarz_filteringPatients",
+    "commands": [{
+      "id": "06fed59f-6b3a-4eff-99a9-32e3e072695e",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5173/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "95242e9c-ceb4-4bd7-90d0-4f783af3de3a",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "950x861",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "13c9a0c8-eb0a-4cff-b5d9-f8fd1d9ce195",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R3aj5»",
+      "targets": [
+        ["id=«R3aj5»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABR3aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R3aj5»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "piotr.kowalski@clinic.pl"
+    }, {
+      "id": "6c44e3cc-b6a7-4469-ad9a-6e043de5e64e",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R5aj5»",
+      "targets": [
+        ["id=«R5aj5»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABR5aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R5aj5»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "tajnehaslo"
+    }, {
+      "id": "c3fa4fe7-0cdf-4065-9156-5e87529c4b00",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "970c8f55-3069-41cc-943d-4aff724d13af",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiListItem-root:nth-child(5) .MuiTypography-root",
+      "targets": [
+        ["css=.MuiListItem-root:nth-child(5) .MuiTypography-root", "css:finder"],
+        ["xpath=//li[5]/div/div[2]/span", "xpath:position"],
+        ["xpath=//span[contains(.,'Pacjenci')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "79f31cb1-0ce7-490f-a3a6-2bb4c97c0b61",
+      "comment": "",
+      "command": "waitForElementVisible",
+      "target": "css=.MuiTypography-h4",
+      "targets": [],
+      "value": "5"
+    }, {
+      "id": "da1344f6-ca57-4269-929f-d37450447e05",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r7»",
+      "targets": [
+        ["id=«r7»", "id"],
+        ["css=#\\ABr7\\BB", "css:finder"],
+        ["xpath=//input[@id='«r7»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "90010112345"
+    }, {
+      "id": "ad426cf8-a8f0-4f6a-8821-65741c56c5b0",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiTableCell-body:nth-child(3)",
+      "targets": [
+        ["css=.MuiTableCell-body:nth-child(3)", "css:finder"],
+        ["xpath=//td[3]", "xpath:position"],
+        ["xpath=//td[contains(.,'90010112345')]", "xpath:innerText"]
+      ],
+      "value": "90010112345"
+    }, {
+      "id": "a47fc704-1609-4c22-b79e-f33f93f55980",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r7»",
+      "targets": [
+        ["id=«r7»", "id"],
+        ["css=#\\ABr7\\BB", "css:finder"],
+        ["xpath=//input[@id='«r7»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "b7532739-9051-46f7-bea5-60f21fbcd874",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r8»",
+      "targets": [
+        ["id=«r8»", "id"],
+        ["css=#\\ABr8\\BB", "css:finder"],
+        ["xpath=//input[@id='«r8»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "Kowalski"
+    }, {
+      "id": "4f1cb9b0-050c-4008-85f5-2244fd01bfec",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiTableRow-root:nth-child(1) > .MuiTableCell-body:nth-child(2)",
+      "targets": [
+        ["css=.MuiTableRow-root:nth-child(1) > .MuiTableCell-body:nth-child(2)", "css:finder"],
+        ["xpath=//td[2]", "xpath:position"],
+        ["xpath=//td[contains(.,'Kowalski')]", "xpath:innerText"]
+      ],
+      "value": "Kowalski"
+    }, {
+      "id": "a97acca3-0828-4ecc-8cc1-a8be52efecad",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiTypography-button",
+      "targets": [
+        ["css=.MuiTypography-button", "css:finder"],
+        ["xpath=//span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "aeac008a-f060-418f-a5df-20f09617156c",
+      "comment": "",
+      "command": "waitForElementVisible",
+      "target": "css=.MuiTypography-root",
+      "targets": [
+        ["css=.MuiTypography-root", "css:finder"],
+        ["xpath=//h5", "xpath:position"],
+        ["xpath=//h5[contains(.,'Logowanie')]", "xpath:innerText"]
+      ],
+      "value": "2"
+    }, {
+      "id": "eb7df302-75e4-42cc-88eb-3ffda79dd285",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "3e879de9-4855-45d9-8e1c-76380a048302",
+    "name": "lekarz_editingNotesTodayAppointments",
+    "commands": [{
+      "id": "55aa7afa-db05-4140-a76c-1977c7a056cd",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:5173/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "3254f833-2167-4425-960d-125c89777138",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "950x861",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "26cb7af9-782c-4466-89a4-7be112979849",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R3aj5»",
+      "targets": [
+        ["id=«R3aj5»", "id"],
+        ["name=email", "name"],
+        ["css=#\\ABR3aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R3aj5»']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "piotr.kowalski@clinic.pl"
+    }, {
+      "id": "e4cfbb8a-2dc8-45a3-b3db-6492f23ea6bd",
+      "comment": "",
+      "command": "type",
+      "target": "id=«R5aj5»",
+      "targets": [
+        ["id=«R5aj5»", "id"],
+        ["name=haslo", "name"],
+        ["css=#\\ABR5aj5\\BB", "css:finder"],
+        ["xpath=//input[@id='«R5aj5»']", "xpath:attributes"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "tajnehaslo"
+    }, {
+      "id": "f787496d-46e3-4b22-8394-c16355b845af",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButtonBase-root",
+      "targets": [
+        ["css=.MuiButtonBase-root", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "3f1a3f00-ff8e-44ce-acbc-db279053d25b",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiListItem-root:nth-child(2) .MuiTypography-root",
+      "targets": [
+        ["css=.MuiListItem-root:nth-child(2) .MuiTypography-root", "css:finder"],
+        ["xpath=//li[2]/div/div[2]/span", "xpath:position"],
+        ["xpath=//span[contains(.,'Dzisiejsze wizyty')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "4417e075-6b7f-429f-b1c7-39fa891e61ed",
+      "comment": "",
+      "command": "waitForElementVisible",
+      "target": "css=.MuiTypography-h4",
+      "targets": [],
+      "value": "5"
+    }, {
+      "id": "53119f8d-0730-4ad0-b4b8-0e5a60f19cd2",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=(//button[@type='button'])[3]", "xpath:attributes"],
+        ["xpath=//td[5]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "3c497334-41d9-43fe-b2f3-619fdc6d8bdf",
+      "comment": "",
+      "command": "waitForElementVisible",
+      "target": "id=«r8»",
+      "targets": [
+        ["id=«r8»", "id"],
+        ["css=#\\ABr8\\BB", "css:finder"],
+        ["xpath=//h2[@id='«r8»']", "xpath:attributes"],
+        ["xpath=//h2", "xpath:position"],
+        ["xpath=//h2[contains(.,'Edycja wizyty - Marek Kamiński (10:30:00)')]", "xpath:innerText"]
+      ],
+      "value": "5"
+    }, {
+      "id": "f938e4ef-96a6-4d87-8859-de3890c11267",
+      "comment": "",
+      "command": "type",
+      "target": "id=«r9»",
+      "targets": [
+        ["id=«r9»", "id"],
+        ["css=#\\ABr9\\BB", "css:finder"],
+        ["xpath=//textarea[@id='«r9»']", "xpath:attributes"],
+        ["xpath=//textarea", "xpath:position"]
+      ],
+      "value": "example"
+    }, {
+      "id": "6b68b2e4-0a14-4ccf-9e63-9345794cd7cb",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-contained",
+      "targets": [
+        ["css=.MuiButton-contained", "css:finder"],
+        ["xpath=(//button[@type='button'])[6]", "xpath:attributes"],
+        ["xpath=//button[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "810c5cff-d54a-4abd-af51-99ee5edb96cf",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiChip-label",
+      "targets": [
+        ["css=.MuiChip-label", "css:finder"],
+        ["xpath=//td[4]/div/span", "xpath:position"],
+        ["xpath=//span[contains(.,'Oczekuje')]", "xpath:innerText"]
+      ],
+      "value": "Zrealizowana"
+    }, {
+      "id": "512b863a-e851-43e2-b531-8a3432a74903",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-root",
+      "targets": [
+        ["css=.MuiButton-root", "css:finder"],
+        ["xpath=(//button[@type='button'])[3]", "xpath:attributes"],
+        ["xpath=//td[5]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "b737f79b-bd8e-488b-93d1-39ed9791677b",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiButton-textError",
+      "targets": [
+        ["css=.MuiButton-textError", "css:finder"],
+        ["xpath=(//button[@type='button'])[5]", "xpath:attributes"],
+        ["xpath=//button[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "ee60c13d-70b1-4977-9a9e-5124803a2d0c",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiDialog-container",
+      "targets": [
+        ["css=.MuiDialog-container", "css:finder"],
+        ["xpath=//div[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "e31379a4-2a18-47a3-8dc9-d8abdd8c8176",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.MuiChip-label",
+      "targets": [
+        ["css=.MuiChip-label", "css:finder"],
+        ["xpath=//td[4]/div/span", "xpath:position"],
+        ["xpath=//span[contains(.,'Oczekuje')]", "xpath:innerText"]
+      ],
+      "value": "Oczekuje"
+    }, {
+      "id": "ee4416fb-9d78-4435-b6c9-3218bcccc810",
+      "comment": "",
+      "command": "click",
+      "target": "css=.MuiTypography-button",
+      "targets": [
+        ["css=.MuiTypography-button", "css:finder"],
+        ["xpath=//span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "7a88c55d-fc70-4d7c-9ebd-53ad664bbb97",
+      "comment": "",
+      "command": "waitForElementVisible",
+      "target": "css=.MuiTypography-root",
+      "targets": [
+        ["css=.MuiTypography-root", "css:finder"],
+        ["xpath=//h5", "xpath:position"],
+        ["xpath=//h5[contains(.,'Logowanie')]", "xpath:innerText"]
+      ],
+      "value": "2"
+    }, {
+      "id": "2e365eba-bf0d-47f6-a028-d628378f7fca",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "0f02ca06-7350-4f71-a4cc-c87b998eb50e",
+    "name": "frontendLekarz",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["e2aa1a3a-26d2-4829-9a95-c04a8519bffc", "4e4ae3a3-52da-4536-ba40-0f9432c1046b", "f97c92df-a9fd-494b-8e0f-57dca834ca8b", "076c7165-0897-4d63-93a1-50a4894556a6", "f542872b-6043-468d-8a45-18d6929ddaa5", "e9743761-1120-4585-81ae-34cabaaa1052", "734214ad-89e3-4481-8876-08305b2c5840", "40dbcf7b-cf47-4577-85ff-3bc452da63b6", "6c5eca56-0d70-45b4-8636-609ec77215ce", "3e879de9-4855-45d9-8e1c-76380a048302", "6c823266-43a0-49a4-9519-d9c30a3ad55e"]
+  }, {
+    "id": "636793c6-44fd-4fd3-81a9-f78f901b3301",
+    "name": "frontendPacjent",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["afea1c54-2aaa-4ca4-ba28-04793241d6d7", "7427b6f4-4801-4d3e-9a7e-5416e72b1d95", "43263708-75be-465a-80c8-6a4a53e23552", "29cbbb3b-2179-4d67-b342-a778352d8a5c", "112181ea-096d-47ae-8a5a-8a1bff1fbd7b", "9fb620e0-3259-4008-bb00-551ff6b2e4c9", "0ad184c4-dfcc-4c2c-88a5-0b9409e55aad", "cda99391-e6bc-4591-92a2-0f3186ea332d", "3fc793fb-f14d-43a2-90be-bf0bde2584b5", "604ae16a-82b8-41a5-8437-6dbe1242717e"]
+  }, {
+    "id": "751f73ab-7add-4073-9256-2fcb863b965d",
+    "name": "frontendAdmin",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["bb17361c-2106-41b0-854b-68e32cc3b47b", "3600a8aa-1d43-425a-a5f1-8ddd65f80da8", "d7048d0a-9b48-4505-ac28-12b31ccdc2d4", "227fa6ef-0bc2-4fb9-b577-bd8b508f8d40", "92e0f33a-3159-48fc-8242-649314adf08d", "c459f3e8-ca31-454b-a819-a02f02f3f95d", "fb2d8042-2f4c-4926-bd5b-b396207ac508"]
+  }],
+  "urls": ["http://localhost:5173/", "http://localhost:5174/", "http://localhost:5175/"],
+  "plugins": []
+}
